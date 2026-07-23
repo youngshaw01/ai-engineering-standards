@@ -248,9 +248,160 @@ main "$@"
 
 ---
 
+### R09 — SSH 免密登录
+
+**MUST** — SSH 免密登录必须使用密钥对认证，禁止在脚本中硬编码密码或使用 `sshpass`。
+
+#### 操作流程
+
+**Step 1：生成密钥对（客户端）**
+
+```bash
+# 生成 ED25519 密钥（推荐，更短更安全）
+ssh-keygen -t ed25519 -C "your_email@example.com" -f ~/.ssh/id_ed25519
+
+# 或生成 RSA 密钥（兼容性更好，旧服务器可能不支持 ED25519）
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com" -f ~/.ssh/id_rsa
+```
+
+执行后会生成两个文件：
+
+| 文件 | 用途 | 权限 |
+|------|------|------|
+| `~/.ssh/id_ed25519` | 私钥（绝不可泄露） | 600 |
+| `~/.ssh/id_ed25519.pub` | 公钥（可分发） | 644 |
+
+**Step 2：分发公钥到服务器**
+
+方式 A — 使用 `ssh-copy-id`（推荐）：
+
+```bash
+ssh-copy-id -i ~/.ssh/id_ed25519.pub user@remote-host
+```
+
+方式 B — 手动复制（无 ssh-copy-id 时）：
+
+```bash
+# 在远程服务器上执行
+mkdir -p ~/.ssh && chmod 700 ~/.ssh
+echo "公钥内容" >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+```
+
+方式 C — 一行命令完成：
+
+```bash
+cat ~/.ssh/id_ed25519.pub | ssh user@remote-host "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
+```
+
+**Step 3：验证免密登录**
+
+```bash
+ssh user@remote-host "echo 'SSH 免密登录成功'"
+```
+
+如果不需要输入密码即输出结果，说明配置成功。
+
+**Step 4：配置 SSH Config（可选，推荐）**
+
+```bash
+# ~/.ssh/config
+Host myserver
+    HostName     192.168.1.100
+    User         deploy
+    Port         22
+    IdentityFile ~/.ssh/id_ed25519
+    ServerAliveInterval 60
+    ServerAliveCountMax  3
+```
+
+之后直接用别名连接：
+
+```bash
+ssh myserver
+```
+
+#### 多服务器批量配置
+
+```bash
+# servers.txt — 每行一个服务器
+# 192.168.1.100
+# 192.168.1.101
+# 192.168.1.102
+
+for host in $(cat servers.txt); do
+    ssh-copy-id -i ~/.ssh/id_ed25519.pub deploy@$host
+done
+```
+
+#### 安全加固
+
+```bash
+# /etc/ssh/sshd_config — 服务器端配置
+PermitRootLogin no                    # 禁止 root 登录
+PasswordAuthentication no             # 禁止密码认证（只允许密钥）
+PubkeyAuthentication yes              # 启用公钥认证
+AuthorizedKeysFile .ssh/authorized_keys
+MaxAuthTries 3                        # 最大尝试次数
+```
+
+```bash
+# 修改后重启 SSH 服务
+sudo systemctl restart sshd
+```
+
+#### 常见问题排查
+
+| 问题 | 原因 | 解决 |
+|------|------|------|
+| 仍需密码 | `authorized_keys` 权限不对 | `chmod 600 ~/.ssh/authorized_keys` |
+| 仍需密码 | `~/.ssh/` 目录权限不对 | `chmod 700 ~/.ssh` |
+| 仍需密码 | 家目录权限不对 | `chmod 755 ~` |
+| Connection refused | sshd 未运行或端口不对 | `systemctl status sshd` |
+| Permission denied | 用户被 DenyUsers 排除 | 检查 `/etc/ssh/sshd_config` |
+| Host key verification failed | 首次连接未确认指纹 | `ssh-keyscan host >> ~/.ssh/*3known_hosts` |
+| ED25519 不支持 | 旧版 OpenSSH | 改用 RSA 4096 |
+
+#### Windows 环境
+
+```powershell
+# 生成密钥（PowerShell + OpenSSH，Windows 10 1809+）
+ssh-keygen -t ed25519 -C "your_email@example.com"
+
+# 密钥位置
+# C:\Users\YourName\.ssh\id_ed25519
+# C:\Users\YourName\.ssh\id_ed25519.pub
+
+# 分发公钥
+type C:\Users\YourName\.ssh\id_ed25519.pub | ssh user@host "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+
+# 如果使用 Git Bash
+ssh-keygen -t ed25519 -C "your_email@example.com"
+# 密钥位置同 Linux：~/.ssh/id_ed25519
+```
+
+✅ Correct:
+
+```bash
+# 使用密钥认证 + SSH Config 别名
+ssh deploy@server "systemctl restart app"
+```
+
+❌ Wrong:
+
+```bash
+# 硬编码密码或使用 sshpass
+sshpass -p 'MyP@ssw0rd' ssh root@server "systemctl restart app"
+```
+
+---
+
 ## Checklist
 
 - [ ] SSH 已禁用 root 登录和密码认证
+- [ ] SSH 免密登录使用 ED25519 或 RSA 4096 密钥
+- [ ] 公钥已分发到目标服务器，authorized_keys 权限为 600
+- [ ] SSH Config 已配置别名、心跳保活
 - [ ] 防火墙仅开放必要端口，fail2ban 已安装
 - [ ] 服务以专用用户运行，文件权限符合最小权限原则
 - [ ] 所有服务使用 systemd 管理，配置自动重启
