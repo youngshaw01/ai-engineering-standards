@@ -417,6 +417,165 @@ for (User user : users) {
 
 ---
 
+### R09 — 多数据库兼容（MySQL / SQL Server / Oracle）
+
+**MUST** — 业务 SQL 禁止依赖单一数据库专有语法，除非通过 `databaseIdProvider` 明确隔离。
+
+**核心原则：80% 公共 SQL + 20% databaseId 差异 SQL。**
+
+不要试图写一套"万能 SQL"，长期会失控。也不要一开始就复制三套 Mapper，维护成本极高。
+
+#### 方案一（推荐）：databaseIdProvider + databaseId 属性
+
+**配置：**
+
+```xml
+<!-- mybatis-config.xml -->
+<configuration>
+    <databaseIdProvider type="DB_VENDOR">
+        <property name="MySQL" value="mysql"/>
+        <property name="Microsoft SQL Server" value="sqlserver"/>
+        <property name="Oracle" value="oracle"/>
+    </databaseIdProvider>
+</configuration>
+```
+
+**公共 SQL（无 databaseId，所有数据库兜底）：**
+
+```xml
+<select id="selectById" resultType="User">
+    SELECT id, name FROM user WHERE id = #{id}
+</select>
+```
+
+**差异 SQL（按 databaseId 区分）：**
+
+```xml
+<!-- MySQL 分页 -->
+<select id="selectPage" databaseId="mysql" resultType="User">
+    SELECT * FROM user LIMIT #{offset}, #{size}
+</select>
+
+<!-- SQL Server 分页 -->
+<select id="selectPage" databaseId="sqlserver" resultType="User">
+    SELECT * FROM (
+        SELECT *, ROW_NUMBER() OVER (ORDER BY id) rn FROM user
+    ) t WHERE rn BETWEEN #{start} AND #{end}
+</select>
+
+<!-- Oracle 分页 -->
+<select id="selectPage" databaseId="oracle" resultType="User">
+    SELECT * FROM (
+        SELECT a.*, ROWNUM rn FROM user a WHERE ROWNUM &lt;= #{end}
+    ) WHERE rn >= #{start}
+</select>
+```
+
+**MyBatis 自动选择规则：**
+1. 优先匹配有 `databaseId` 且与当前数据库一致的语句
+2. 其次使用无 `databaseId` 的通用语句
+3. 都没有则报错
+
+✅ Correct:
+
+```xml
+<!-- 公共 SQL 用 ANSI SQL，差异 SQL 用 databaseId -->
+<select id="selectByStatus" resultType="User">
+    SELECT id, name, status FROM user WHERE status = #{status}
+</select>
+```
+
+❌ Wrong:
+
+```xml
+<!-- 业务 SQL 硬编码 MySQL 函数，无法兼容其他数据库 -->
+<select id="selectByDate" resultType="User">
+    SELECT * FROM user WHERE DATE_FORMAT(create_time, '%Y-%m-%d') = #{date}
+</select>
+```
+
+#### 方案二：公共 SQL + OGNL 动态判断（仅适合小差异）
+
+```xml
+<select id="selectRecent" resultType="User">
+    SELECT * FROM user WHERE status = 1
+    <if test="_databaseId == 'mysql'">
+        AND create_time > DATE_SUB(NOW(), INTERVAL 7 DAY)
+    </if>
+    <if test="_databaseId == 'oracle'">
+        AND create_time > SYSDATE - 7
+    </if>
+    <if test="_databaseId == 'sqlserver'">
+        AND create_time > DATEADD(DAY, -7, GETDATE())
+    </if>
+</select>
+```
+
+❌ 不推荐大量使用 — XML 越来越乱，可读性差。
+
+#### 方案三：多 Mapper XML 文件（差异极大时）
+
+```
+mapper/
+├── common/           ← 公共 SQL
+│   └── UserMapper.xml
+├── mysql/            ← MySQL 专用
+│   └── UserMapper.xml
+├── oracle/           ← Oracle 专用
+│   └── UserMapper.xml
+└── sqlserver/        ← SQL Server 专用
+    └── UserMapper.xml
+```
+
+❌ 仅在 SQL 完全不同时使用 — 大量重复，维护成本高。
+
+#### 方案四：分页统一交给 PageHelper 插件
+
+**消除分页差异的最佳方式** — PageHelper 自动适配 MySQL / Oracle / SQL Server 分页方言：
+
+```xml
+<!-- Mapper XML 只写通用查询，不写分页语法 -->
+<select id="selectList" resultType="User">
+    SELECT * FROM user WHERE status = #{status} ORDER BY id
+</select>
+```
+
+```java
+// Service 层 — PageHelper 自动改写 SQL
+PageHelper.startPage(pageNum, pageSize);
+List<User> list = userMapper.selectList(query);
+return new PageInfo<>(list);
+```
+
+#### 常见 SQL 方言差异速查表
+
+| 功能 | MySQL | SQL Server | Oracle | 兼容方案 |
+|------|-------|-----------|--------|---------|
+| 分页 | `LIMIT offset, size` | `ROW_NUMBER()` / `OFFSET-FETCH` | `ROWNUM` / `FETCH FIRST` | PageHelper 或 databaseId |
+| 时间函数 | `NOW()` | `GETDATE()` | `SYSDATE` | 应用层传参 `#{createTime}` |
+| 日期格式化 | `DATE_FORMAT(d, '%Y-%m-%d')` | `CONVERT(VARCHAR, d, 23)` | `TO_CHAR(d, 'YYYY-MM-DD')` | 应用层格式化 |
+| 字符串拼接 | `CONCAT(a, b)` | `a + b` | `a \|\| b` | 应用层拼接 |
+| 空值处理 | `IFNULL(x, 0)` | `ISNULL(x, 0)` | `NVL(x, 0)` | `COALESCE(x, 0)` (ANSI SQL) |
+| 自增主键 | `AUTO_INCREMENT` | `IDENTITY(1,1)` | `SEQUENCE` | 雪花算法 / MyBatis-Plus IdWorker |
+| 模糊查询 | `CONCAT('%', #{name}, '%')` | `'%' + #{name} + '%'` | `'%' \|\| #{name} \|\| '%'` | Java 传参 `name = "%" + name + "%"` |
+| 布尔类型 | `TINYINT(1)` | `BIT` | `NUMBER(1)` | 统一用 `TINYINT` / `SMALLINT` |
+
+#### 老项目渐进接入
+
+```
+保持现状
+    ↓
+新增代码遵守标准（ANSI SQL + 应用层处理时间/拼接）
+    ↓
+差异 SQL 逐步迁移到 databaseIdProvider
+    ↓
+分页统一交给 PageHelper
+```
+
+❌ 不要一次性重写所有 SQL — 风险太高。
+
+---
+
 ## Checklist
 
 - [ ] Mapper 接口方法命名遵循统一约定
@@ -427,3 +586,8 @@ for (User user : users) {
 - [ ] 批量操作使用专用方法，单批最多 500 条
 - [ ] 二级缓存谨慎开启，生产环境优先使用 Redis
 - [ ] MyBatis / JPA 选型有明确依据
+- [ ] 业务 SQL 使用 ANSI SQL，不依赖单一数据库专有语法
+- [ ] 差异 SQL 通过 databaseIdProvider 管理，不写"万能 SQL"
+- [ ] 分页统一交给 PageHelper 插件，不手写分页语法
+- [ ] 时间处理由应用层统一，SQL 不使用数据库时间函数
+- [ ] 自增主键使用雪花算法，不绑定数据库自增机制
