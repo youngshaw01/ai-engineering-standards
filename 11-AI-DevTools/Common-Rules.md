@@ -21,7 +21,7 @@
 - 删除目录
 - 清空目录
 - 覆盖非空目录
-- 删除 Git Submodule
+- 删除版本控制元数据（.git/、.svn/）
 - 删除 Docker Volume
 - 删除数据库文件
 
@@ -59,9 +59,13 @@ _trash_YYYYMMDD
 
 ---
 
-## 0.2 Git 高危操作
+## 0.2 版本控制高危操作
 
-未经明确要求，禁止执行：
+未经明确要求，禁止执行任何影响版本历史的操作。
+
+### Git
+
+禁止执行：
 
 ```
 git add
@@ -89,6 +93,41 @@ git log
 git show
 git branch
 ```
+
+### SVN
+
+禁止执行：
+
+```
+svn commit
+svn merge
+svn delete
+svn revert        # 注意：svn revert 撤销工作区修改，不可恢复
+svn switch        # 可能导致工作区混乱
+svn relocate      # 修改仓库地址
+svn import        # 无历史直接导入
+```
+
+允许执行：
+
+```
+svn status
+svn diff
+svn log
+svn info
+svn update
+svn list
+svn cat
+```
+
+### 通用原则
+
+无论使用 Git 还是 SVN，以下操作必须确认：
+
+- 任何 commit/push 操作（变更进入版本历史）
+- 任何 merge 操作（改变分支历史）
+- 任何删除/移动操作（可能影响其他协作者）
+- 任何 tag/release 操作（标记发布版本）
 
 ---
 
@@ -191,9 +230,11 @@ AI_RULES.md
 - 修改 CI/CD
 - 修改部署脚本
 - 修改系统配置
-- 修改 Git 状态
+- 修改版本控制状态（Git commit/push/tag 或 SVN commit/merge/delete）
 - 大规模目录调整
 - 架构重构
+- **批量修改**（SVN 项目尤其重要，AI 大范围修改比提交风险更高）
+- **自动重构 / 目录迁移 / 依赖升级 / 全工程格式化**
 - 长时间任务（预计超过 30 秒）
 - 存在不可逆影响的操作
 

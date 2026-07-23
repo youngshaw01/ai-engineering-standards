@@ -1,6 +1,6 @@
 # AI Engineering Standards
 
-> Enterprise-grade engineering standards for modern software development — from code to architecture, from AI to DevOps.
+> AI Native Software Engineering Standard — 兼容传统 SVN 企业项目，并支持未来 Git 迁移。
 
 ---
 
@@ -9,8 +9,10 @@
 A comprehensive, opinionated set of engineering standards designed for:
 
 - **Engineering teams** seeking consistent, high-quality development practices
-- **Open-source communities** needing clear contribution guidelines
+- **Legacy projects** (SVN-based enterprise systems) needing incremental adoption
 - **AI-assisted development** workflows with Cursor, Claude Code, Trae, and more
+
+Key principle: **Standards are not bound to Git. Version control is just one part of engineering practice.**
 
 Every standard follows the same structure: **Rule → Example → Anti-pattern → Checklist**.
 

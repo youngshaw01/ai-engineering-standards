@@ -11,6 +11,13 @@ type:
   # legacy — existing codebase, adopt standards incrementally
   type: new
 
+version_control:
+  # git — new projects, open source, internet teams
+  # svn — legacy enterprise projects (finance, government, internal networks)
+  # git-svn — SVN→Git migration transition period
+  # none — no version control (not recommended, but supported)
+  type: git
+
 technology:
   backend:
     - java          # java | python | go | nodejs | ...
@@ -20,8 +27,6 @@ technology:
     - mysql        # mysql | postgresql | mongodb | redis | ...
   ai_tool:
     - cursor       # cursor | trae | claude-code | codex | none
-  vcs:
-    - git          # git | svn | git-svn
 
 architecture:
   style:
@@ -34,7 +39,7 @@ rules:
   include:
     # Core rules (always recommended)
     - safety            # Security, sensitive data, deletion protection
-    - vcs               # Version control (Git or SVN, based on technology.vcs)
+    - vcs               # Version control (Git.md or SVN.md, based on version_control.type)
     - coding            # Coding conventions for your language
     - api               # API design patterns
     - testing           # Testing strategy

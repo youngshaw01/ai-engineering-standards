@@ -6,9 +6,9 @@ AI Engineering Standards — 接入指南。
 
 ## 核心理念
 
-> **标准库提供能力，项目只声明自己采用哪些。**
+> **AI Native Engineering Standard，兼容传统 SVN 企业项目，并支持未来 Git 迁移。**
 
-本仓库是一套规则库，不是项目管理平台。每个项目通过 `.standards/profile.yaml` 声明自己的技术栈和适用规则，AI 开发工具（Cursor / Trae / Claude Code）据此加载对应规则。
+本仓库是一套规则库，不是项目管理平台。标准体系不绑定特定版本控制工具（Git 或 SVN），项目通过 `.standards/profile.yaml` 声明自己的技术栈和适用规则，AI 开发工具据此加载对应规则。
 
 ---
 
@@ -67,6 +67,13 @@ type:
   # legacy — 已有代码，渐进接入
   type: new
 
+version_control:
+  # git — 新项目、开源、互联网团队
+  # svn — 老项目、金融/政务/内网
+  # git-svn — SVN→Git 迁移过渡期
+  # none — 无版本控制（不推荐，但支持）
+  type: git
+
 technology:
   backend:
     - java          # java | python | go | nodejs
@@ -76,8 +83,6 @@ technology:
     - mysql        # mysql | postgresql | mongodb | redis
   ai_tool:
     - cursor       # cursor | trae | claude-code | codex | none
-  vcs:
-    - git          # git | svn | git-svn
 
 architecture:
   style:
@@ -108,6 +113,7 @@ rules:
 | 字段 | 说明 |
 |------|------|
 | `type` | 只有两个值：`new` 或 `legacy`。不需要 L1/L2/L3 成熟度分级。 |
+| `version_control.type` | `git` / `svn` / `git-svn` / `none`。决定加载 Git.md 还是 SVN.md 规则。 |
 | `rules.include` | 显式声明采用哪些规则集。不写 = 不适用。 |
 | `rules.exclude` | 显式排除不适用的架构规则。避免 AI 给出无关建议。 |
 | `ai_tool` | 声明使用的 AI 开发工具，决定加载哪套 Rules 文件。 |
@@ -169,6 +175,15 @@ rules:
 2. **新代码必须符合标准** — 每次修改都是改进机会
 3. **例外必须记录** — 在 exceptions.yaml 中声明理由和负责人
 4. **优先修复安全问题** — SQL 注入、XSS、硬编码密钥等必须立即处理
+5. **不推动 SVN→Git 迁移** — 迁移是独立决策，不在标准接入范围内
+
+**SVN 项目特别注意：**
+
+SVN 老项目使用 AI 的最大风险不是提交，而是 **AI 大范围修改**。因此：
+
+- AI Rules 必须限制批量修改、自动重构、目录迁移、依赖升级、全工程格式化
+- 开发流程：`svn checkout` → `Cursor 打开项目` → `AI 读取 .cursor/rules/` → `开发` → `人工 svn commit`
+- 不要让 AI 执行任何 svn 命令，所有版本控制操作由开发者手动执行
 
 **示例 — 老项目差距报告：**
 
@@ -319,7 +334,7 @@ A: 第一步只做两件事：
 
 A: 看 `profile.yaml` 中的 `rules.include`：
 - `safety` — 所有项目都需要
-- `git` — 所有项目都需要
+- `vcs` — 必须有（根据 `version_control.type` 自动选择 Git.md 或 SVN.md）
 - `coding` — 必须有（对应你的编程语言）
 - `api` — 后端项目需要
 - `testing` — 所有项目都需要
