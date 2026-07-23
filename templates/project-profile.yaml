@@ -1,0 +1,45 @@
+# Project Profile
+# Copy this file to your project as .standards/profile.yaml
+# The .standards directory is gitignored by default
+
+project:
+  name: my-project
+  description: Brief description of the project
+
+type:
+  # new — start from scratch, apply all standards from day one
+  # legacy — existing codebase, adopt standards incrementally
+  type: new
+
+technology:
+  backend:
+    - java          # java | python | go | nodejs | ...
+  frontend:
+    - vue           # react | vue | angular | ...
+  database:
+    - mysql        # mysql | postgresql | mongodb | redis | ...
+  ai_tool:
+    - cursor       # cursor | trae | claude-code | codex | none
+
+architecture:
+  style:
+    - monolith     # monolith | microservice | ddd | event-driven
+
+standards:
+  level: standard   # standard | strict
+
+rules:
+  include:
+    # Core rules (always recommended)
+    - safety            # Security, sensitive data, deletion protection
+    - git               # Git workflow, commit conventions
+    - coding            # Coding conventions for your language
+    - api               # API design patterns
+    - testing           # Testing strategy
+
+  exclude:
+    # Architecture rules — only if you're actually using them
+    - ddd               # Exclude if not doing DDD
+    - microservice      # Exclude if not microservices
+    - kubernetes        # Exclude if not on K8S
+    - event-driven      # Exclude if not event-driven

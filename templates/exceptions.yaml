@@ -1,0 +1,34 @@
+# Standards Exceptions
+# Copy this file to your project as .standards/exceptions.yaml
+# Declare intentional deviations from the standards here.
+# This ensures exceptions are documented and reviewed, not silent.
+
+# Format:
+#   <rule_id>:
+#     reason: <why this exception exists>
+#     scope: <which files/modules are affected>
+#     owner: <who approved this exception>
+#     deadline: <when this exception should be resolved, or "permanent" if justified>
+
+examples:
+
+  # Example: MyBatis XML uses ${} for dynamic table names (legacy pattern)
+  SQL-INJECTION-001:
+    reason: "Legacy MyBatis mapper uses ${tableName} for dynamic table names in reporting queries. Full migration to #{} would require rewriting 50+ queries."
+    scope: "com.example.reporting.mapper"
+    owner: "zhangsan"
+    deadline: "2026-09-30"
+
+  # Example: No TTL on some cache keys (performance trade-off)
+  REDIS-TTL-001:
+    reason: "Configuration cache keys have no TTL because they change rarely and cold-load causes 200ms spike on every pod restart."
+    scope: "Cache keys matching 'cfg:*'"
+    owner: "lisi"
+    deadline: "permanent"
+
+  # Example: HTTP method used for non-idempotent operation
+  API-METHOD-001:
+    reason: "POST endpoint used for merchant status update due to client compatibility (mobile app cannot send PUT requests)."
+    scope: "POST /api/v1/merchant/status"
+    owner: "wangwu"
+    deadline: "2026-08-15"
