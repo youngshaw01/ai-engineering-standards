@@ -574,6 +574,58 @@ return new PageInfo<>(list);
 
 ❌ 不要一次性重写所有 SQL — 风险太高。
 
+#### 持久层新旧项目分治原则
+
+**FluentMyBatis / MyBatis-Plus 解决的是 SQL 维护方式（从 XML 到 Java DSL），不是数据库方言问题。**
+
+> ❌ FluentMyBatis ≠ 自动支持三数据库
+> ✅ FluentMyBatis + Dialect 设计 = 多数据库友好
+> ✅ 新项目推荐
+> ❌ 老 SVN 项目不要强制迁移
+
+**新项目（SHOULD）：**
+
+| 推荐方案 | 说明 |
+|---------|------|
+| FluentMyBatis / MyBatis-Plus | 类型安全、IDE 可追踪、AI 更易生成维护 |
+| Dialect Adapter | 分页/时间/函数等差异通过方言适配层隔离 |
+| 统一分页插件 | PageHelper 或框架内置分页 |
+| 雪花算法主键 | 不绑定数据库自增机制 |
+
+**新项目架构：**
+
+```
+业务层 (Service)
+    ↓
+Repository (持久化抽象)
+    ↓
+Mapper DSL (FluentMyBatis / MyBatis-Plus)
+    ↓
+Dialect Adapter (MysqlDialect / OracleDialect / SqlServerDialect)
+    ↓
+数据库
+```
+
+**老项目（MUST）：**
+
+| 规则 | 说明 |
+|------|------|
+| 不大规模迁移 ORM | 1000 个 Mapper XML 的迁移 = 重构，风险极高 |
+| 新增 SQL 遵循兼容原则 | ANSI SQL + 应用层处理时间/拼接 |
+| 差异 SQL 用 databaseIdProvider | 不写"万能 SQL" |
+
+**老项目保持：**
+
+```
+MyBatis XML（保持不变）
+    +
+databaseIdProvider（差异 SQL 隔离）
+    +
+SQL 规范（新代码遵守）
+    +
+PageHelper（分页统一）
+```
+
 ---
 
 ## Checklist
