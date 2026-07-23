@@ -14,6 +14,25 @@ A comprehensive, opinionated set of engineering standards designed for:
 
 Key principle: **Standards are not bound to Git. Version control is just one part of engineering practice.**
 
+## Three-Layer Model
+
+```
+                 AI Agent
+                    ▲
+        ┌───────────┼───────────┐
+        │           │           │
+     Rules       Skills     Knowledge
+        │           │           │
+   约束行为     扩展能力     提供知识
+   "不能做"     "会做"       "知道"
+```
+
+| Layer | Question | Content | Location |
+|-------|----------|---------|----------|
+| **Rules** | AI 能不能做？ | 安全护栏、编码规范、版本控制规则 | `.cursor/rules/` / `AI_RULES.md` |
+| **Skills** | AI 会什么？ | TDD、调试、代码审查、架构设计 | `.standards/skills.yaml` |
+| **Knowledge** | AI 知道什么？ | 架构文档、数据库设计、API 契约 | `docs/ai-knowledge/` |
+
 Every standard follows the same structure: **Rule → Example → Anti-pattern → Checklist**.
 
 ---

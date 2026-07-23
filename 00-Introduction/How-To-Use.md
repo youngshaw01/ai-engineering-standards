@@ -10,6 +10,16 @@ AI Engineering Standards — 接入指南。
 
 本仓库是一套规则库，不是项目管理平台。标准体系不绑定特定版本控制工具（Git 或 SVN），项目通过 `.standards/profile.yaml` 声明自己的技术栈和适用规则，AI 开发工具据此加载对应规则。
 
+标准体系采用 **Rules / Skills / Knowledge 三层模型**：
+
+| 层 | 回答的问题 | 内容 | 位置 |
+|---|---------|------|------|
+| **Rules** | AI 能不能做？ | 安全护栏、编码规范、版本控制 | `.cursor/rules/` / `AI_RULES.md` |
+| **Skills** | AI 会什么？ | TDD、调试、代码审查、架构设计 | `.standards/skills.yaml` |
+| **Knowledge** | AI 知道什么？ | 架构文档、数据库设计、API 契约 | `docs/ai-knowledge/` |
+
+三者职责不混用：Rules 约束行为，Skills 扩展能力，Knowledge 提供知识。
+
 ---
 
 ## 快速开始
@@ -20,18 +30,26 @@ AI Engineering Standards — 接入指南。
 # 1. 复制模板
 cp templates/project-profile.yaml your-project/.standards/profile.yaml
 cp templates/exceptions.yaml your-project/.standards/exceptions.yaml
+cp templates/skills.yaml your-project/.standards/skills.yaml
+cp templates/knowledge.yaml your-project/.standards/knowledge.yaml
 
 # 2. 编辑 profile.yaml，声明你的技术栈
 #    type: new
 #    technology: { backend: [java], database: [mysql] }
 
-# 3. 将 AI Rules 文件链接到项目
+# 3. 编辑 skills.yaml，启用需要的 AI 技能
+#    enabled: [superpowers-zh]
+
+# 4. 编写 Knowledge 文档到 docs/ai-knowledge/
+#    新项目：同步编写 architecture.md / api.md / database.md
+
+# 5. 将 AI Rules 文件链接到项目
 #    根据你的 AI 工具选择：
 #    - Cursor: 复制 .cursor/rules/*.md 到项目根目录或 .cursor/rules/
 #    - Trae: 复制 AI_RULES.md 到项目根目录
 #    - Claude Code: 复制 .claude/rules/*.md 到项目根目录
 
-# 4. 开始开发 — AI 会自动应用对应规则
+# 6. 开始开发 — AI 会自动应用对应规则
 ```
 
 ### 老项目
@@ -40,6 +58,8 @@ cp templates/exceptions.yaml your-project/.standards/exceptions.yaml
 # 1. 复制模板
 cp templates/project-profile.yaml your-project/.standards/profile.yaml
 cp templates/exceptions.yaml your-project/.standards/exceptions.yaml
+cp templates/skills.yaml your-project/.standards/skills.yaml
+cp templates/knowledge.yaml your-project/.standards/knowledge.yaml
 
 # 2. 编辑 profile.yaml
 #    type: legacy
@@ -47,7 +67,14 @@ cp templates/exceptions.yaml your-project/.standards/exceptions.yaml
 
 # 3. 在 exceptions.yaml 中记录已知的例外情况
 
-# 4. 遵循 Boy Scout Rule：
+# 4. 执行 Knowledge Extraction（老项目第一步！）
+#    让 AI 扫描代码，生成：
+#    docs/ai-knowledge/architecture.md
+#    docs/ai-knowledge/database.md
+#    docs/ai-knowledge/api.md
+#    人工确认后标记 knowledge.yaml 中 extraction.completed: true
+
+# 5. 遵循 Boy Scout Rule：
 #    新代码必须符合标准，旧代码逐步治理
 ```
 
@@ -217,7 +244,11 @@ SVN 老项目使用 AI 的最大风险不是提交，而是 **AI 大范围修改
     ↓
 AI 工具读取 .standards/profile.yaml
     ↓
-根据 rules.include 加载对应章节的规则
+根据 rules.include 加载对应章节的规则（Rules 层）
+    ↓
+根据 skills.yaml 加载启用的 AI 技能（Skills 层）
+    ↓
+根据 knowledge.yaml 加载项目知识文档（Knowledge 层）
     ↓
 开发者编写代码 → AI 自动应用规则
     ↓
@@ -313,9 +344,16 @@ ai-engineering-standards/
 ```
 your-project/
 ├── .standards/
-│   ├── profile.yaml    ← 声明技术栈和规则
-│   └── exceptions.yaml ← 记录例外（可选）
-└── AI_RULES.md         ← AI 工具读取的规则（从标准库生成）
+│   ├── profile.yaml      ← 声明技术栈和规则（Rules 层）
+│   ├── exceptions.yaml   ← 记录例外（Rules 层）
+│   ├── skills.yaml       ← 启用的 AI 技能（Skills 层）
+│   └── knowledge.yaml    ← 知识文档索引（Knowledge 层）
+├── docs/
+│   └── ai-knowledge/     ← Knowledge 文档目录
+│       ├── architecture.md
+│       ├── database.md
+│       └── api.md
+└── AI_RULES.md           ← AI 工具读取的规则（从标准库生成）
 ```
 
 ---

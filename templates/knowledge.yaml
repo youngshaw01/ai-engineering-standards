@@ -1,0 +1,35 @@
+# Knowledge Profile
+# Copy this file to your project as .standards/knowledge.yaml
+# Declare which project knowledge documents are available to AI.
+
+# Knowledge documents to include — AI will read these for context
+include:
+  # - architecture       # System architecture, component diagram, data flow
+  # - database           # Database schema, ER diagram, migration history
+  # - api                # API contracts, endpoint catalog, error codes
+  # - business-flow      # Core business processes, state machines
+  # - deployment         # Deployment topology, environments, configuration
+
+# Knowledge documents to exclude — too large, outdated, or irrelevant
+exclude:
+  # - history            # Historical decision records (low relevance for daily work)
+  # - meeting-notes      # Meeting transcripts (not structured knowledge)
+
+# Knowledge extraction status (for legacy projects)
+extraction:
+  # Set to true after running knowledge extraction on a legacy project
+  completed: false
+
+  # Documents that have been extracted and verified
+  extracted: []
+  #   - architecture
+  #   - database
+
+  # Documents still needed
+  pending: []
+  #   - api
+  #   - business-flow
+
+# Knowledge directory — where knowledge documents are stored
+# Default: docs/ai-knowledge/ in the project root
+directory: docs/ai-knowledge/

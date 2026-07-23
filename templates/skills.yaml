@@ -1,0 +1,40 @@
+# Skills Profile
+# Copy this file to your project as .standards/skills.yaml
+# Declare which AI skills are enabled for this project.
+
+# Enabled skills — AI will load these capabilities
+enabled:
+  - superpowers-zh       # AI software development workflow (TDD, debugging, code review)
+  # - java-review        # Java-specific code review skill
+  # - database-expert    # Database design and optimization skill
+  # - security-audit     # Security vulnerability scanning skill
+
+# Disabled skills — available but not active for this project
+disabled:
+  # - kubernetes-admin   # K8S operations (not applicable for tar.gz deployment)
+  # - frontend-design    # UI/UX design skill (not needed for backend-only work)
+
+# Skill registry — record of all evaluated skills (for governance)
+# New skills MUST go through evaluation before being enabled.
+registry:
+  - name: superpowers-zh
+    type: development
+    source: community
+    status: approved
+    scope: [coding, review, debugging, testing]
+    risk: medium
+    permissions:
+      read: [project-code, project-docs]
+      write: [code-files]
+      execute: none
+
+  # - name: java-review
+  #   type: internal
+  #   source: team
+  #   status: approved
+  #   scope: [java, spring-boot, mybatis]
+  #   risk: low
+  #   permissions:
+  #     read: [project-code]
+  #     write: none
+  #     execute: none
