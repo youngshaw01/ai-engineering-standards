@@ -76,6 +76,8 @@ technology:
     - mysql        # mysql | postgresql | mongodb | redis
   ai_tool:
     - cursor       # cursor | trae | claude-code | codex | none
+  vcs:
+    - git          # git | svn | git-svn
 
 architecture:
   style:
@@ -88,7 +90,7 @@ rules:
   include:
     # 核心规则（始终推荐）
     - safety            # 安全、敏感信息、删除保护
-    - git               # Git 工作流、提交规范
+    - vcs               # 版本控制（Git 或 SVN，根据 technology.vcs）
     - coding            # 编码规范（按语言）
     - api               # API 设计模式
     - testing           # 测试策略
