@@ -388,6 +388,169 @@ $bytes | ForEach-Object { "0x{0:X2}" -f $_ }
 1. **TortoiseSVN GUI 提交**：右键 → SVN Commit → 在 message 框输入中文 → 直接提交（GUI 不受终端编码影响）
 2. **英文 message**：如果无法解决编码问题，使用英文 commit message（治标不治本）
 
+#### 生产级辅助脚本方案（r15442 验证通过）
+
+> 以下方案经过 Malaysia AcqSys 项目 r15442 提交验证，配套 `.standards/exceptions.yaml VCS-ENCODING-001` 规则使用。
+
+**核心增强：** 相比手动 `--encoding gbk`，生产级脚本增加两道防线：
+
+1. **BOM 校验** — 提交前检查 message 文件前 3 字节，拒绝 UTF-8 BOM（EF BB BF）文件
+2. **提交后验证** — 用 `svn propget --revprop -r HEAD svn:log` 读取最新 commit message，确认未乱码
+
+**关键警示：** 禁止使用 UTF-8 文件提交（即使带 BOM）。SVN 服务端 GBK 仓库接收到 UTF-8 字节流会产生不可逆乱码。
+
+**辅助脚本 `svn-utf8-commit.ps1`（抽象版，参数化路径）：**
+
+```powershell
+# svn-utf8-commit.ps1 — SVN 中文 commit 提交辅助脚本（GBK 编码）
+# 规则依据: .standards/exceptions.yaml VCS-ENCODING-001
+
+param(
+    [Parameter(Mandatory = $false)]
+    [string]$RepoRoot = (Get-Location).Path,
+
+    [Parameter(Mandatory = $false)]
+    [string]$MessageFile = "msg-temp.txt"
+)
+
+# ---- 1. 待提交的 message（直接编辑这里）----
+$Message = @"
+[chore] 请按 conventional commits 风格填写标题
+
+详细说明（可选）:
+- 修改内容 1
+- 修改内容 2
+
+依据: .standards/exceptions.yaml VCS-ENCODING-001
+"@
+
+# ---- 2. 待提交的路径（相对 RepoRoot，留空则提交全部变更）----
+$Paths = @(
+    # "path/to/file1"
+    # "path/to/file2"
+)
+
+# ============================================================================
+# 以下为脚本逻辑，一般无需修改
+# ============================================================================
+
+$ErrorActionPreference = "Stop"
+Set-Location $RepoRoot
+Write-Host "=== 工作目录: $(Get-Location) ===" -ForegroundColor Cyan
+
+# ---- 3. 写入 ANSI(GBK) 文件 ----
+$gbk = [System.Text.Encoding]::GetEncoding(936)
+[System.IO.File]::WriteAllText($MessageFile, $Message, $gbk)
+Write-Host ""
+Write-Host "=== Message 文件已写入（GBK）: $MessageFile ===" -ForegroundColor Cyan
+
+# ---- 4. 验证编码（前 3 字节应不是 UTF-8 BOM EF BB BF）----
+$bytes = [System.IO.File]::ReadAllBytes($MessageFile)[0..2]
+$bomHex = ($bytes | ForEach-Object { $_.ToString("X2") }) -join " "
+if ($bytes[0] -eq 0xEF -and $bytes[1] -eq 0xBB -and $bytes[2] -eq 0xBF) {
+    Write-Host "❌ 警告: 文件是 UTF-8 BOM 编码，必须改为 GBK！" -ForegroundColor Red
+    exit 1
+} else {
+    Write-Host "✅ 编码验证通过（GBK ANSI）: 前 3 字节 = $bomHex" -ForegroundColor Green
+}
+
+# ---- 5. 预检查 status ----
+Write-Host ""
+Write-Host "=== svn status ===" -ForegroundColor Cyan
+svn status --depth=infinity
+
+# ---- 6. 询问确认 ----
+Write-Host ""
+Write-Host "=== 即将提交以下路径 ===" -ForegroundColor Yellow
+$Paths | ForEach-Object { Write-Host "  $_" }
+Write-Host ""
+$confirmation = Read-Host "确认提交？(yes/no)"
+if ($confirmation -ne "yes") {
+    Write-Host "已取消" -ForegroundColor Yellow
+    exit 0
+}
+
+# ---- 7. 执行 commit（必须 --encoding gbk）----
+Write-Host ""
+Write-Host "=== 执行 svn commit --encoding gbk ===" -ForegroundColor Cyan
+$commitArgs = @("--encoding", "gbk", "-F", $MessageFile) + $Paths
+$process = Start-Process -FilePath "svn" -ArgumentList "commit", $commitArgs -NoNewWindow -Wait -PassThru -RedirectStandardOutput "svn-commit-stdout.log" -RedirectStandardError "svn-commit-stderr.log"
+
+if ($process.ExitCode -eq 0) {
+    Write-Host ""
+    Write-Host "=== Commit 成功 ===" -ForegroundColor Green
+    Get-Content svn-commit-stdout.log
+
+    # ---- 8. 验证 message（关键步骤！防止乱码）----
+    Write-Host ""
+    Write-Host "=== 验证 commit message (HEAD) ===" -ForegroundColor Cyan
+    $verifyOutput = svn propget --revprop -r HEAD svn:log
+    Write-Host $verifyOutput
+    Write-Host ""
+
+    # 简单检测：message 是否包含原始关键字
+    if ($verifyOutput -match "请按 conventional commits") {
+        Write-Host "⚠️ 警告: 未修改默认 message 模板，请先编辑 `$Message 变量" -ForegroundColor Yellow
+    }
+
+    Write-Host "✅ 提交完成。请在 TortoiseSVN 中查看是否中文正常。" -ForegroundColor Green
+} else {
+    Write-Host ""
+    Write-Host "❌ Commit 失败" -ForegroundColor Red
+    Get-Content svn-commit-stderr.log
+    exit 1
+}
+
+# ---- 9. 清理临时文件 ----
+Remove-Item $MessageFile -ErrorAction SilentlyContinue
+Remove-Item svn-commit-stdout.log -ErrorAction SilentlyContinue
+Remove-Item svn-commit-stderr.log -ErrorAction SilentlyContinue
+
+Write-Host ""
+Write-Host "=== 完成 ===" -ForegroundColor Cyan
+```
+
+**脚本使用流程：**
+
+1. 复制脚本到项目任意位置（建议 `docs/scripts/`）
+2. 编辑 `$Message` 变量，填入本次 commit 内容
+3. 编辑 `$Paths` 数组，指定要提交的文件/目录
+4. 执行：`powershell -NoProfile -ExecutionPolicy Bypass -File svn-utf8-commit.ps1`
+5. 脚本会自动完成：写 GBK 文件 → BOM 校验 → status 预检查 → 人工确认 → commit → 验证 message → 清理
+
+**真实乱码案例对照（Malaysia AcqSys 项目 SVN log）：**
+
+| Revision | 提交方式 | message 表现 | 诊断 |
+|---------|---------|-------------|------|
+| r15442 | 辅助脚本（GBK 文件 + `--encoding gbk -F`） | `[chore] 新增 SVN 中文 commit 辅助脚本` ✅ | 正常 |
+| r15441 | `--encoding gbk` 命令行 | `[chore] 恢复 exceptions.yaml VCS-ENCODING-001 规则` ✅ | 正常 |
+| r15440 | UTF-8 文件（带 BOM）+ `--encoding gbk -F` | `ï»¿[chore] é¡¹ç›®æ ̄ç›®å½•æ–°å¢ž` ❌ | UTF-8 BOM 被当作 Latin-1 显示 |
+| r15438 | UTF-8 文件 + `--encoding gbk -F` | `[chore] 鎵╁睍 svn:global-ignores` ❌ | UTF-8 字节流被 GBK 解码 |
+| r15365 | 直接 `-m "提交"` | `提交` ⚠️ | 编码正常但违反 Conventional Commits |
+
+**乱码模式识别：**
+
+| 乱码特征 | 根因 | 修复 |
+|---------|------|------|
+| `ï»¿` 开头 | UTF-8 BOM (EF BB BF) 被 Latin-1 解码 | 改用 GBK 编码文件，去除 BOM |
+| `é¡¹ç›®` 类乱码 | UTF-8 字节流被 Latin-1 解码 | 改用 GBK 编码文件 |
+| `鎵╁睍` 类乱码 | UTF-8 字节流被 GBK 解码 | 改用 GBK 编码文件 |
+| `?` 替代部分字符 | GBK 终端无法显示某字符 | `chcp 936` + GBK 文件 |
+| 部分字符变 `?` | PowerShell `-m` 参数内中文被破坏 | 用 `-F` 文件方式替代 `-m` |
+
+**项目级例外登记（推荐实践）：**
+
+将编码规则登记到 `.standards/exceptions.yaml`，确保 AI 工具和团队成员可识别：
+
+```yaml
+VCS-ENCODING-001:
+  reason: "SVN 服务器端使用 GBK 编码存储 commit message。开发者提交中文 message 时必须使用 --encoding gbk 参数（命令行方式）或确保 message 文件为 ANSI(GBK) 编码 + -F 方式提交，禁止使用 UTF-8 文件（即使带 BOM）。TortoiseSVN GUI 默认 GBK 直接提交即可"
+  scope: "所有 svn commit 操作"
+  owner: "youngshaw"
+  deadline: "permanent"
+  evidence: "ai-engineering-standards/01-Engineering/SVN.md R03 + 实测验证"
+```
+
 ---
 
 ### R04 — 合并与冲突
