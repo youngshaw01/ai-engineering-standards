@@ -261,13 +261,60 @@ AI_RULES.md
 - 修改 CI/CD
 - 修改部署脚本
 - 修改系统配置
-- 修改版本控制状态（Git commit/push/tag 或 SVN commit/merge/delete）
+- **高危版本控制操作**（见下方"版本控制操作分级"）
 - 大规模目录调整
 - 架构重构
 - **批量修改**（SVN 项目尤其重要，AI 大范围修改比提交风险更高）
 - **自动重构 / 目录迁移 / 依赖升级 / 全工程格式化**
 - 长时间任务（预计超过 30 秒）
 - 存在不可逆影响的操作
+
+---
+
+## 版本控制操作分级
+
+### 常规操作（用户明确指令后直接执行）
+
+当用户明确指令执行版本控制操作时（如"提交"、"推送"、"打 tag"），AI 应简要说明将执行的操作（含文件范围），然后**直接执行**，无需二次确认。
+
+**禁止使用 `git add -A` / `git add .`**，必须按文件名添加，避免误加敏感文件或大文件。
+
+| 操作 | 用户指令 | AI 行为 |
+|------|---------|---------|
+| `git commit` | "提交" | 简要说明 → 直接执行 |
+| `git push` | "推送" | 简要说明 → 直接执行 |
+| `git tag` | "打 tag" | 简要说明 → 直接执行 |
+| `svn commit` | "提交" | 简要说明 → 直接执行（必须带 `--encoding gbk`） |
+
+### SVN commit 标准命令格式（解决公司 GBK 乱码）
+
+公司 SVN 服务器端使用 GBK 编码，中文 commit message 必须指定 `--encoding gbk`，否则会产生永久乱码：
+
+```bash
+# Linux / macOS
+svn commit -m "feat(auth): 新增登录接口" --encoding gbk
+
+# Windows PowerShell
+svn commit -m "feat(auth): 新增登录接口" --encoding gbk
+```
+
+复杂多行 message 推荐用 `-F` 文件方式（GBK 编码），详见 [SVN.md R03](../01-Engineering/SVN.md#r03--提交规范)。
+
+### 高危操作（必须确认）
+
+以下操作即使用户明确指令，仍需确认后执行：
+
+- `git push --force` / `git push --force-with-lease`
+- `git reset --hard`
+- `git rebase` / `git rebase -i`
+- `git branch -D` / `git tag -d`
+- `git clean`
+- `svn delete` / `svn merge` / `svn switch` / `svn revert`
+- 任何 tag/release 发布操作
+
+### AI 主动提议的版本控制操作
+
+AI 主动提议的 commit/push（非用户指令）必须确认后执行。
 
 ---
 
