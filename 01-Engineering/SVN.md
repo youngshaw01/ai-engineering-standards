@@ -330,6 +330,64 @@ svn commit -m "fix(device): fix device offline status not updated"
 svn propset --revprop -r 1234 svn:log "fix(device): 修复设备离线状态不更新问题" https://svn.example.com/repo
 ```
 
+#### 中文 Commit Message 实战经验（r15435 验证通过）
+
+> 以下方案经过 SVN r15430~r15435 共 6 次提交验证，r15435 成功，r15430~r15434 均失败。
+
+**核心发现：PowerShell here-string 会破坏中文字符。** 任何 `@" "@` 或 `"` 内的中文，在 GBK 终端下可能被 PowerShell 解析器替换/截断，导致 GBK 字节流不正确。
+
+**✅ 经过验证的可靠方案 — GBK 字节流构造（r15435 实战成功）：**
+
+```powershell
+# Step 1: 切换到 GBK 终端
+chcp 936
+[Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding(936)
+
+# Step 2: 用 GBK 码表反向查表，构造正确字节流
+# 关键技巧：GetString(byte[]) 把 GBK 字节流转回字符串，绕开 here-string 解析 bug
+$gbkBytes = [byte[]](0x64,0x6F,0x63,0x73,0x3A,0x20, ...)  # 完整 GBK 字节流
+$gbk = [System.Text.Encoding]::GetEncoding(936)
+$msg = $gbk.GetString($gbkBytes)
+
+# Step 3: 写入 GBK 编码的临时文件
+$tmpFile = "$env:TEMP\svn-commit-msg.txt"
+[System.IO.File]::WriteAllBytes($tmpFile, $gbk.GetBytes($msg))
+
+# Step 4: 提交
+svn commit -F $tmpFile --encoding gbk
+Remove-Item $tmpFile
+```
+
+**辅助工具：把中文转 GBK 字节数组（用于构造 $gbkBytes）：**
+
+```powershell
+# 先用 Node.js 生成 UTF-8 文件（Node 不受 PowerShell 字符替换影响）
+# node -e "require('fs').writeFileSync('msg.txt', 'docs: 修正 L0.4 message 文件编码示例', 'utf8')"
+# 然后用 PowerShell 读 UTF-8 + 转 GBK 字节
+$utf8 = New-Object System.Text.UTF8Encoding($false)
+$text = [System.IO.File]::ReadAllText("msg.txt", $utf8)
+$gbk = [System.Text.Encoding]::GetEncoding(936)
+$bytes = $gbk.GetBytes($text)
+# 输出字节数组供 $gbkBytes 使用
+$bytes | ForEach-Object { "0x{0:X2}" -f $_ }
+```
+
+**❌ 失败案例档案（r15430 ~ r15434）：**
+
+| 方案 | 失败原因 | 乱码表现 |
+|------|---------|---------|
+| `svn commit -m "中文" --encoding gbk` | PowerShell `-m` 参数内中文被 GBK 终端破坏 | 部分字符变 `?` |
+| here-string `@"中文"@` + WriteAllBytes | PowerShell 解析 here-string 时替换/截断字符 | "方编码"、"去销提场" |
+| `[System.Text.Encoding]::UTF8` | PowerShell 5.1 中该静态属性返回 `$null` | NullReferenceException |
+| `New-Object System.Text.UTF8Encoding` | 构造函数在当前 PowerShell 实例返回 `$null` | NullReferenceException |
+| Node.js iconv-lite | 项目未安装 iconv-lite 包 | Module not found |
+| 新 PowerShell 进程传参 | `$env:TEMP` 在新进程中为空 | Empty path name |
+
+**最简提交方式（推荐给非技术人员）：**
+
+1. **TortoiseSVN GUI 提交**：右键 → SVN Commit → 在 message 框输入中文 → 直接提交（GUI 不受终端编码影响）
+2. **英文 message**：如果无法解决编码问题，使用英文 commit message（治标不治本）
+
 ---
 
 ### R04 — 合并与冲突
