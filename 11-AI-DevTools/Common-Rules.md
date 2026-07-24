@@ -1,9 +1,13 @@
 # AI Engineering Rules（Core Edition）
 
+> **Layer 0: Global AI Engineering Standard** — 跨项目通用规则，所有项目继承。
+>
 > Version: 2.0
 > Scope: Cursor、Claude Code、Codex CLI、Gemini CLI、OpenHands、Trae、Windsurf 等 AI 开发工具
 >
-> 本规则优先于默认行为。如与工具默认行为冲突，以本规则为准。
+> 本规则为 Layer 0 全局规则。项目特定规则（Layer 1）优先级高于本规则。
+> 如 Layer 1 规则与本规则冲突，以 Layer 1 为准。
+> 如与 AI 工具默认行为冲突，以本规则为准。
 
 ---
 
