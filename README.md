@@ -21,45 +21,76 @@ Key principle: **Standards are not bound to Git. Version control is just one par
 > **Source of Truth 原则：规则只在一处定义，其他地方只引用。**
 
 ```
-Layer 0: Global Standard                 ← 跨项目通用（本仓库）
-    ai-engineering-standards
-        |
-        | inherit
-        ↓
-Layer 1: Project Governance               ← 项目真实规则（最高权威）
-    .harness / .standards
-        |
-        | adapter
-        ↓
-Layer 2: AI Tool Adapter                  ← 格式转换层，不定义规则
-    .trae/rules / .cursor/rules / .claude
+                 Layer 0
+        ai-engineering-standards
+        Global Standard（通用标准库）
+                 |
+                 | inherit
+                 ↓
+                 Layer 1
+              .harness
+        Project Governance（项目AI工作空间）
+                 |
+                 | expose
+                 ↓
+                 Layer 2
+       .cursor/.trae/.claude
+          AI Adapter（工具适配层）
 ```
 
-### Priority（冲突时）
+**关键：** 项目继承全局标准，AI 工具消费规则。Adapter 无规则权力。
+
+### Rule Resolution Priority
 
 ```
-Layer 1 (Project Rules) > Layer 0 (Global Rules) > Layer 2 (Tool Adapter)
+1. Project Override (.harness)              ← 项目规则覆盖一切
+2. Global Standard (ai-engineering-standards) ← 通用标准兜底
+3. AI Tool Default Rules                     ← 工具默认行为
 ```
 
-| Layer | Location | Defines | Does NOT define |
-|-------|----------|---------|-----------------|
-| **Layer 0** | `ai-engineering-standards/` | 通用安全红线、编码原则、测试策略、架构模式 | 项目特定约束、业务规则、遗留系统约定 |
-| **Layer 1** | `.harness/` or `.standards/` | 项目约束、业务规则、技术选型、SVN 约定、遗留系统约定 | 与 Layer 0 重复的通用规则（应引用） |
-| **Layer 2** | `.trae/rules/` / `.cursor/rules/` | 无（纯转换层） | 任何规则 |
+```
+项目规则覆盖通用标准
+通用标准覆盖 AI 默认行为
+Adapter 无规则权力
+```
+
+### Layer 职责
+
+| Layer | Location | Role | Defines |
+|-------|----------|------|---------|
+| **Layer 0** | `ai-engineering-standards/` | Global Standard | 通用安全红线、编码原则、测试策略、架构模式 |
+| **Layer 1** | `.harness/` | Project Governance | 项目约束、业务规则、技术选型、遗留系统约定 |
+| **Layer 2** | `.cursor/rules/` / `.trae/rules/` | AI Adapter | 无（纯转换层，消费 Layer 0 + Layer 1 规则） |
+
+### .harness vs .standards 职责分工
+
+当项目同时存在 `.harness` 和 `.standards` 时：
+
+| 目录 | 职责 | 内容 |
+|------|------|------|
+| `.harness/` | 项目事实 | rules/、wiki/、workspace/、specs/、agents/ |
+| `.standards/` | AI 接入声明 | profile.yaml、skills.yaml、knowledge.yaml、rule-id.yaml |
+
+```
+project/
+├── .harness/              ← 项目事实（rules/wiki/workspace）
+└── .standards/            ← AI 接入声明（profile/skills/knowledge）
+```
 
 ### AI Tool Adapter 职责
 
-AI 工具规则文件**只做格式转换**，把 Layer 0 + Layer 1 规则转换为 AI 可加载的格式：
+AI 工具规则文件**只做格式转换**，通过 Rule ID 引用，不重新定义规则：
 
 ```markdown
 # .trae/rules/project-rules.md
 
-Source: .harness/project/rules/项目编码规范.md
+## SEC-001: Sensitive Information Protection
+Source: ai-engineering-standards/11-AI-DevTools/Common-Rules.md
+AI 必须遵守（详见 source）
 
-AI 必须遵守：
-- Java 编码规范（详见 source）
-- SVN 提交规范（详见 source）
-- 数据库规范（详见 source）
+## VCS-001: SVN Commit Policy
+Source: .harness/project/rules/svn.md
+AI 必须遵守（详见 source）
 ```
 
 ❌ 不应该：
@@ -67,8 +98,7 @@ AI 必须遵守：
 ```markdown
 # .trae/rules/java.md  ← 不应该在这里重新定义规则
 
-- 禁止 @Autowired 字段注入  ← 这应该在 .harness 或 ai-engineering-standards 中定义
-- 构造器注入优先             ← 重复定义会导致规则漂移
+- 禁止 @Autowired 字段注入  ← 重复定义会导致规则漂移
 ```
 
 ### 内容归属判断

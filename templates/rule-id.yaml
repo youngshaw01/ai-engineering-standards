@@ -1,0 +1,163 @@
+# Rule Identity Registry
+# Every rule gets a unique ID for traceability across layers.
+# AI tools, .harness, .standards, and adapters all reference the same ID.
+
+# --- Security (SEC) ---
+SEC-001:
+  name: Sensitive Information Protection
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L0-0.4
+  severity: MUST
+
+SEC-002:
+  name: Irreversible Operations Protection
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L0-0.1
+  severity: MUST
+
+SEC-003:
+  name: Version Control Dangerous Operations
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L0-0.2
+  severity: MUST
+
+SEC-004:
+  name: System State Modification
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L0-0.3
+  severity: MUST
+
+SEC-005:
+  name: AI Self-Modification Protection
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L0-0.5
+  severity: MUST
+
+# --- Engineering (ENG) ---
+ENG-001:
+  name: Minimal Change Principle
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L2-2.1
+  severity: MUST
+
+ENG-002:
+  name: Backward Compatibility
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L2-2.2
+  severity: MUST
+
+ENG-003:
+  name: Confirmation Threshold
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L1
+  severity: MUST
+
+ENG-004:
+  name: Evidence Before Action
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L3-3.2
+  severity: MUST
+
+ENG-005:
+  name: Information Insufficiency
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L3-3.3
+  severity: MUST
+
+# --- Version Control (VCS) ---
+VCS-001:
+  name: VCS Dangerous Operations
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L0-0.2
+  severity: MUST
+
+VCS-002:
+  name: SVN Commit Policy
+  owner: project
+  layer: 1
+  source: .harness/project/rules/svn.md
+  severity: MUST
+
+VCS-003:
+  name: SVN Chinese Commit Encoding
+  owner: project
+  layer: 1
+  source: 01-Engineering/SVN.md#R03
+  severity: MUST
+
+VCS-004:
+  name: SVN Auto-Commit Prohibition
+  owner: project
+  layer: 1
+  source: .harness/project/rules/项目编码规范.md
+  severity: MUST
+
+# --- Coding (CODE) ---
+CODE-001:
+  name: No Pseudocode Placeholders
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L2-2.5
+  severity: MUST
+
+CODE-002:
+  name: Type-Safe API
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L2-2.5
+  severity: MUST
+
+CODE-003:
+  name: Java Constructor Injection
+  owner: project
+  layer: 1
+  source: .harness/project/rules/java-conventions.md
+  severity: MUST
+
+# --- Database (DB) ---
+DB-001:
+  name: SQL Injection Prevention
+  owner: global
+  layer: 0
+  source: 05-Backend/Database.md
+  severity: MUST
+
+DB-002:
+  name: Table Naming Convention
+  owner: project
+  layer: 1
+  source: .harness/project/rules/sql.md
+  severity: MUST
+
+DB-003:
+  name: Multi-Database Compatibility
+  owner: global
+  layer: 0
+  source: 02-Java/MyBatis.md#R09
+  severity: SHOULD
+
+# --- Testing (TEST) ---
+TEST-001:
+  name: TDD for New Code
+  owner: global
+  layer: 0
+  source: 08-Testing/TestStrategy.md
+  severity: SHOULD
+
+TEST-002:
+  name: Coverage Target
+  owner: global
+  layer: 0
+  source: 08-Testing/TestStrategy.md
+  severity: SHOULD

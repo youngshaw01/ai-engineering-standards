@@ -32,29 +32,37 @@ architecture:
   style:
     - monolith     # monolith | microservice | ddd | event-driven
 
-# Inheritance — which global standards to inherit (Layer 0)
-# AI loads: Global Rules (inherit) + Project Rules (project_rules) + Tool Adapter
-standards:
-  level: standard   # standard | strict
-  inherit:
-    - safety        # L0-L5 safety guardrails (always recommended)
-    - coding        # Coding conventions for your language
-    - api           # API design patterns
-    - testing       # Testing strategy
+# Governance — Three-Layer Model (Global / Project / Adapter)
+governance:
+  global_standards:
+    source: ai-engineering-standards
+    inherit:
+      - safety            # L0-L5 safety guardrails (always recommended)
+      - coding            # Coding conventions for your language
+      - api               # API design patterns
+      - testing           # Testing strategy
 
-# Project Rules — Layer 1 (highest authority, overrides Global Rules)
-project_rules:
-  # Source of Truth for project-specific rules
-  # Can be .harness/ or .standards/ depending on your project setup
-  source: .harness/
+  project_rules:
+    source:
+      type: local         # local | remote
+      path: .harness/     # .harness/ or custom path
+    priority:
+      override: true      # Project rules override global standards
 
-  # Rules that override or extend global standards
-  # Only declare project-specific rules here; don't repeat global rules
-  overrides: []
+  adapters:
+    enabled:
+      - trae              # trae | cursor | claude | codex | windsurf | copilot
 
-  # Rules that are excluded for this project
-  exclude:
-    # - ddd               # Exclude if not doing DDD
-    # - microservice      # Exclude if not microservices
-    # - kubernetes        # Exclude if not on K8S
-    # - event-driven      # Exclude if not event-driven
+# Rule Identity — unique IDs for traceability across layers
+# See .standards/rule-id.yaml for the full registry
+rule_identity:
+  registry: .standards/rule-id.yaml
+  prefix: SEC             # SEC-001, VCS-001, CODE-001, DB-001, ...
+
+# Architecture rules — only if you're actually using them
+# Exclude rules that don't apply to this project
+exclude:
+  # - ddd               # Exclude if not doing DDD
+  # - microservice      # Exclude if not microservices
+  # - kubernetes        # Exclude if not on K8S
+  # - event-driven      # Exclude if not event-driven

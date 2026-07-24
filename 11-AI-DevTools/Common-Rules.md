@@ -9,6 +9,33 @@
 > 如 Layer 1 规则与本规则冲突，以 Layer 1 为准。
 > 如与 AI 工具默认行为冲突，以本规则为准。
 
+## Governance Metadata
+
+```yaml
+layer: 0                          # Global Standard
+authority: reference              # 参考权威，可被 Layer 1 覆盖
+override: allowed_by_project      # 允许项目覆盖
+source_of_truth: this_document    # 本文档是事实来源
+consumer:                         # 消费者（AI 工具）
+  - cursor
+  - trae
+  - claude-code
+  - codex
+  - windsurf
+  - copilot
+rule_ids:                         # 规则 ID（详见 .standards/rule-id.yaml）
+  SEC-001: Sensitive Information Protection
+  SEC-002: Irreversible Operations Protection
+  SEC-003: Version Control Dangerous Operations
+  SEC-004: System State Modification
+  SEC-005: AI Self-Modification Protection
+  ENG-001: Minimal Change Principle
+  ENG-002: Backward Compatibility
+  ENG-003: Confirmation Threshold
+  ENG-004: Evidence Before Action
+  ENG-005: Information Insufficiency
+```
+
 ---
 
 # L0 - Safety Guardrails（最高优先级）
