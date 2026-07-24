@@ -232,6 +232,104 @@ svn commit -m "WIP"
 | 临时文件 | `*.tmp`, `*.bak`, `~$*` | 无用文件 |
 | 密钥证书 | `*.pem`, `*.key`, `*.jks` | 安全风险 |
 
+#### 中文 Commit Message 乱码解决方案
+
+**MUST** — SVN 服务器端若使用 GBK 编码（国内企业常见），中文 commit message 会出现乱码。提交时必须指定 `--encoding gbk`。
+
+**根因：** SVN 服务器端 `svnserve.conf` 或历史版本仓库使用 GBK 编码处理非 ASCII 字符，UTF-8 终端输入的中文 commit message 传到 GBK 仓库就会出现乱码。
+
+**基础方案：每次提交强制指定仓库编码**
+
+```bash
+# Linux / macOS
+svn commit -m "feat(auth): 新增登录接口" --encoding gbk
+
+# Windows PowerShell
+svn commit -m "feat(auth): 新增登录接口" --encoding gbk
+```
+
+**PowerShell 终端额外配置（解决控制台编码问题）：**
+
+```powershell
+# 方式 1：切换控制台代码页到 GBK（936）
+chcp 936
+
+# PowerShell 5.1：设置控制台输出编码为 GBK
+$OutputEncoding = [System.Text.Encoding]::GetEncoding(936)
+[Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding(936)
+
+# PowerShell 7+：推荐使用 UTF-8
+$OutputEncoding = [System.Text.Encoding]::UTF8
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+```
+
+**多行 / 复杂 commit message 方案（推荐）：**
+
+由于 PowerShell 对中文引号、换行符号敏感，推荐用临时文件 + `-F` 参数：
+
+```powershell
+$msg = @"
+feat(audit): 注册 audit:api 权限
+
+- 修改内容: 新增 audit:api (0806) 和 audit:api:query (080601) 权限
+- Issue 编号: #AUDIT-2026-0723
+- 是否影响数据库: 是
+"@
+
+# 写到临时文件，避免命令行转义问题
+$tmp = New-TemporaryFile
+[System.IO.File]::WriteAllText($tmp.FullName, $msg, [System.Text.Encoding]::UTF8)
+
+svn commit -F $tmp.FullName --encoding gbk
+Remove-Item $tmp
+```
+
+**完整提交命令模板：**
+
+```powershell
+svn commit `
+    -m "feat(audit): 注册 audit:api 权限
+
+- 修改内容: 新增 audit:api (0806) 和 audit:api:query (080601) 权限
+- Issue 编号: #AUDIT-2026-0723
+- 是否影响数据库: 是" `
+    --encoding gbk
+```
+
+✅ Correct:
+
+```bash
+# 指定 --encoding gbk，中文不乱码
+svn commit -m "fix(device): 修复设备离线状态不更新问题" --encoding gbk
+```
+
+❌ Wrong:
+
+```bash
+# 不指定 encoding，中文 commit message 乱码
+svn commit -m "fix(device): 修复设备离线状态不更新问题"
+
+# 用英文规避问题（治标不治本，不利于团队协作）
+svn commit -m "fix(device): fix device offline status not updated"
+```
+
+**常见乱码场景与处理：**
+
+| 场景 | 原因 | 解决 |
+|------|------|------|
+| commit message 乱码 | 未指定 `--encoding gbk` | 提交时加 `--encoding gbk` |
+| 文件名中文乱码 | 工作区编码与服务器不一致 | 统一使用 UTF-8 文件编码 |
+| PowerShell 输入中文乱码 | 控制台代码页非 936 | `chcp 936` |
+| TortoiseSVN 乱码 | 客户端编码设置错误 | 设置 → 常规 → UTF-8 |
+| 已提交的乱码 message | 历史已固化 | `svn propset --revprop svn:log` 修改历史 message |
+
+**修正历史乱码 message：**
+
+```bash
+# 修改指定版本的 commit message（需要服务器开启 pre-revprop-change hook）
+svn propset --revprop -r 1234 svn:log "fix(device): 修复设备离线状态不更新问题" https://svn.example.com/repo
+```
+
 ---
 
 ### R04 — 合并与冲突
