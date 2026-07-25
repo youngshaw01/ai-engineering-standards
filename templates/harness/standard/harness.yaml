@@ -1,0 +1,46 @@
+# Harness Governance Configuration
+# 本文件定义 .harness 的治理配置
+# 详见 ai-engineering-standards/11-AI-DevTools/Harness-Bootstrap.md
+
+version: "1.0"
+
+maturity: standard              # bootstrap | standard | enterprise
+
+project:
+  name: {{PROJECT_NAME}}
+  type: legacy                  # new | legacy
+  version_control: svn          # git | svn | git-svn
+
+workspace:
+  path: .harness/workspace/
+  task_id_pattern: '{date}_{type}-{feature}'
+  lifecycle:
+    current: .harness/workspace/current/
+    history: .harness/workspace/history/
+
+context:
+  strategy: layered             # layered | flat
+  layers_config: .harness/context/layers.yaml
+  budget:
+    target_fill_rate: 0.40      # 会话填充率目标 < 40%
+    principle: just_enough_context
+
+knowledge:
+  path: .harness/knowledge/
+  index: .harness/knowledge/README.md
+
+rules:
+  path: .harness/rules/
+  inherit_global: true          # 继承 ai-engineering-standards 全局规则
+
+global_standards:
+  source: ai-engineering-standards
+  inherit:
+    - safety
+    - coding
+    - api
+    - testing
+
+adapters:
+  enabled:
+    - trae                      # trae | cursor | claude | codex

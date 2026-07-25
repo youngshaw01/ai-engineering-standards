@@ -34,6 +34,15 @@ architecture:
 
 # Governance — Three-Layer Model (Global / Project / Adapter)
 governance:
+  harness:
+    required: true                          # 接入前置条件：必须建立 .harness/
+    version: "1.x"                          # Harness 规范版本
+    maturity: standard                      # bootstrap | standard | enterprise
+    path: .harness/
+    workspace:
+      path: .harness/workspace/
+      task_id_pattern: '{date}_{type}-{feature}'
+
   global_standards:
     source: ai-engineering-standards
     inherit:
@@ -45,7 +54,7 @@ governance:
   project_rules:
     source:
       type: local         # local | remote
-      path: .harness/     # .harness/ or custom path
+      path: .harness/rules/   # 项目规则在 .harness/rules/ 下
     priority:
       override: true      # Project rules override global standards
 

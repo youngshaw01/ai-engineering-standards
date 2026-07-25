@@ -161,3 +161,46 @@ TEST-002:
   layer: 0
   source: 08-Testing/TestStrategy.md
   severity: SHOULD
+
+# --- Harness (HARNESS) ---
+HARNESS-001:
+  name: Harness Bootstrap Prerequisite
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Harness-Bootstrap.md#R01
+  severity: MUST
+
+HARNESS-002:
+  name: AI Skill Workspace Attribution
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Harness-Bootstrap.md#R02
+  severity: MUST
+
+HARNESS-003:
+  name: Harness Maturity Level
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Harness-Bootstrap.md#R03
+  severity: SHOULD
+
+HARNESS-004:
+  name: Workspace Path Unification
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Harness-Bootstrap.md#R04
+  severity: MUST
+
+HARNESS-005:
+  name: Skill Knowledge Attribution
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Harness-Bootstrap.md#R05
+  severity: MUST
+
+HARNESS-006:
+  name: Legacy Project Non-Invasive Onboarding
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Harness-Bootstrap.md#R06
+  severity: MUST

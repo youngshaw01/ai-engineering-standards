@@ -1,0 +1,71 @@
+# Context Layers Configuration
+# 上下文分层加载策略 — 机器可读
+# 原则：Just-enough Context，会话填充率目标 < 40%
+
+version: "2.0"
+
+budget:
+  target_fill_rate: 0.40
+  principle: just_enough_context
+  anti_pattern: 禁止一次性加载全部 knowledge、全部 rules、全部 workspace
+
+layers:
+  L1:
+    name: 会话常驻层
+    trigger: always
+    action: load
+    description: AI 入口 + 核心规则，提供全局视野
+    paths:
+      - AGENTS.md
+      - rules/工程结构.md
+      - rules/项目编码规范.md
+    estimated_lines: 280
+    must_not_load:
+      - rules/detail/**
+      - rules/layers/**
+      - knowledge/**
+      - workspace/history/**
+
+  L2:
+    name: 阶段触发层
+    trigger: task_phase
+    action: load
+    description: 按开发阶段加载对应规则
+    phases:
+      coding:
+        paths:
+          - rules/layers/01-controller.md
+          - rules/layers/02-service.md
+          - rules/layers/03-dao.md
+        path_triggered:
+          java/**: rules/detail/java-conventions.md
+          web/**: rules/detail/web-conventions.md
+          sql/**: rules/detail/sql.md
+      code_review:
+        paths:
+          - rules/code-review-checklist.md
+      unit_test:
+        paths:
+          - rules/testing-conventions.md
+
+  L3:
+    name: 按需查询层
+    trigger: on_demand
+    action: query
+    description: AI 根据任务自主查阅，不主动预加载
+    paths:
+      knowledge:
+        root: knowledge/
+        index: knowledge/README.md
+        scenarios:
+          quick_start: [knowledge/架构.md, knowledge/领域术语.md]
+          business_dev: [knowledge/业务流程.md, knowledge/数据模型.md]
+          data_integration: [knowledge/数据模型.md, knowledge/接口协议.md]
+      workspace_history:
+        pattern: workspace/history/{task_id}/**
+
+transitions:
+  on_task_start: load L1 paths
+  on_phase_change: load L2 paths for phase; unload previous phase L2
+  on_path_edit: load matching path_triggered detail rule only
+  on_knowledge_need: query L3 knowledge by scenario; never bulk load knowledge/

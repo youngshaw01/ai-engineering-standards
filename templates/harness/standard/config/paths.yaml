@@ -1,0 +1,41 @@
+# Project Paths Configuration
+# 项目路径常量 — 供 AI 和工具脚本引用
+
+version: "1.0"
+
+project:
+  root: .
+  name: {{PROJECT_NAME}}
+
+source:
+  main:
+    java: src/main/java
+    resources: src/main/resources
+    webapp: src/main/webapp
+  test:
+    java: src/test/java
+    resources: src/test/resources
+
+build:
+  output: target
+  dependencies: pom.xml            # Maven | build.gradle
+
+docs:
+  human: docs/                     # 人类正式文档
+  api: docs/api/                   # API 文档
+  architecture: docs/architecture/
+
+ai:
+  harness: .harness/
+  standards: .standards/           # AI 接入声明（profile.yaml, rule-id.yaml）
+  workspace: .harness/workspace/
+  current_task: .harness/workspace/current/
+
+version_control:
+  type: svn                        # git | svn
+  trunk: trunk
+  branches: branches
+  tags: tags
+  ignore:
+    - .harness/workspace/history/  # 可选：忽略历史归档
+    - .standards/                  # 可选：忽略 AI 接入声明

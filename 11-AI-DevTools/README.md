@@ -7,6 +7,7 @@ AI-assisted development tool standards: Cursor, Trae, CodeArts, Claude Code, and
 | Document | Description |
 |----------|-------------|
 | [Common-Rules](Common-Rules.md) | **AI Engineering Rules Core Edition v2.0** — L0-L5 公共约束，所有 AI 工具共享 |
+| [Harness-Bootstrap](Harness-Bootstrap.md) | **Project AI Governance Workspace 规范** — .harness 接入前置、成熟度分级、workspace 归属 |
 | [Cursor-Rules](Cursor-Rules.md) | Cursor Rules 机制、项目规则结构、特有约定 |
 | [Trae-Rules](Trae-Rules.md) | Trae project rules, AI workflow configuration |
 | [CodeArts-Rules](CodeArts-Rules.md) | Huawei CodeArts rules, project configuration |

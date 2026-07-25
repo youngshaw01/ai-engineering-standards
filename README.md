@@ -14,6 +14,14 @@
 
 Key principle: **Standards are not bound to Git. Version control is just one part of engineering practice.**
 
+### 接入前置条件
+
+任何项目接入本标准库前，必须建立 `.harness/` 目录（至少 Bootstrap 成熟度）。
+
+`.harness` 是项目的 **AI Governance Workspace**——AI 在项目中的工作空间。
+
+详见 [Harness-Bootstrap.md](11-AI-DevTools/Harness-Bootstrap.md)。
+
 ---
 
 ## Three-Layer Governance Model
@@ -68,14 +76,16 @@ Adapter 无规则权力
 
 | 目录 | 职责 | 内容 |
 |------|------|------|
-| `.harness/` | 项目事实 | rules/、wiki/、workspace/、specs/、agents/ |
-| `.standards/` | AI 接入声明 | profile.yaml、skills.yaml、knowledge.yaml、rule-id.yaml |
+| `.harness/` | 项目运行时 | rules/、knowledge/、skills/、workspace/、context/、config/ |
+| `.standards/` | AI 接入声明 | profile.yaml、rule-id.yaml |
 
 ```
 project/
-├── .harness/              ← 项目事实（rules/wiki/workspace）
-└── .standards/            ← AI 接入声明（profile/skills/knowledge）
+├── .harness/              ← 项目运行时（rules/knowledge/skills/workspace）
+└── .standards/            ← AI 接入声明（profile/rule-id）
 ```
+
+**关键**：skills.yaml 和 knowledge/ 归入 `.harness/`，不放入 `.standards/`。`.standards/` 只保留 AI 接入声明。
 
 ### AI Tool Adapter 职责
 

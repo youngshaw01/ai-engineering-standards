@@ -475,6 +475,25 @@ throw new UnsupportedOperationException()
 
 不得直接修改大量代码。
 
+### .harness 前置检查
+
+AI 在项目首次执行任务前，必须检查 `.harness/` 是否存在：
+
+- **存在**：读取 `.harness/AGENTS.md` 了解项目入口，按规则工作
+- **不存在**：暂停任务，提示用户先初始化 `.harness/`（从 `templates/harness/bootstrap/` 复制）
+
+详见 [Harness-Bootstrap.md](Harness-Bootstrap.md)。
+
+### AI Skill 产物归属
+
+AI 使用 skill（superpowers、openspec、systematic-debugging 等）产出的计划、规格、调试记录，必须归入：
+
+```
+.harness/workspace/current/{task_id}/
+```
+
+禁止放入 `docs/` 或项目根目录。详见 [AI-Workflow.md](AI-Workflow.md) R06。
+
 ---
 
 ## 3.2 证据优先

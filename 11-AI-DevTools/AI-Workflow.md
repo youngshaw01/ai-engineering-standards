@@ -72,6 +72,69 @@ AI 辅助开发工作流规范，适用于 Cursor、Trae、Claude Code 等所有
 
 ---
 
+### R06 — AI Skill 产物归属
+
+**MUST** — 所有 AI skill（superpowers、executing-plans、openspec、systematic-debugging、TDD 等）产出的文件归入：
+
+```
+.harness/workspace/current/{task_id}/
+```
+
+**禁止放入**：
+
+- `docs/`（人类正式文档目录）
+- 项目根目录
+- `.cursor/rules/` / `.trae/rules/`（工具适配层，不存储内容）
+
+### task_id 命名规则
+
+```
+{date}_{type}-{feature}
+
+type: feat | fix | refactor | docs | test | chore
+
+示例：
+  20260724_feat-token-optimization
+  20260725_fix-svn-encoding
+```
+
+### 单任务产物结构
+
+```
+.harness/workspace/current/{task_id}/
+├── plan.md                ← 实现计划
+├── spec.md                ← 规格文档
+├── tasks.md               ← 任务清单
+├── checklist.md           ← 验证清单
+├── debug-log.md           ← 调试记录
+└── validation.md          ← 验证结果
+```
+
+### 生命周期
+
+```
+current/{task_id}/  →  完成后  →  history/{task_id}/
+```
+
+详见 [Harness-Bootstrap.md](Harness-Bootstrap.md)。
+
+---
+
+### R07 — .harness 接入前置
+
+**MUST** — 项目接入 `ai-engineering-standards` 前，必须建立 `.harness/` 目录（至少 Bootstrap 成熟度）。
+
+AI 检测到项目无 `.harness/` 时，应：
+
+1. 暂停任务执行
+2. 提示用户："本项目未建立 .harness，无法接入 ai-engineering-standards"
+3. 引导用户从 `templates/harness/bootstrap/` 初始化
+4. 完成初始化后继续任务
+
+详见 [Harness-Bootstrap.md](Harness-Bootstrap.md)。
+
+---
+
 ## Checklist
 
 - [ ] 复杂任务已分解为小步骤
@@ -79,3 +142,5 @@ AI 辅助开发工作流规范，适用于 Cursor、Trae、Claude Code 等所有
 - [ ] 关键决策点已人工确认
 - [ ] AI 输出已验证
 - [ ] 上下文窗口有效利用
+- [ ] AI skill 产物已归入 `.harness/workspace/{task_id}/`
+- [ ] 项目已建立 `.harness/`（至少 Bootstrap 成熟度）
