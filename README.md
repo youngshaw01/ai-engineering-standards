@@ -153,7 +153,7 @@ AI 必须遵守（详见 source）
 | 08 | **Testing** | Strategy, Unit, Integration, API, E2E | [→](08-Testing/) |
 | 09 | **DevOps** | Docker, Kubernetes, CI/CD, Nginx, Linux, Monitoring | [→](09-DevOps/) |
 | 10 | **Product** | PRD, SaaS, Tech Writing | [→](10-Product/) |
-| 11 | **AI DevTools** | Common Rules, Cursor Rules, Trae Rules, AI Workflow, MCP Server | [→](11-AI-DevTools/) |
+| 11 | **AI DevTools** | Common Rules, Cursor Rules, Trae Rules, AI Workflow, Token Optimization, MCP Server | [→](11-AI-DevTools/) |
 
 ---
 
