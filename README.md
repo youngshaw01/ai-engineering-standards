@@ -136,15 +136,36 @@ AI 必须遵守（详见 source）
         │           │           │
      Rules       Skills     Knowledge
         │           │           │
-   约束行为     扩展能力     提供知识
+   约束行为     提供能力     提供知识
    "不能做"     "会做"       "知道"
 ```
 
 | Layer | Question | Content | Location |
 |-------|----------|---------|----------|
 | **Rules** | AI 能不能做？ | 安全护栏、编码规范、版本控制规则 | 各章节文档 |
-| **Skills** | AI 会什么？ | TDD、调试、代码审查、架构设计 | `templates/skills.yaml` |
-| **Knowledge** | AI 知道什么？ | 架构文档、数据库设计、API 契约 | `templates/knowledge.yaml` |
+| **Skills** | AI 会什么？ | TDD、调试、代码审查、架构设计 | `.harness/skills/`（项目级） |
+| **Knowledge** | AI 知道什么？ | 架构文档、数据库设计、API 契约 | `.harness/knowledge/`（项目级） |
+
+### Skill 治理原则
+
+> **Skill 是可选能力，不是规则来源。**
+
+- Skill 不得定义约束，不得替代 Rule
+- Skill 必须经过项目验证后启用，禁止全局自动安装
+- Skill 不得覆盖 Rule——Rule 优先级永远高于 Skill
+- Skill 不自动接管——`auto_execute: false` 是默认值
+
+```
+Skill Resolution Priority:
+
+1. 项目安全规则（SEC-001, SEC-002...）
+2. 工程标准（ENG-001, CODE-001...）
+3. 项目流程（VCS-002, DB-002...）
+4. Skill 建议（java-review, grill-me...）
+5. AI 默认行为
+```
+
+详见 [Skill-Governance.md](11-AI-DevTools/Skill-Governance.md)。
 
 ---
 

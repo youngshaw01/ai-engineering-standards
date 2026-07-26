@@ -75,7 +75,12 @@ AI Agent
 │
 ├── rules/                 ← 项目规则（Layer 1）
 ├── knowledge/             ← 项目知识
-├── skills/                ← AI 能力声明
+├── skills/                ← AI 能力（可选，详见 Skill-Governance.md）
+│   ├── skills.yaml        ← Skill 注册表
+│   ├── workflow/          ← AI 工作方法论（superpowers-zh、grill-me）
+│   ├── engineering/       ← 工程能力（java-review、api-testing）
+│   ├── domain/            ← 领域能力（telecom、finance）
+│   └── operations/        ← 运维能力（docker、kubernetes）
 ├── workspace/             ← AI 工作记录
 │   ├── current/{task_id}/
 │   └── history/{task_id}/
@@ -91,7 +96,7 @@ AI Agent
 | `harness.yaml` | 治理配置 | maturity、workspace path、task_id pattern |
 | `rules/` | 项目规则 | 编码规范、工程结构、版本控制约束 |
 | `knowledge/` | 项目知识 | 架构文档、业务流程、数据模型、领域术语 |
-| `skills/` | AI 能力 | skills.yaml——声明项目启用的 AI skill |
+| `skills/` | AI 能力（可选） | skills.yaml + 分类 Skill（workflow/engineering/domain/operations） |
 | `workspace/` | 工作记录 | plan.md、spec.md、tasks.md、debug-log.md |
 | `context/` | 上下文分层 | layers.yaml——L1 常驻 / L2 阶段 / L3 按需 |
 | `config/` | 项目配置 | paths.yaml、mcp servers 等 |
@@ -245,7 +250,11 @@ current/{task_id}/  →  完成后  →  history/{task_id}/
 ```
 .harness/
 ├── skills/
-│   └── skills.yaml        ← AI 能力声明
+│   ├── skills.yaml        ← Skill 注册表（治理配置）
+│   ├── workflow/           ← AI 工作方法论
+│   ├── engineering/        ← 工程能力
+│   ├── domain/             ← 领域能力
+│   └── operations/         ← 运维能力
 ├── knowledge/
 │   ├── README.md          ← 知识索引
 │   ├── 架构.md
@@ -255,6 +264,15 @@ current/{task_id}/  →  完成后  →  history/{task_id}/
 ```
 
 **不放 `.standards/`**——Skill 和 Knowledge 是项目运行时能力，不是标准。
+
+### Skill 治理原则
+
+1. **Skill 是可选能力，不是规则来源**——Skill 不得定义约束
+2. **Skill 必须经过项目验证后启用**——禁止全局自动安装
+3. **Skill 不得覆盖 Rule**——Rule 优先级永远高于 Skill
+4. **Skill 不自动接管**——`auto_execute: false` 是默认值
+
+详见 [Skill-Governance.md](Skill-Governance.md)。
 
 ### .standards/ 只保留 AI 接入声明
 
@@ -388,6 +406,12 @@ Global Standards
 ### R06 — 老项目接入不改代码
 
 **MUST** — 老项目（SVN/Git）接入时，只创建 `.harness/`，不修改业务代码。AI 扫描生成的 knowledge/context/rules 必须经人工确认。
+
+### R07 — Skill 不得覆盖 Rule
+
+**MUST** — Skill 是可选能力模块，不是规则来源。当 Skill 建议与 Rule 冲突时，Rule 优先。AI 不得因为 Skill 指令绕过安全规则、工程标准或项目流程。
+
+详见 [Skill-Governance.md](Skill-Governance.md)。
 
 ---
 

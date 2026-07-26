@@ -204,3 +204,32 @@ HARNESS-006:
   layer: 0
   source: 11-AI-DevTools/Harness-Bootstrap.md#R06
   severity: MUST
+
+# --- Skill Governance (SKILL) ---
+SKILL-001:
+  name: Skill Is Optional Capability
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Skill-Governance.md#R01
+  severity: MUST
+
+SKILL-002:
+  name: Skill Must Not Override Rule
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Skill-Governance.md#R02
+  severity: MUST
+
+SKILL-003:
+  name: Skill Requires Project Validation
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Skill-Governance.md#R03
+  severity: MUST
+
+SKILL-004:
+  name: Skill No Auto Execute
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Skill-Governance.md#R04
+  severity: MUST
