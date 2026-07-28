@@ -193,14 +193,47 @@ skills:
 
 | 维度 | 说明 |
 |------|------|
-| 定位 | 方案挑战、架构评审、反向质疑 |
-| 能力 | 分析目标、寻找假设、挑战设计、提出风险、给替代方案 |
-| 分类 | workflow / review |
-| 推荐范围 | 架构设计、PRD、重大改造、数据库设计、安全方案 |
-| 不适用 | 普通编码（如修改 UserService.java） |
-| trigger | manual（手动触发，不自动执行） |
+| 定位 | 交互式 AI 拷问工具——AI 主动连珠炮式提问，倒逼用户把方案想清楚 |
+| 能力 | 深度追问模式、一次只问一个、多场景适配、轻量启动 |
+| 分类 | productivity（user-invoked） |
+| 来源 | [mattpocock/skills](https://github.com/mattpocock/skills) — `skills/productivity/grill-me/SKILL.md` |
+| 安装 | `npx skills@latest add mattpocock/skills`，选择 `grill-me` |
+| Author | Matt Pocock |
+| License | MIT |
+| 推荐范围 | 架构设计、PRD、重大改造、数据库设计、安全方案、方案审查、决策树审查 |
+| 不适用 | 普通编码（如修改 UserService.java）、简单修改、需要"告诉我怎么做"的场景 |
+| trigger | manual（用户手动调用 `/grill-me`，不自动执行） |
+| invoked_by | user（user-invoked skill） |
 
 **关键**：Grill Me 不应该参与普通编码，否则效率下降。
+
+### grill-with-docs（工程版）
+
+Grill Me 的工程增强版，除拷问外还：
+
+- 构建项目领域模型（`CONTEXT.md`）
+- 建立 ADR（Architecture Decision Records）
+- 锐化术语（Ubiquitous Language）
+
+来源：`skills/engineering/grill-with-docs/SKILL.md`
+
+适用：需要同时梳理领域语言和架构决策的项目。
+
+### mattpocock/skills 仓库其他 Skill
+
+| Skill | 分类 | invoked_by | 用途 |
+|-------|------|-----------|------|
+| `tdd` | engineering | model | 红绿重构循环，TDD 开发 |
+| `diagnosing-bugs` | engineering | model | 纪律化调试循环：复现 → 缩小 → 假设 → 修复 → 回归测试 |
+| `domain-modeling` | engineering | model | 构建领域模型，锐化术语 |
+| `codebase-design` | engineering | model | 深模块设计：大量行为 + 小接口 |
+| `improve-codebase-architecture` | engineering | user | 扫描代码库架构改进机会 |
+| `to-prd` | engineering | user | 将对话合成为 PRD |
+| `to-issues` | engineering | user | 将计划/PRD 拆分为可独立抓取的 issue |
+| `triage` | engineering | user | 将 issue 推进到下一个状态 |
+| `handoff` | productivity | user | 压缩对话为交接文档 |
+
+**注意**：以上 Skill 均来自同一仓库，按需选择，不要全部安装。
 
 ---
 
