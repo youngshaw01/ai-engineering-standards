@@ -13,4 +13,4 @@ AI engineering standards: from agent architecture to evaluation.
 | [Workflow](Workflow.md) | AI workflow orchestration, DAG, human-in-the-loop |
 | [FineTuning](FineTuning.md) | Dataset preparation, training config, evaluation, deployment |
 | [Evaluation](Evaluation.md) | Benchmark, metrics, A/B testing, safety evaluation |
-| [Skill Governance](Skill-Governance.md) | AI Skill lifecycle, permission model, security governance |
+| [Skill Governance](Skill-Governance.md) | → [11-AI-DevTools/Skill-Governance.md](../11-AI-DevTools/Skill-Governance.md)（Harness 规范） |

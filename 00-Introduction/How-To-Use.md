@@ -62,67 +62,17 @@ cp -r templates/harness/bootstrap/. your-project/.harness/
 
 ---
 
-## 传统 profile.yaml 接入（兼容）
+## profile.yaml 与 exceptions
 
-以下内容为 profile.yaml 驱动的接入方式，与 Harness-first 流程并存。
+Harness 目录接入见上文 **Harness-first 快速开始**。
 
----
+| 文件 | 用途 | 模板 |
+|------|------|------|
+| `.standards/profile.yaml` | 技术栈、规则继承、Harness 成熟度 | `templates/project-profile.yaml` |
+| `.standards/exceptions.yaml` | 老项目已知偏差登记 | `templates/exceptions.yaml` |
+| `.standards/rule-id.yaml` | Rule ID 注册表 | `templates/rule-id.yaml` |
 
-## 快速开始
-
-### 新项目
-
-```bash
-# 1. 复制模板
-cp templates/project-profile.yaml your-project/.standards/profile.yaml
-cp templates/exceptions.yaml your-project/.standards/exceptions.yaml
-cp templates/harness/standard/skills/skills.yaml your-project/.harness/skills/skills.yaml
-cp templates/knowledge.yaml your-project/.standards/knowledge.yaml
-
-# 2. 编辑 profile.yaml，声明你的技术栈
-#    type: new
-#    technology: { backend: [java], database: [mysql] }
-
-# 3. 编辑 skills.yaml，启用需要的 AI 技能
-#    enabled: [superpowers-zh]
-
-# 4. 编写 Knowledge 文档到 .harness/knowledge/
-#    新项目：同步编写 architecture.md / api.md / database.md
-
-# 5. 将 AI Rules 文件链接到项目
-#    根据你的 AI 工具选择：
-#    - Cursor: 复制 .cursor/rules/*.md 到项目根目录或 .cursor/rules/
-#    - Trae: 复制 AI_RULES.md 到项目根目录
-#    - Claude Code: 复制 .claude/rules/*.md 到项目根目录
-
-# 6. 开始开发 — AI 会自动应用对应规则
-```
-
-### 老项目
-
-```bash
-# 1. 复制模板
-cp templates/project-profile.yaml your-project/.standards/profile.yaml
-cp templates/exceptions.yaml your-project/.standards/exceptions.yaml
-cp templates/harness/standard/skills/skills.yaml your-project/.harness/skills/skills.yaml
-cp templates/knowledge.yaml your-project/.standards/knowledge.yaml
-
-# 2. 编辑 profile.yaml
-#    type: legacy
-#    rules.include: 只包含你当前能执行的规则
-
-# 3. 在 exceptions.yaml 中记录已知的例外情况
-
-# 4. 执行 Knowledge Extraction（老项目第一步！）
-#    让 AI 扫描代码，生成：
-#    .harness/knowledge/架构.md
-#    .harness/knowledge/数据模型.md
-#    .harness/knowledge/接口协议.md
-#    人工确认后标记 knowledge.yaml 中 extraction.completed: true
-
-# 5. 遵循 Boy Scout Rule：
-#    新代码必须符合标准，旧代码逐步治理
-```
+Knowledge 与 Skill 不在 `.standards/`，分别维护于 `.harness/knowledge/` 与 `.harness/skills/skills.yaml`。
 
 ---
 
@@ -288,17 +238,17 @@ SVN 老项目使用 AI 的最大风险不是提交，而是 **AI 大范围修改
 ```
 项目启动
     ↓
-AI 工具读取 .standards/profile.yaml
+AI 读取 .harness/AGENTS.md + .standards/profile.yaml
     ↓
-根据 rules.include 加载对应章节的规则（Rules 层）
+按 profile 继承全局规则 + 加载 .harness/rules/（Rules 层）
     ↓
-根据 skills.yaml 加载启用的 AI 技能（Skills 层）
+按 .harness/skills/skills.yaml 加载 Skill（Skills 层）
     ↓
-根据 knowledge.yaml 加载项目知识文档（Knowledge 层）
+按 .harness/knowledge/ 按需查询（Knowledge 层）
     ↓
 开发者编写代码 → AI 自动应用规则
     ↓
-提交代码 → AI 用 Checklist 自检
+产物归入 .harness/workspace/{task_id}/
 ```
 
 ### 各工具配置方式
@@ -371,21 +321,9 @@ your-project/
 
 ## 最小可落地版本
 
-Phase 1 只需要三样东西：
+**标准库侧**：按章节组织（`00-Introduction/` … `11-AI-DevTools/`），模板在 `templates/`。
 
-```
-ai-engineering-standards/
-├── core/              ← 安全 + Git + AI 工作规则
-├── engineering/       ← 后端 + API + 数据库
-├── languages/         ← Java / Python / ...
-├── templates/
-│   ├── project-profile.yaml   ← 项目画像模板
-│   └── exceptions.yaml        ← 例外声明模板
-└── docs/
-    └── How-To-Use.md          ← 本文档
-```
-
-**项目侧只需要：**
+**项目侧**：
 
 ```
 your-project/
@@ -426,7 +364,7 @@ A: 看 `profile.yaml` 中的 `rules.include`：
 
 ### Q: 可以自定义规则吗？
 
-A: 可以。在项目的 `.standards/` 目录下添加自定义规则文件，AI 工具会同时加载标准库规则和你的项目级规则。项目级规则优先级更高。
+A: 可以。在项目的 `.harness/rules/` 目录下添加自定义规则，AI 工具通过 Rule ID 引用。项目级规则优先级高于全局标准。
 
 ### Q: 如何处理与团队现有规范的冲突？
 

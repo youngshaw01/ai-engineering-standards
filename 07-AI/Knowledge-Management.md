@@ -23,7 +23,8 @@
 #### ✅ Correct
 
 ```yaml
-# .standards/knowledge.yaml
+# 知识索引 — .harness/knowledge/README.md
+# 各文档见 .harness/knowledge/*.md
 packs:
   - name: architecture
     description: "系统架构概览"
@@ -67,7 +68,7 @@ packs:
 
 **SHOULD** 每类知识不超过 4KB，超出时拆分子文档。
 
-**MAY** 根据项目特点扩展新类别，需在 `knowledge.yaml` 中声明。
+**MAY** 根据项目特点扩展新类别，需在 `knowledge/README.md` 索引中声明。
 
 #### ✅ Correct
 
@@ -201,17 +202,18 @@ id, email, created_at, ...  # 不完整
 │       ├── security.md
 │       └── history.md
 └── .standards/
-    └── knowledge.yaml    # 知识包元数据
+    └── README.md         # 知识索引
 ```
 
-**SHOULD** `knowledge.yaml` 与目录结构一一对应。
+**SHOULD** `knowledge/README.md` 与目录结构一一对应。
 
 **MAY** 大型项目可按子系统分目录，如 `.harness/knowledge/payment/`。
 
 #### ✅ Correct
 
 ```yaml
-# .standards/knowledge.yaml
+# 知识索引 — .harness/knowledge/README.md
+# 各文档见 .harness/knowledge/*.md
 version: 1.0
 packs:
   - id: architecture
@@ -228,7 +230,7 @@ packs:
 #### ❌ Wrong
 
 ```yaml
-# knowledge.yaml 与实际文件不匹配
+# knowledge/README.md 索引与实际文件不匹配
 packs:
   - id: api
     file: docs/api.md  # 实际不存在
@@ -369,7 +371,7 @@ $ git commit -am "add phone field"
 - [ ] 创建对应 Markdown 文件于 `.harness/knowledge/`
 - [ ] 编写内容，确保 ≤ 4KB
 - [ ] 添加代码示例和源码链接
-- [ ] 更新 `.standards/knowledge.yaml`
+- [ ] 更新 `.harness/knowledge/README.md` 索引
 - [ ] 人工审查并确认
 
 ### 老项目 Knowledge 提取

@@ -180,11 +180,11 @@ Skill Resolution Priority:
 | 04 | **Frontend** | TypeScript, React, CSS | [→](04-Frontend/) |
 | 05 | **Backend** | API, Security, Audit, RBAC, Database, Redis, MQ | [→](05-Backend/) |
 | 06 | **Architecture** | DDD, Microservice, Event-Driven, CQRS, System Design | [→](06-Architecture/) |
-| 07 | **AI** | Agent, MCP, Prompt, RAG, Workflow, FineTuning, Evaluation, Skill Governance, Knowledge Management | [→](07-AI/) |
+| 07 | **AI** | Agent, MCP, Prompt, RAG, Workflow, FineTuning, Evaluation, Knowledge Management | [→](07-AI/) |
 | 08 | **Testing** | Strategy, Unit, Integration, API, E2E | [→](08-Testing/) |
 | 09 | **DevOps** | Docker, Kubernetes, CI/CD, Nginx, Linux, Monitoring | [→](09-DevOps/) |
 | 10 | **Product** | PRD, SaaS, Tech Writing | [→](10-Product/) |
-| 11 | **AI DevTools** | Common Rules, Cursor Rules, Trae Rules, AI Workflow, Token Optimization, MCP Server | [→](11-AI-DevTools/) |
+| 11 | **AI DevTools** | Common Rules, Harness, Skill Governance, Cursor/Trae Rules, AI Workflow | [→](11-AI-DevTools/) |
 
 ---
 

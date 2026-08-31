@@ -29,9 +29,9 @@ templates:
     enterprise: templates/harness/enterprise/
   profile: templates/project-profile.yaml
   rule_id: templates/rule-id.yaml
-  skills: templates/skills.yaml
-  knowledge: templates/knowledge.yaml
   exceptions: templates/exceptions.yaml
+  harness_skills: templates/harness/standard/skills/skills.yaml
+  harness_governance: templates/harness/standard/governance/
 
 examples:
   root: examples/
