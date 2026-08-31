@@ -1,0 +1,94 @@
+# Project Lifecycle Configuration
+# 复制到：.harness/governance/lifecycle.yaml
+# 详见：01-Engineering/Project-Lifecycle-Governance.md
+
+version: "1.0"
+
+project:
+  name: {{PROJECT_NAME}}
+  type: {{new | legacy}}
+  maturity: standard
+
+phases:
+  - id: requirements
+    name: 需求
+    gate_exit: R1
+    artifacts:
+      - workspace/current/{task_id}/spec.md
+    references:
+      - 10-Product/PRD.md
+
+  - id: design
+    name: 设计
+    gate_exit: D1
+    gate_regression: D-R
+    artifacts:
+      - workspace/current/{task_id}/spec.md
+    references:
+      - 06-Architecture/
+      - 05-Backend/API.md
+
+  - id: development
+    name: 开发
+    gate_exit: DEV1
+    gate_regression: DEV-R
+    environment: [local, dev]
+    artifacts:
+      - workspace/current/{task_id}/plan.md
+      - workspace/current/{task_id}/tasks.md
+    references:
+      - 11-AI-DevTools/AI-Workflow.md
+
+  - id: test
+    name: 测试
+    gate_exit: T1
+    gate_regression: T-R
+    environment: [test, ci]
+    regression_levels: [L1, L2, L3]
+    references:
+      - 08-Testing/TestStrategy.md
+
+  - id: deploy
+    name: 部署
+    gate_exit_staging: DEP-S
+    gate_exit_production: DEP-P
+    gate_regression: DEP-R
+    environment: [staging, production]
+    production_approval: required
+    references:
+      - 09-DevOps/CI-CD.md
+
+  - id: deliver
+    name: 交付
+    gate_exit: DL1
+    gate_regression: DL-R
+    artifacts:
+      - workspace/history/{task_id}/validation.md
+
+  - id: operate
+    name: 运营
+    continuous: true
+    references:
+      - 09-DevOps/Monitoring.md
+
+environments:
+  promotion_path: [local, dev, test, staging, production]
+  rules:
+    - no_skip_promotion
+    - production_requires_manual_approval
+    - staging_prod_parity
+
+regression:
+  levels:
+    L1: { scope: unit, max_duration_min: 5 }
+    L2: { scope: integration, max_duration_min: 15 }
+    L3: { scope: business_e2e, max_duration_min: 30 }
+    L4: { scope: full, trigger: major_release }
+    L5: { scope: production_smoke, max_duration_min: 15, trigger: post_deploy }
+
+ai_boundaries:
+  forbidden_without_approval:
+    - production_deploy
+    - production_config_change
+    - auto_commit_push
+    - schema_change

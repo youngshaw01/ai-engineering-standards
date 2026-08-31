@@ -58,6 +58,8 @@ cp -r templates/harness/bootstrap/. your-project/.harness/
 
 详见 [Harness-Bootstrap.md](../11-AI-DevTools/Harness-Bootstrap.md)。
 
+项目全生命周期（需求→开发→测试→部署→交付）及老项目改造路径，详见 [Project-Lifecycle-Governance.md](../01-Engineering/Project-Lifecycle-Governance.md)。
+
 ---
 
 ## 传统 profile.yaml 接入（兼容）

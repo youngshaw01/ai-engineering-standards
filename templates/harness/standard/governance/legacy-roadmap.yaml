@@ -1,0 +1,93 @@
+# Legacy Project Migration Roadmap
+# 复制到：.harness/governance/legacy-roadmap.yaml
+# 详见：01-Engineering/Project-Lifecycle-Governance.md#legacy-migration-roadmap
+
+version: "1.0"
+
+project:
+  name: {{PROJECT_NAME}}
+  type: legacy
+  version_control: {{git | svn | git-svn}}
+
+stages:
+  - id: stage_0_business
+    name: 业务梳理
+    duration: 1-2 weeks
+    invasive: false
+    deliverables:
+      - knowledge/架构.md
+      - knowledge/业务流程.md
+      - knowledge/数据模型.md
+      - knowledge/领域术语.md
+      - .standards/exceptions.yaml
+    exit_criteria:
+      - business_docs_human_verified
+      - extraction_completed: true
+
+  - id: stage_1_bootstrap
+    name: Harness Bootstrap
+    duration: 1 day
+    invasive: false
+    deliverables:
+      - .harness/AGENTS.md
+      - .harness/rules/README.md
+      - .harness/workspace/
+    exit_criteria:
+      - harness_bootstrap_complete
+
+  - id: stage_2_knowledge_rules
+    name: 知识与规则沉淀
+    duration: 1-2 weeks
+    invasive: false
+    deliverables:
+      - .harness/knowledge/
+      - .harness/rules/
+      - .harness/context/layers.yaml
+      - .harness/harness.yaml
+    exit_criteria:
+      - harness_maturity: standard
+      - ai_generated_content_verified
+
+  - id: stage_3_boy_scout
+    name: Boy Scout 渐进治理
+    duration: ongoing
+    invasive: partial
+    priorities:
+      P0: { focus: security, action: fix_immediately }
+      P1: { focus: core_paths_without_tests, action: add_tests }
+      P2: { focus: new_code, action: enforce_standards }
+      P3: { focus: historical_debt, action: fix_1_2_per_sprint }
+    rules:
+      - new_code_must_comply
+      - no_mass_refactor_without_plan
+
+  - id: stage_4_quality_gates
+    name: 质量门禁接入
+    duration: 2-4 weeks
+    deliverables:
+      - .harness/governance/gates.yaml
+      - ci_pipeline
+      - staging_environment
+    exit_criteria:
+      - pre_merge_gate_active
+      - staging_regression_active
+
+  - id: stage_5_optional
+    name: 可选升级
+    duration: as_needed
+    options:
+      - id: vcs_migration
+        trigger: organizational_decision
+        reference: 01-Engineering/SVN.md#R08
+      - id: enterprise_harness
+        trigger: multi_agent_or_audit_required
+        reference: 11-AI-DevTools/Harness-Bootstrap.md
+      - id: architecture_refactor
+        trigger: structural_issues_from_stage_0
+        note: 独立项目，走完整生命周期 Phase 1-7
+
+tracking:
+  current_stage: stage_0_business
+  started_at: {{DATE}}
+  owner: {{OWNER}}
+  next_review: {{DATE}}

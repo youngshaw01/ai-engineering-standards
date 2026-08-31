@@ -174,7 +174,7 @@ Skill Resolution Priority:
 | # | Chapter | Description | Docs |
 |---|---------|-------------|------|
 | 00 | **Introduction** | How to use, glossary, governance model | [→](00-Introduction/) |
-| 01 | **Engineering** | Git, SVN, Code Review, Project Structure, Dependencies | [→](01-Engineering/) |
+| 01 | **Engineering** | Git, SVN, Code Review, Project Structure, Lifecycle Governance, Dependencies | [→](01-Engineering/) |
 | 02 | **Java** | Java 17, Spring Boot, MyBatis, Maven | [→](02-Java/) |
 | 03 | **Python** | Python 3, FastAPI, Pytest | [→](03-Python/) |
 | 04 | **Frontend** | TypeScript, React, CSS | [→](04-Frontend/) |

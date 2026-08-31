@@ -88,6 +88,8 @@ AI Agent
 └── config/                ← 项目配置
 ```
 
+项目全生命周期治理（需求→交付、环境晋升、反向回归、老项目改造），详见 [Project-Lifecycle-Governance.md](../01-Engineering/Project-Lifecycle-Governance.md)。
+
 ### 各目录职责
 
 | 目录 | 职责 | 内容示例 |
@@ -100,6 +102,7 @@ AI Agent
 | `workspace/` | 工作记录 | plan.md、spec.md、tasks.md、debug-log.md |
 | `context/` | 上下文分层 | layers.yaml——L1 常驻 / L2 阶段 / L3 按需 |
 | `config/` | 项目配置 | paths.yaml、mcp servers 等 |
+| `governance/` | 生命周期与门禁 | lifecycle.yaml、gates.yaml、legacy-roadmap.yaml |
 
 ### 关键调整：workspace 上提
 
@@ -430,6 +433,7 @@ Global Standards
 - [ ] 已创建 `knowledge/`（至少含 README.md 索引）
 - [ ] 已创建 `context/layers.yaml`（上下文分层）
 - [ ] 已创建 `config/paths.yaml`（路径配置）
+- [ ] 已创建 `governance/`（生命周期与门禁，见 [Project-Lifecycle-Governance.md](../01-Engineering/Project-Lifecycle-Governance.md)）
 
 ### Enterprise 升级
 
