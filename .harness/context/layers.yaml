@@ -1,0 +1,73 @@
+# Context Layers Configuration
+# ai-engineering-standards 上下文分层加载策略
+# 原则：Just-enough Context，会话填充率目标 < 40%
+
+version: "2.0"
+
+budget:
+  target_fill_rate: 0.40
+  principle: just_enough_context
+  anti_pattern: 禁止一次性加载全部章节、全部 templates、全部 workspace/history
+
+layers:
+  L1:
+    name: 会话常驻层
+    trigger: always
+    action: load
+    description: AI 入口 + 标准维护规则
+    paths:
+      - AGENTS.md
+      - rules/standards-maintenance.md
+    estimated_lines: 200
+    must_not_load:
+      - workspace/history/**
+      - knowledge/**
+
+  L2:
+    name: 阶段触发层
+    trigger: task_phase
+    action: load
+    description: 按任务类型加载对应章节或模板
+    phases:
+      harness:
+        paths:
+          - ../11-AI-DevTools/Harness-Bootstrap.md
+          - ../templates/harness/standard/README.md
+      skill_governance:
+        paths:
+          - ../11-AI-DevTools/Skill-Governance.md
+      ai_devtools:
+        paths:
+          - ../11-AI-DevTools/Common-Rules.md
+      chapter_edit:
+        path_triggered:
+          ../01-Engineering/**: ../01-Engineering/README.md
+          ../02-Java/**: ../02-Java/README.md
+          ../11-AI-DevTools/**: ../11-AI-DevTools/README.md
+
+  L3:
+    name: 按需查询层
+    trigger: on_demand
+    action: query
+    description: AI 根据任务自主查阅
+    paths:
+      knowledge:
+        root: knowledge/
+        index: knowledge/README.md
+        scenarios:
+          repo_structure: [knowledge/架构.md]
+          governance: [knowledge/治理模型.md]
+      templates:
+        root: ../templates/
+        scenarios:
+          harness_bootstrap: [../templates/harness/bootstrap/README.md]
+          harness_standard: [../templates/harness/standard/README.md]
+          harness_enterprise: [../templates/harness/enterprise/README.md]
+      workspace_history:
+        pattern: workspace/history/{task_id}/**
+
+transitions:
+  on_task_start: load L1 paths
+  on_phase_change: load L2 paths for phase; unload previous phase L2
+  on_path_edit: load matching path_triggered chapter README only
+  on_knowledge_need: query L3 knowledge by scenario

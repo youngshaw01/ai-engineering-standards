@@ -1,6 +1,8 @@
 # Skills Profile
-# Copy this file to your project as .standards/skills.yaml
-# Declare which AI skills are enabled for this project.
+# 已迁移至 .harness/skills/skills.yaml
+# 本文件保留用于向后兼容，新项目请使用 templates/harness/standard/skills/skills.yaml
+#
+# Copy to: .harness/skills/skills.yaml
 
 # Enabled skills — AI will load these capabilities
 enabled:

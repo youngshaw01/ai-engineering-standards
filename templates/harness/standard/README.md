@@ -32,6 +32,8 @@ cp -r templates/harness/standard/. /path/to/your-project/.harness/
 │   └── README.md                  ← 规则占位（待补充）
 ├── knowledge/
 │   └── README.md                  ← 知识索引（待补充）
+├── skills/
+│   └── skills.yaml                ← Skill 注册表（可选）
 ├── workspace/
 │   ├── current/
 │   │   └── README.md
@@ -51,6 +53,7 @@ cp -r templates/harness/standard/. /path/to/your-project/.harness/
 |---------|------|
 | `harness.yaml` | 治理配置（maturity、workspace、context 策略） |
 | `knowledge/` | 项目知识库（架构、业务流程、数据模型） |
+| `skills/skills.yaml` | Skill 注册表（可选，详见 Skill-Governance.md） |
 | `context/layers.yaml` | 上下文分层加载（L1 常驻 / L2 阶段 / L3 按需） |
 | `config/paths.yaml` | 项目路径常量 |
 

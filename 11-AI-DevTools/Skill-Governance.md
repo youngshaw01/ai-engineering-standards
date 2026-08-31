@@ -373,7 +373,7 @@ excluded:
 
 ### Skill 登记
 
-- [ ] 已写入 `.harness/skills.yaml`
+- [ ] 已写入 `.harness/skills/skills.yaml`
 - [ ] 已设置 `auto_execute: false`
 - [ ] 已明确 scope（适用范围）
 - [ ] 已获得审批（如 require_approval: true）

@@ -99,7 +99,7 @@ Source: ai-engineering-standards/11-AI-DevTools/Common-Rules.md
 AI 必须遵守（详见 source）
 
 ## VCS-001: SVN Commit Policy
-Source: .harness/project/rules/svn.md
+Source: .harness/rules/svn.md
 AI 必须遵守（详见 source）
 ```
 
@@ -194,18 +194,12 @@ Skill Resolution Priority:
 ai-engineering-standards/
 ├── 00-Introduction/
 ├── 01-Engineering/
-├── 02-Java/
-├── 03-Python/
-├── 04-Frontend/
-├── 05-Backend/
-├── 06-Architecture/
-├── 07-AI/
-├── 08-Testing/
-├── 09-DevOps/
-├── 10-Product/
+├── ...
 ├── 11-AI-DevTools/
-├── templates/          # Ready-to-use templates (profile.yaml, skills.yaml, etc.)
-└── examples/          # Code examples
+├── templates/          # Ready-to-use templates (Harness, profile, rule-id)
+├── examples/         # Code examples
+├── .harness/         # 本仓库 AI 工作空间（Standard 成熟度实例）
+└── .standards/       # AI 接入声明（profile.yaml, rule-id.yaml）
 ```
 
 ---

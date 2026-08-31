@@ -27,13 +27,13 @@
 packs:
   - name: architecture
     description: "系统架构概览"
-    file: docs/ai-knowledge/architecture.md
+    file: .harness/knowledge/architecture.md
     size: 3.2KB
     load_trigger: ["architecture", "design", "refactor"]
 
   - name: database
     description: "数据库表结构与关系"
-    file: docs/ai-knowledge/database.md
+    file: .harness/knowledge/database.md
     size: 2.8KB
     load_trigger: ["database", "sql", "query", "migration"]
 ```
@@ -72,7 +72,7 @@ packs:
 #### ✅ Correct
 
 ```
-docs/ai-knowledge/
+.harness/knowledge/
 ├── architecture.md      # 3.1KB
 ├── database.md          # 2.9KB
 ├── api.md               # 3.5KB
@@ -85,7 +85,7 @@ docs/ai-knowledge/
 #### ❌ Wrong
 
 ```
-docs/ai-knowledge/
+.harness/knowledge/
 ├── everything.md        # 50KB，无法针对性加载
 └── notes/               # 散乱笔记，无结构
 ```
@@ -206,7 +206,7 @@ id, email, created_at, ...  # 不完整
 
 **SHOULD** `knowledge.yaml` 与目录结构一一对应。
 
-**MAY** 大型项目可按子系统分目录，如 `docs/ai-knowledge/payment/`。
+**MAY** 大型项目可按子系统分目录，如 `.harness/knowledge/payment/`。
 
 #### ✅ Correct
 
@@ -215,12 +215,12 @@ id, email, created_at, ...  # 不完整
 version: 1.0
 packs:
   - id: architecture
-    file: docs/ai-knowledge/architecture.md
+    file: .harness/knowledge/architecture.md
     keywords: ["架构", "设计", "模块"]
     depends_on: []
 
   - id: database
-    file: docs/ai-knowledge/database.md
+    file: .harness/knowledge/database.md
     keywords: ["数据库", "SQL", "表"]
     depends_on: [architecture]
 ```
@@ -305,8 +305,8 @@ $ vim drafts/architecture.md
 # 修正 AI 误解的业务逻辑
 
 # Step 4: 入库
-$ mv drafts/* docs/ai-knowledge/
-$ git add docs/ai-knowledge/
+$ mv drafts/* .harness/knowledge/
+$ git add .harness/knowledge/
 $ git commit -m "feat: add initial knowledge base"
 ```
 
@@ -342,11 +342,11 @@ $ ai-commit --message "修复 bug"
 $ ALTER TABLE users ADD COLUMN phone VARCHAR(20);
 
 # 立即更新 Knowledge
-$ vim docs/ai-knowledge/database.md
+$ vim .harness/knowledge/database.md
 # 添加 phone 字段说明
 
 # 提交时附带更新
-$ git add docs/ai-knowledge/database.md
+$ git add .harness/knowledge/database.md
 $ git commit -m "chore: sync database knowledge after adding phone column"
 ```
 
@@ -366,7 +366,7 @@ $ git commit -am "add phone field"
 ### 创建 Knowledge Pack
 
 - [ ] 确定知识类别（architecture/database/api/business-flow/deployment/security/history）
-- [ ] 创建对应 Markdown 文件于 `docs/ai-knowledge/`
+- [ ] 创建对应 Markdown 文件于 `.harness/knowledge/`
 - [ ] 编写内容，确保 ≤ 4KB
 - [ ] 添加代码示例和源码链接
 - [ ] 更新 `.standards/knowledge.yaml`

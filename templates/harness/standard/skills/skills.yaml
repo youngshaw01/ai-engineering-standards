@@ -1,0 +1,53 @@
+# Skill Governance Configuration
+# 复制到消费项目：.harness/skills/skills.yaml
+# 详见 ai-engineering-standards/11-AI-DevTools/Skill-Governance.md
+
+version: "1.0"
+
+policy:
+  auto_install: false              # 禁止自动安装
+  require_approval: true           # 启用前需审批
+  auto_execute: false              # 禁止自动执行
+
+enabled:
+  - name: superpowers-zh
+    category: workflow
+    source:
+      type: external               # external | local
+      # path: ~/.cursor/skills/superpowers-zh
+    scope:
+      - development
+      - refactoring
+    approval:
+      required: true
+      approved_by: {{APPROVER}}
+      approved_at: {{DATE}}
+    auto_execute: false
+
+  - name: grill-me
+    category:
+      - workflow
+      - review
+    source:
+      type: external
+      repository: mattpocock/skills
+      url: https://github.com/mattpocock/skills
+      skill_path: skills/productivity/grill-me/SKILL.md
+      install: npx skills@latest add mattpocock/skills
+      author: Matt Pocock
+      license: MIT
+      invoked_by: user
+    scope:
+      - architecture
+      - design-review
+      - prd-review
+      - plan-review
+      - decision-review
+    description: |
+      Relentlessly interview the user about a plan or design
+      until every branch of the decision tree is resolved.
+    trigger:
+      manual: true
+    auto_execute: false
+
+excluded: []

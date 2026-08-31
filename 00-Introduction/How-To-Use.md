@@ -8,17 +8,61 @@ AI Engineering Standards — 接入指南。
 
 > **AI Native Engineering Standard，兼容传统 SVN 企业项目，并支持未来 Git 迁移。**
 
-本仓库是一套规则库，不是项目管理平台。标准体系不绑定特定版本控制工具（Git 或 SVN），项目通过 `.standards/profile.yaml` 声明自己的技术栈和适用规则，AI 开发工具据此加载对应规则。
+本仓库是一套规则库，不是项目管理平台。项目通过 `.harness/`（AI 工作空间）和 `.standards/profile.yaml`（接入声明）接入标准体系。
 
-标准体系采用 **Rules / Skills / Knowledge 三层模型**：
+标准体系采用 **Harness 三层治理 + Rules / Skills / Knowledge 模型**：
 
 | 层 | 回答的问题 | 内容 | 位置 |
 |---|---------|------|------|
-| **Rules** | AI 能不能做？ | 安全护栏、编码规范、版本控制 | `.cursor/rules/` / `AI_RULES.md` |
-| **Skills** | AI 会什么？ | TDD、调试、代码审查、架构设计 | `.standards/skills.yaml` |
-| **Knowledge** | AI 知道什么？ | 架构文档、数据库设计、API 契约 | `docs/ai-knowledge/` |
+| **Rules** | AI 能不能做？ | 安全护栏、编码规范、版本控制 | `.harness/rules/` + 章节文档 |
+| **Skills** | AI 会什么？ | TDD、调试、代码审查、架构设计 | `.harness/skills/skills.yaml` |
+| **Knowledge** | AI 知道什么？ | 架构文档、数据库设计、API 契约 | `.harness/knowledge/` |
 
 三者职责不混用：Rules 约束行为，Skills 扩展能力，Knowledge 提供知识。
+
+> **接入前置条件**：任何项目必须先建立 `.harness/`（至少 Bootstrap 成熟度）。详见 [Harness-Bootstrap.md](../11-AI-DevTools/Harness-Bootstrap.md)。
+
+---
+
+## Harness-first 快速开始
+
+### 新项目（Git，推荐）
+
+```bash
+# 1. 初始化 .harness（Bootstrap，约 5 分钟）
+cp -r templates/harness/bootstrap/. your-project/.harness/
+
+# 2. 编辑 .harness/AGENTS.md，填写项目信息
+
+# 3. 初始化 .standards（接入声明）
+mkdir -p your-project/.standards
+cp templates/project-profile.yaml your-project/.standards/profile.yaml
+cp templates/rule-id.yaml your-project/.standards/rule-id.yaml
+
+# 4. 项目成熟后升级到 Standard（约 30 分钟）
+cp -r templates/harness/standard/. your-project/.harness/
+# 补充 knowledge/、context/layers.yaml、config/paths.yaml
+
+# 5. 配置 AI 工具 Adapter（.cursor/rules/ 等，引用 Rule ID）
+```
+
+### 老项目（SVN）
+
+```bash
+# 1. 创建 .harness（Bootstrap 模板）
+cp -r templates/harness/bootstrap/. your-project/.harness/
+
+# 2. AI 扫描项目，生成 knowledge/、rules/（人工确认后启用）
+# 3. 渐进升级到 Standard / Enterprise
+```
+
+详见 [Harness-Bootstrap.md](../11-AI-DevTools/Harness-Bootstrap.md)。
+
+---
+
+## 传统 profile.yaml 接入（兼容）
+
+以下内容为 profile.yaml 驱动的接入方式，与 Harness-first 流程并存。
 
 ---
 
@@ -30,7 +74,7 @@ AI Engineering Standards — 接入指南。
 # 1. 复制模板
 cp templates/project-profile.yaml your-project/.standards/profile.yaml
 cp templates/exceptions.yaml your-project/.standards/exceptions.yaml
-cp templates/skills.yaml your-project/.standards/skills.yaml
+cp templates/harness/standard/skills/skills.yaml your-project/.harness/skills/skills.yaml
 cp templates/knowledge.yaml your-project/.standards/knowledge.yaml
 
 # 2. 编辑 profile.yaml，声明你的技术栈
@@ -40,7 +84,7 @@ cp templates/knowledge.yaml your-project/.standards/knowledge.yaml
 # 3. 编辑 skills.yaml，启用需要的 AI 技能
 #    enabled: [superpowers-zh]
 
-# 4. 编写 Knowledge 文档到 docs/ai-knowledge/
+# 4. 编写 Knowledge 文档到 .harness/knowledge/
 #    新项目：同步编写 architecture.md / api.md / database.md
 
 # 5. 将 AI Rules 文件链接到项目
@@ -58,7 +102,7 @@ cp templates/knowledge.yaml your-project/.standards/knowledge.yaml
 # 1. 复制模板
 cp templates/project-profile.yaml your-project/.standards/profile.yaml
 cp templates/exceptions.yaml your-project/.standards/exceptions.yaml
-cp templates/skills.yaml your-project/.standards/skills.yaml
+cp templates/harness/standard/skills/skills.yaml your-project/.harness/skills/skills.yaml
 cp templates/knowledge.yaml your-project/.standards/knowledge.yaml
 
 # 2. 编辑 profile.yaml
@@ -69,9 +113,9 @@ cp templates/knowledge.yaml your-project/.standards/knowledge.yaml
 
 # 4. 执行 Knowledge Extraction（老项目第一步！）
 #    让 AI 扫描代码，生成：
-#    docs/ai-knowledge/architecture.md
-#    docs/ai-knowledge/database.md
-#    docs/ai-knowledge/api.md
+#    .harness/knowledge/架构.md
+#    .harness/knowledge/数据模型.md
+#    .harness/knowledge/接口协议.md
 #    人工确认后标记 knowledge.yaml 中 extraction.completed: true
 
 # 5. 遵循 Boy Scout Rule：
@@ -343,17 +387,17 @@ ai-engineering-standards/
 
 ```
 your-project/
-├── .standards/
-│   ├── profile.yaml      ← 声明技术栈和规则（Rules 层）
-│   ├── exceptions.yaml   ← 记录例外（Rules 层）
-│   ├── skills.yaml       ← 启用的 AI 技能（Skills 层）
-│   └── knowledge.yaml    ← 知识文档索引（Knowledge 层）
-├── docs/
-│   └── ai-knowledge/     ← Knowledge 文档目录
-│       ├── architecture.md
-│       ├── database.md
-│       └── api.md
-└── AI_RULES.md           ← AI 工具读取的规则（从标准库生成）
+├── .harness/                  ← AI 工作空间（Rules / Skills / Knowledge / Workspace）
+│   ├── AGENTS.md
+│   ├── harness.yaml
+│   ├── rules/
+│   ├── knowledge/
+│   ├── skills/skills.yaml
+│   └── workspace/
+├── .standards/                ← AI 接入声明
+│   ├── profile.yaml
+│   └── rule-id.yaml
+└── .cursor/rules/             ← Adapter 层（引用 Rule ID）
 ```
 
 ---

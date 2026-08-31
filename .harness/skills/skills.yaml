@@ -1,0 +1,17 @@
+# Skill Governance Configuration
+# 本仓库（标准库）的 Skill 治理配置
+# 详见 11-AI-DevTools/Skill-Governance.md
+
+version: "1.0"
+
+policy:
+  auto_install: false
+  require_approval: true
+  auto_execute: false
+
+enabled: []
+
+excluded: []
+
+# 说明：标准库本身不启用项目级 Skill。
+# 消费项目应在 .harness/skills/skills.yaml 中声明启用的 Skill。

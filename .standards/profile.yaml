@@ -1,0 +1,57 @@
+# Project Profile — ai-engineering-standards
+# 本仓库 AI 接入声明
+
+project:
+  name: ai-engineering-standards
+  description: Global AI Engineering Standard — 跨项目通用规则库
+
+type:
+  type: new
+
+version_control:
+  type: git
+
+technology:
+  backend: []
+  frontend: []
+  database: []
+  ai_tool:
+    - cursor
+
+architecture:
+  style:
+    - monolith
+
+governance:
+  harness:
+    required: true
+    version: "1.0"
+    maturity: standard
+    path: .harness/
+    workspace:
+      path: .harness/workspace/
+      task_id_pattern: '{date}_{type}-{feature}'
+
+  global_standards:
+    source: self
+    inherit:
+      - safety
+      - coding
+      - api
+      - testing
+      - harness
+
+  project_rules:
+    source:
+      type: local
+      path: .harness/rules/
+    priority:
+      override: false
+
+  adapters:
+    enabled:
+      - cursor
+
+rule_identity:
+  registry: .standards/rule-id.yaml
+  prefix: SEC

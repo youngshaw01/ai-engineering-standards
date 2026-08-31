@@ -1,6 +1,8 @@
 # Skill Governance
 
 > AI Skill 治理标准，定义 Skill 的定义、分类、生命周期、权限模型和安全管理。
+>
+> **Harness 规范（推荐）**：详见 [11-AI-DevTools/Skill-Governance.md](../11-AI-DevTools/Skill-Governance.md)。Skill 注册表统一存放于 `.harness/skills/skills.yaml`。
 
 ---
 
@@ -85,7 +87,7 @@ skills:
 | 评估 | 技术负责人 | 安全审查、权限评估、风险评级 | 评估报告 |
 | 登记 | 管理员 | 写入 skill-registry.yaml | 注册表条目 |
 | 批准 | 项目负责人 | 审批启用申请 | 审批记录 |
-| 启用 | 开发者 | 在 .standards/skills.yaml 中声明 | 配置文件 |
+| 启用 | 开发者 | 在 .harness/skills/skills.yaml 中声明 | 配置文件 |
 | 升级 | 维护者 | 版本更新、变更通知 | CHANGELOG |
 | 废弃 | 管理员 | 标记 deprecated、移除引用 | 废弃记录 |
 
@@ -361,10 +363,10 @@ skills:
 
 ### R06 — 项目级 Skill 配置
 
-**MUST** — 每个项目必须在 .standards/skills.yaml 中声明启用的 Skill：
+**MUST** — 每个项目必须在 .harness/skills/skills.yaml 中声明启用的 Skill：
 
 ```yaml
-# .standards/skills.yaml — 项目级 Skill 配置
+# .harness/skills/skills.yaml — 项目级 Skill 配置
 # Copy from templates/skills.yaml and customize for your project
 
 # Enabled skills — AI will load these capabilities
@@ -398,12 +400,12 @@ overrides:
 ```bash
 # 启用新 Skill
 1. 确认 skill-registry.yaml 中已登记且状态为 approved
-2. 编辑 .standards/skills.yaml，添加到 enabled 列表
+2. 编辑 .harness/skills/skills.yaml，添加到 enabled 列表
 3. 提交 PR，请求团队成员 Review
 4. 合并后生效
 
 # 禁用问题 Skill
-1. 编辑 .standards/skills.yaml，移至 disabled 列表
+1. 编辑 .harness/skills/skills.yaml，移至 disabled 列表
 2. 提交 PR，说明禁用原因
 3. 合并后立即生效
 ```
@@ -411,7 +413,7 @@ overrides:
 ✅ Correct:
 
 ```yaml
-# .standards/skills.yaml
+# .harness/skills/skills.yaml
 enabled:
   - superpowers-zh
 
@@ -426,7 +428,7 @@ overrides:
 ❌ Wrong:
 
 ```yaml
-# .standards/skills.yaml
+# .harness/skills/skills.yaml
 enabled:
   - some-unregistered-skill  # 未在注册表中登记
   - another-skill:latest      # 语法错误
@@ -445,7 +447,7 @@ enabled:
 | 本质 | 约束行为边界 | 扩展能力边界 | 提供背景知识 |
 | 表达 | "不能做" | "会做" | "知道" |
 | 示例 | 禁止删除文件 | 执行 TDD 流程 | Spring Boot 最佳实践 |
-| 存储位置 | .rules/ 或项目根目录 | .standards/skills.yaml | knowledge.yaml |
+| 存储位置 | .rules/ 或项目根目录 | .harness/skills/skills.yaml | knowledge.yaml |
 | 优先级 | 最高（L0） | 中等 | 最低 |
 
 **边界规则：**
@@ -464,7 +466,7 @@ enabled:
 - 禁止执行 rm -rf 等不可恢复操作
 - 禁止修改系统配置
 
-# .standards/skills.yaml
+# .harness/skills/skills.yaml
 # Skills — 扩展能力
 enabled:
   - superpowers-zh  # 会执行 TDD、调试、代码审查
@@ -485,7 +487,7 @@ spring_boot:
 - 当需要测试时，运行 pytest --cov
 - 当需要重构时，先写测试再改代码
 
-# .standards/skills.yaml
+# .harness/skills/skills.yaml
 ## 错误示范：Skill 违反 Rules
 enabled:
   - dangerous-skill  # 该 Skill 可执行 rm -rf
@@ -593,7 +595,7 @@ def execute_skill(skill: Skill, action: Action):
 - [ ] 已按最小权限原则声明权限范围
 - [ ] 已评估风险等级（low / medium / high）
 - [ ] 高风险 Skill 已获得项目负责人和安全负责人联合审批
-- [ ] 已在 .standards/skills.yaml 中声明启用
+- [ ] 已在 .harness/skills/skills.yaml 中声明启用
 
 ### Skill 使用检查清单
 
@@ -606,7 +608,7 @@ def execute_skill(skill: Skill, action: Action):
 ### Skill 废弃检查清单
 
 - [ ] 已在 skill-registry.yaml 中标记 deprecated
-- [ ] 已从 .standards/skills.yaml 的 enabled 列表移除
+- [ ] 已从 .harness/skills/skills.yaml 的 enabled 列表移除
 - [ ] 已通知相关团队
 - [ ] 已保留废弃记录至少 30 天
 - [ ] 已评估对现有工作流的影响
