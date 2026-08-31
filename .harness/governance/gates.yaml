@@ -1,0 +1,49 @@
+﻿# Quality Gates — ai-engineering-standards
+# 详见：01-Engineering/Project-Lifecycle-Governance.md
+
+version: "1.0"
+
+project:
+  name: ai-engineering-standards
+
+gates:
+  pre_merge:
+    description: PR 合并前
+    must_pass: true
+    checks:
+      - name: harness-template-sync
+        command: manual
+        must_pass: true
+        evidence:
+          - Harness-Bootstrap.md updated when templates change
+          - .harness/ instance matches templates/harness/standard/
+      - name: path-conventions
+        command: manual
+        must_pass: true
+        rules:
+          - .harness/workspace/ not .harness/project/workspace/
+          - no .standards/ directory
+          - harness.yaml is the single project config entry
+          - .harness/config/rule-id.yaml for Rule IDs
+      - name: document-format
+        command: manual
+        must_pass: true
+        reference: rules/standards-maintenance.md#R01
+
+  pre_release:
+    description: 版本发布前
+    must_pass: true
+    checks:
+      - name: changelog-updated
+        command: manual
+        must_pass: true
+      - name: how-to-use-accurate
+        command: manual
+        must_pass: true
+        reference: 00-Introduction/How-To-Use.md
+
+regression:
+  core_checks:
+    - Single Source of Truth — no duplicate rule definitions
+    - Adapter layer references Rule ID only
+  always_run_on: [pre_merge, pre_release]

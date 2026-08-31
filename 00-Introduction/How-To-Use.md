@@ -8,7 +8,7 @@ AI Engineering Standards — 接入指南。
 
 > **AI Native Engineering Standard，兼容传统 SVN 企业项目，并支持未来 Git 迁移。**
 
-本仓库是一套规则库，不是项目管理平台。项目通过 `.harness/`（AI 工作空间）和 `.standards/profile.yaml`（接入声明）接入标准体系。
+本仓库是一套规则库，不是项目管理平台。项目通过 **`.harness/`** 接入标准体系（唯一项目级 AI 治理目录）。
 
 标准体系采用 **Harness 三层治理 + Rules / Skills / Knowledge 模型**：
 
@@ -32,12 +32,11 @@ AI Engineering Standards — 接入指南。
 # 1. 初始化 .harness（Bootstrap，约 5 分钟）
 cp -r templates/harness/bootstrap/. your-project/.harness/
 
-# 2. 编辑 .harness/AGENTS.md，填写项目信息
+# 2. 编辑 .harness/AGENTS.md 与 harness.yaml
 
-# 3. 初始化 .standards（接入声明）
-mkdir -p your-project/.standards
-cp templates/project-profile.yaml your-project/.standards/profile.yaml
-cp templates/rule-id.yaml your-project/.standards/rule-id.yaml
+# 3. 复制 Rule ID 注册表（Standard）
+mkdir -p your-project/.harness/config
+cp templates/harness/standard/config/rule-id.yaml your-project/.harness/config/rule-id.yaml
 
 # 4. 项目成熟后升级到 Standard（约 30 分钟）
 cp -r templates/harness/standard/. your-project/.harness/
@@ -62,84 +61,51 @@ cp -r templates/harness/bootstrap/. your-project/.harness/
 
 ---
 
-## profile.yaml 与 exceptions
+## harness.yaml 配置项
 
-Harness 目录接入见上文 **Harness-first 快速开始**。
-
-| 文件 | 用途 | 模板 |
+| 配置 | 位置 | 说明 |
 |------|------|------|
-| `.standards/profile.yaml` | 技术栈、规则继承、Harness 成熟度 | `templates/project-profile.yaml` |
-| `.standards/exceptions.yaml` | 老项目已知偏差登记 | `templates/exceptions.yaml` |
-| `.standards/rule-id.yaml` | Rule ID 注册表 | `templates/rule-id.yaml` |
+| 项目画像 | `.harness/harness.yaml` | 名称、类型、技术栈、成熟度 |
+| Rule ID 注册表 | `.harness/config/rule-id.yaml` | 跨层规则追溯 |
+| 例外登记 | `.harness/governance/exceptions.yaml` | 老项目已知偏差 |
+| 生命周期门禁 | `.harness/governance/` | lifecycle.yaml、gates.yaml |
 
-Knowledge 与 Skill 不在 `.standards/`，分别维护于 `.harness/knowledge/` 与 `.harness/skills/skills.yaml`。
+模板：`templates/harness/standard/harness.yaml`
 
 ---
 
-## profile.yaml 详解
+## harness.yaml 详解
 
-每个项目只需一个配置文件：
+项目治理配置统一在 `.harness/harness.yaml`（模板：`templates/harness/standard/harness.yaml`）。
 
 ```yaml
 project:
   name: payment-service
-  description: 支付服务
-
-type:
-  # new — 从零开始，第一天就符合标准
-  # legacy — 已有代码，渐进接入
   type: new
-
-version_control:
-  # git — 新项目、开源、互联网团队
-  # svn — 老项目、金融/政务/内网
-  # git-svn — SVN→Git 迁移过渡期
-  # none — 无版本控制（不推荐，但支持）
-  type: git
+  version_control: git
 
 technology:
-  backend:
-    - java          # java | python | go | nodejs
-  frontend:
-    - vue           # react | vue | angular
-  database:
-    - mysql        # mysql | postgresql | mongodb | redis
-  ai_tool:
-    - cursor       # cursor | trae | claude-code | codex | none
+  backend: [java]
+  ai_tool: [cursor]
 
-architecture:
-  style:
-    - monolith     # monolith | microservice | ddd | event-driven
+global_standards:
+  inherit: [safety, coding, api, testing]
 
-standards:
-  level: standard   # standard | strict
+exclude: []
 
-rules:
-  include:
-    # 核心规则（始终推荐）
-    - safety            # 安全、敏感信息、删除保护
-    - vcs               # 版本控制（Git 或 SVN，根据 technology.vcs）
-    - coding            # 编码规范（按语言）
-    - api               # API 设计模式
-    - testing           # 测试策略
-
-  exclude:
-    # 架构规则 — 只有实际使用时才包含
-    - ddd               # 如果不用 DDD，排除
-    - microservice      # 如果不用微服务，排除
-    - kubernetes        # 如果不上 K8S，排除
-    - event-driven      # 如果不用事件驱动，排除
+rule_identity:
+  registry: .harness/config/rule-id.yaml
 ```
 
 ### 关键说明
 
 | 字段 | 说明 |
 |------|------|
-| `type` | 只有两个值：`new` 或 `legacy`。不需要 L1/L2/L3 成熟度分级。 |
-| `version_control.type` | `git` / `svn` / `git-svn` / `none`。决定加载 Git.md 还是 SVN.md 规则。 |
-| `rules.include` | 显式声明采用哪些规则集。不写 = 不适用。 |
-| `rules.exclude` | 显式排除不适用的架构规则。避免 AI 给出无关建议。 |
-| `ai_tool` | 声明使用的 AI 开发工具，决定加载哪套 Rules 文件。 |
+| `project.type` | `new` 或 `legacy` |
+| `project.version_control` | 决定加载 Git.md 还是 SVN.md |
+| `global_standards.inherit` | 继承的全局规则集 |
+| `exclude` | 排除不适用的架构规则 |
+| `maturity` | bootstrap / standard / enterprise |
 
 ---
 
@@ -150,9 +116,9 @@ rules:
 ```
 创建项目
     ↓
-初始化 .standards/profile.yaml（type: new）
+初始化 .harness/（type: new，见 harness.yaml）
     ↓
-选择技术栈 → 自动确定 rules.include
+选择技术栈 → 配置 global_standards.inherit
     ↓
 生成 AI Rules（.cursor/rules/ 或 AI_RULES.md）
     ↓
@@ -183,7 +149,7 @@ rules:
     ↓
 扫描现有代码，识别差距
     ↓
-在 exceptions.yaml 中记录例外
+在 .harness/governance/exceptions.yaml 中记录例外
     ↓
 制定迁移计划（按优先级排序）
     ↓
@@ -196,7 +162,7 @@ rules:
 
 1. **不要求全部整改** — 这是不可执行的
 2. **新代码必须符合标准** — 每次修改都是改进机会
-3. **例外必须记录** — 在 exceptions.yaml 中声明理由和负责人
+3. **例外必须记录** — 在 `.harness/governance/exceptions.yaml` 中声明理由和负责人
 4. **优先修复安全问题** — SQL 注入、XSS、硬编码密钥等必须立即处理
 5. **不推动 SVN→Git 迁移** — 迁移是独立决策，不在标准接入范围内
 
@@ -238,9 +204,9 @@ SVN 老项目使用 AI 的最大风险不是提交，而是 **AI 大范围修改
 ```
 项目启动
     ↓
-AI 读取 .harness/AGENTS.md + .standards/profile.yaml
+AI 读取 .harness/AGENTS.md + harness.yaml
     ↓
-按 profile 继承全局规则 + 加载 .harness/rules/（Rules 层）
+按 harness.yaml 继承全局规则 + 加载 .harness/rules/
     ↓
 按 .harness/skills/skills.yaml 加载 Skill（Skills 层）
     ↓
@@ -263,8 +229,9 @@ your-project/
 │       ├── 01-git.md             ← 从 git 章节生成
 │       ├── 02-java.md            ← 从 coding 章节生成
 │       └── 03-api.md             ← 从 api 章节生成
-└── .standards/
-    └── profile.yaml
+└── .harness/
+    └── config/
+        └── rule-id.yaml
 ```
 
 #### Trae
@@ -272,8 +239,9 @@ your-project/
 ```
 your-project/
 ├── AI_RULES.md                    ← 合并后的规则文件
-└── .standards/
-    └── profile.yaml
+└── .harness/
+    └── config/
+        └── rule-id.yaml
 ```
 
 #### Claude Code
@@ -285,8 +253,9 @@ your-project/
 │       ├── safety.md
 │       ├── git.md
 │       └── java.md
-└── .standards/
-    └── profile.yaml
+└── .harness/
+    └── config/
+        └── rule-id.yaml
 ```
 
 ### 为什么不让 AI 读取整个 standards 仓库？
@@ -295,7 +264,7 @@ your-project/
 - **规则冲突** — 无关规则可能产生矛盾建议
 - **性能问题** — 每次对话都要重新加载所有规则
 
-**正确做法：** 根据 profile.yaml 的 `rules.include` 生成精简版规则文件，只保留当前项目适用的内容。
+**正确做法：** 根据 `harness.yaml` 的 `global_standards.inherit` 生成精简版规则文件，只保留当前项目适用的内容。
 
 ---
 
@@ -327,16 +296,15 @@ your-project/
 
 ```
 your-project/
-├── .harness/                  ← AI 工作空间（Rules / Skills / Knowledge / Workspace）
+├── .harness/                  ← 唯一项目级 AI 治理目录
 │   ├── AGENTS.md
-│   ├── harness.yaml
+│   ├── harness.yaml           ← 项目画像 + 治理配置
+│   ├── config/rule-id.yaml
+│   ├── governance/exceptions.yaml
 │   ├── rules/
 │   ├── knowledge/
 │   ├── skills/skills.yaml
 │   └── workspace/
-├── .standards/                ← AI 接入声明
-│   ├── profile.yaml
-│   └── rule-id.yaml
 └── .cursor/rules/             ← Adapter 层（引用 Rule ID）
 ```
 
@@ -347,14 +315,14 @@ your-project/
 ### Q: 老项目有大量历史代码，怎么开始？
 
 A: 第一步只做两件事：
-1. 添加 `.standards/profile.yaml`，声明 `type: legacy`
-2. 在 `exceptions.yaml` 中记录最明显的几个例外
+1. 建立 `.harness/`（Bootstrap），在 `harness.yaml` 中声明 `type: legacy`
+2. 在 `.harness/governance/exceptions.yaml` 中记录最明显的几个例外
 
 然后每次修改代码时，确保新代码符合标准即可。不需要一次性整改所有历史代码。
 
 ### Q: 如何知道哪些规则适用于我的项目？
 
-A: 看 `profile.yaml` 中的 `rules.include`：
+A: 看 `harness.yaml` 中的 `global_standards.inherit`：
 - `safety` — 所有项目都需要
 - `vcs` — 必须有（根据 `version_control.type` 自动选择 Git.md 或 SVN.md）
 - `coding` — 必须有（对应你的编程语言）
@@ -368,7 +336,7 @@ A: 可以。在项目的 `.harness/rules/` 目录下添加自定义规则，AI �
 
 ### Q: 如何处理与团队现有规范的冲突？
 
-A: 在 `exceptions.yaml` 中声明例外，并注明：
+A: 在 `.harness/governance/exceptions.yaml` 中声明例外，并注明：
 - 原因（为什么偏离标准）
 - 范围（哪些文件受影响）
 - 负责人（谁批准了这个例外）

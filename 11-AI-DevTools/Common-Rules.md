@@ -1,4 +1,4 @@
-# AI Engineering Rules（Core Edition）
+﻿# AI Engineering Rules（Core Edition）
 
 > **Layer 0: Global AI Engineering Standard** — 跨项目通用规则，所有项目继承。
 >
@@ -23,7 +23,7 @@ consumer:                         # 消费者（AI 工具）
   - codex
   - windsurf
   - copilot
-rule_ids:                         # 规则 ID（详见 .standards/rule-id.yaml）
+rule_ids:                         # 规则 ID（详见 .harness/config/rule-id.yaml）
   SEC-001: Sensitive Information Protection
   SEC-002: Irreversible Operations Protection
   SEC-003: Version Control Dangerous Operations

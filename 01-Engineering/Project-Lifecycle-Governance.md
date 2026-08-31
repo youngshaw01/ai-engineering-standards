@@ -1,4 +1,4 @@
-# Project Lifecycle Governance
+﻿# Project Lifecycle Governance
 
 > **项目全生命周期治理规范** — 从需求到交付、从环境晋升到反向回归、从老项目业务梳理到渐进改造。
 >
@@ -333,7 +333,7 @@ Staging ──► Production
 ### 新项目（type: new）
 
 ```
-Day 1:  .harness Bootstrap + profile.yaml
+Day 1:  .harness Bootstrap + harness.yaml
         ↓
 Phase 1-7 全生命周期按标准门禁执行
         ↓
@@ -364,7 +364,7 @@ Phase 1-7 全生命周期按标准门禁执行
 | 核心业务流程梳理 | 流程图、状态机 | `knowledge/业务流程.md` |
 | 数据模型梳理 | ER、核心表说明 | `knowledge/数据模型.md` |
 | 领域术语整理 | 术语表 | `knowledge/领域术语.md` |
-| 痛点/风险登记 | 差距清单 | `.standards/exceptions.yaml` |
+| 痛点/风险登记 | 差距清单 | `.harness/governance/exceptions.yaml` |
 
 **出口**：业务文档 **人工确认** 后标记 `extraction.completed: true`。
 
@@ -387,7 +387,7 @@ cp templates/harness/bootstrap/. .harness/
 | AI 扫描代码推断约定 | 命名、分层、VCS 规范 → `rules/` 草稿 |
 | 生成 knowledge/ 初稿 | 人工确认后启用 |
 | 配置 context/layers.yaml | 按项目结构调整 |
-| 登记 exceptions.yaml | 已知偏差与负责人 |
+| 登记 exceptions | 已知偏差与负责人 | `.harness/governance/exceptions.yaml` |
 
 **出口**：升级到 **Standard** Harness。
 
@@ -543,7 +543,7 @@ Month 2+:  Stage 3 Boy Scout + Stage 4 门禁
 ### 新项目启动
 
 - [ ] 已创建 `.harness/`（Bootstrap 最低）
-- [ ] 已配置 `.standards/profile.yaml`（type: new）
+- [ ] 已配置 `.harness/harness.yaml`（type: new）
 - [ ] 已明确 Phase 1-7 负责人
 - [ ] 已规划 Dev/Test/Staging/Prod 环境
 
@@ -562,7 +562,7 @@ Month 2+:  Stage 3 Boy Scout + Stage 4 门禁
 - [ ] Stage 0：业务梳理文档已人工确认
 - [ ] Stage 1：Bootstrap `.harness/` 已建立
 - [ ] Stage 2：knowledge/ + rules/ 已补充，升级 Standard
-- [ ] exceptions.yaml 已登记已知偏差
+- [ ] 登记 exceptions：`.harness/governance/exceptions.yaml`
 - [ ] Stage 4：CI 门禁已接入（至少 Lint + Unit Test）
 
 ### 发布后（24h 内）

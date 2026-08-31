@@ -1,0 +1,50 @@
+# Project Lifecycle — ai-engineering-standards（标准库维护流程）
+# 详见：01-Engineering/Project-Lifecycle-Governance.md
+
+version: "1.0"
+
+project:
+  name: ai-engineering-standards
+  type: new
+  maturity: standard
+
+phases:
+  - id: spec
+    name: 规范编写
+    gate_exit: S1
+    artifacts:
+      - workspace/current/{task_id}/spec.md
+    references:
+      - 00-Introduction/How-To-Use.md
+      - rules/standards-maintenance.md
+
+  - id: implement
+    name: 文档与模板更新
+    gate_exit: I1
+    artifacts:
+      - workspace/current/{task_id}/plan.md
+      - workspace/current/{task_id}/tasks.md
+    sync_targets:
+      - 11-AI-DevTools/Harness-Bootstrap.md
+      - templates/harness/
+      - .harness/
+
+  - id: review
+    name: 评审与一致性校验
+    gate_exit: R1
+    checks:
+      - template_instance_sync
+      - path_convention_compliance
+      - rule_id_registry_updated
+
+  - id: deliver
+    name: 归档
+    gate_exit: D1
+    artifacts:
+      - workspace/history/{task_id}/validation.md
+
+ai_boundaries:
+  forbidden_without_approval:
+    - auto_commit_push
+    - delete_chapter_documents
+    - modify_license

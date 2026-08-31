@@ -19,9 +19,10 @@ Project overview, usage guide, and terminology.
 
 ## Project Templates
 
-Copy from [templates/](../templates/):
+复制 [templates/harness/standard/](../templates/harness/standard/) 到项目 `.harness/`：
 
-| Template | Purpose |
-|----------|---------|
-| `project-profile.yaml` | Declare your tech stack and which rules apply |
-| `exceptions.yaml` | Record intentional deviations from standards |
+| 模板 | 用途 |
+|------|------|
+| `harness.yaml` | 项目画像 + 治理配置 |
+| `config/rule-id.yaml` | Rule ID 注册表 |
+| `governance/exceptions.yaml` | 已知偏差登记 |

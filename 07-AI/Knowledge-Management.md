@@ -1,4 +1,4 @@
-# Knowledge Management
+﻿# Knowledge Management
 
 ## Overview
 
@@ -201,7 +201,7 @@ id, email, created_at, ...  # 不完整
 │       ├── deployment.md
 │       ├── security.md
 │       └── history.md
-└── .standards/
+└── .harness/config/
     └── README.md         # 知识索引
 ```
 

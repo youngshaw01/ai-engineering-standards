@@ -1,4 +1,4 @@
-# Harness Specification
+﻿# Harness Specification
 
 > **Project AI Governance Workspace** — 所有项目接入 `ai-engineering-standards` 的前置条件。
 >
@@ -85,7 +85,8 @@ AI Agent
 │   ├── current/{task_id}/
 │   └── history/{task_id}/
 ├── context/               ← AI 上下文分层
-└── config/                ← 项目配置
+├── config/                ← rule-id.yaml、paths.yaml
+└── governance/            ← lifecycle、gates、exceptions
 ```
 
 项目全生命周期治理（需求→交付、环境晋升、反向回归、老项目改造），详见 [Project-Lifecycle-Governance.md](../01-Engineering/Project-Lifecycle-Governance.md)。
@@ -101,8 +102,8 @@ AI Agent
 | `skills/` | AI 能力（可选） | skills.yaml + 分类 Skill（workflow/engineering/domain/operations） |
 | `workspace/` | 工作记录 | plan.md、spec.md、tasks.md、debug-log.md |
 | `context/` | 上下文分层 | layers.yaml——L1 常驻 / L2 阶段 / L3 按需 |
-| `config/` | 项目配置 | paths.yaml、mcp servers 等 |
-| `governance/` | 生命周期与门禁 | lifecycle.yaml、gates.yaml、legacy-roadmap.yaml |
+| `config/` | 项目配置 | rule-id.yaml、paths.yaml |
+| `governance/` | 生命周期与门禁 | lifecycle.yaml、gates.yaml、exceptions.yaml |
 
 ### 关键调整：workspace 上提
 
@@ -266,8 +267,6 @@ current/{task_id}/  →  完成后  →  history/{task_id}/
 └── workspace/
 ```
 
-**不放 `.standards/`**——Skill 和 Knowledge 是项目运行时能力，不是标准。
-
 ### Skill 治理原则
 
 1. **Skill 是可选能力，不是规则来源**——Skill 不得定义约束
@@ -277,21 +276,28 @@ current/{task_id}/  →  完成后  →  history/{task_id}/
 
 详见 [Skill-Governance.md](Skill-Governance.md)。
 
-### .standards/ 只保留 AI 接入声明
+### 统一 .harness（禁止 `.harness/config/`）
+
+**MUST NOT** — 禁止创建 `.harness/config/` 平行目录。项目画像与治理配置统一在 `harness.yaml`：
 
 ```
-.standards/
-├── profile.yaml           ← 项目接入配置
-└── rule-id.yaml           ← 规则 ID 登记表
+.harness/
+├── harness.yaml           ← 项目画像 + 治理配置（唯一入口）
+├── config/
+│   ├── rule-id.yaml       ← Rule ID 注册表
+│   └── paths.yaml         ← 路径常量
+└── governance/
+    ├── exceptions.yaml    ← 老项目偏差登记（可选）
+    ├── lifecycle.yaml
+    └── gates.yaml
 ```
 
 ### 职责分工
 
 | 目录 | 职责 | 内容 |
 |------|------|------|
-| `.harness/` | 项目运行时 | rules、knowledge、skills、workspace、context |
-| `.standards/` | AI 接入声明 | profile.yaml、rule-id.yaml |
-| `.cursor/` / `.trae/` | 工具适配 | 纯转换层，引用规则 ID |
+| `.harness/` | 项目 AI 工作空间 | rules、knowledge、skills、workspace、context、config |
+| `.cursor/` / `.trae/` | 工具适配 | 纯转换层，引用 Rule ID |
 
 ---
 
@@ -333,30 +339,30 @@ Bootstrap → Standard → Enterprise
 
 ---
 
-## profile.yaml 配置
+## harness.yaml 配置示例
 
 ```yaml
+version: "1.0"
+maturity: standard
+
+project:
+  name: my-project
+  type: new
+  version_control: git
+
+technology:
+  backend: [java]
+  ai_tool: [cursor]
+
+global_standards:
+  source: ai-engineering-standards
+  inherit: [safety, coding, api, testing]
+
+rule_identity:
+  registry: .harness/config/rule-id.yaml
+
 governance:
-  harness:
-    required: true                          # 接入前置条件
-    version: "1.x"                          # Harness 规范版本
-    maturity: standard                      # bootstrap | standard | enterprise
-    path: .harness/
-    workspace:
-      path: .harness/workspace/
-      task_id_pattern: '{date}_{type}-{feature}'
-
-  global_standards:
-    source: ai-engineering-standards
-    inherit:
-      - safety
-      - coding
-      - api
-      - testing
-
-  adapters:
-    enabled:
-      - trae
+  exceptions: .harness/governance/exceptions.yaml
 ```
 
 ---
@@ -402,9 +408,9 @@ Global Standards
 
 **MUST** — 统一使用 `.harness/workspace/`，不使用 `.harness/project/workspace/`。workspace 是 Harness 核心能力，不属于 project 子域。
 
-### R05 — Skill/Knowledge 归属
+### R05 — 统一 .harness 归属
 
-**MUST** — skills.yaml 和 knowledge/ 归入 `.harness/`，不放入 `.standards/`。`.standards/` 只保留 AI 接入声明（profile.yaml、rule-id.yaml）。
+**MUST** — 项目 AI 治理全部归入 `.harness/`（harness.yaml、config/rule-id.yaml、governance/exceptions.yaml 等）。**MUST NOT** 创建 `.harness/config/` 目录。
 
 ### R06 — 老项目接入不改代码
 
@@ -448,4 +454,5 @@ Global Standards
 - [ ] AI skill 产物已归入 `workspace/current/{task_id}/`
 - [ ] 完成的任务已归档至 `workspace/history/`
 - [ ] task_id 遵循 `{date}_{type}-{feature}` 命名规则
-- [ ] `.standards/` 只含 profile.yaml 和 rule-id.yaml
+- [ ] `harness.yaml` 与 `config/rule-id.yaml` 已配置
+- [ ] 未创建 `.harness/config/` 目录

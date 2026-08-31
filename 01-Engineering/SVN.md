@@ -1,4 +1,4 @@
-# SVN
+﻿# SVN
 
 ## Overview
 
@@ -390,7 +390,7 @@ $bytes | ForEach-Object { "0x{0:X2}" -f $_ }
 
 #### 生产级辅助脚本方案（r15442 验证通过）
 
-> 以下方案经过 Malaysia AcqSys 项目 r15442 提交验证，配套 `.standards/exceptions.yaml VCS-ENCODING-001` 规则使用。
+> 以下方案经过 Malaysia AcqSys 项目 r15442 提交验证，配套 `.harness/governance/exceptions.yaml VCS-ENCODING-001` 规则使用。
 
 **核心增强：** 相比手动 `--encoding gbk`，生产级脚本增加两道防线：
 
@@ -403,7 +403,7 @@ $bytes | ForEach-Object { "0x{0:X2}" -f $_ }
 
 ```powershell
 # svn-utf8-commit.ps1 — SVN 中文 commit 提交辅助脚本（GBK 编码）
-# 规则依据: .standards/exceptions.yaml VCS-ENCODING-001
+# 规则依据: .harness/governance/exceptions.yaml VCS-ENCODING-001
 
 param(
     [Parameter(Mandatory = $false)]
@@ -421,7 +421,7 @@ $Message = @"
 - 修改内容 1
 - 修改内容 2
 
-依据: .standards/exceptions.yaml VCS-ENCODING-001
+依据: .harness/governance/exceptions.yaml VCS-ENCODING-001
 "@
 
 # ---- 2. 待提交的路径（相对 RepoRoot，留空则提交全部变更）----
@@ -540,7 +540,7 @@ Write-Host "=== 完成 ===" -ForegroundColor Cyan
 
 **项目级例外登记（推荐实践）：**
 
-将编码规则登记到 `.standards/exceptions.yaml`，确保 AI 工具和团队成员可识别：
+将编码规则登记到 `.harness/governance/exceptions.yaml`，确保 AI 工具和团队成员可识别：
 
 ```yaml
 VCS-ENCODING-001:

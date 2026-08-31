@@ -1,8 +1,2 @@
 _trash_*/
 _backup_*/
-
-# Consumer projects: gitignore .standards/ locally
-# This repo commits .standards/ as reference
-.standards/
-!.standards/
-!.standards/**

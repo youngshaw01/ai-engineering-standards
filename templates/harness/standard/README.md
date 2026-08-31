@@ -42,11 +42,13 @@ cp -r templates/harness/standard/. /path/to/your-project/.harness/
 ├── context/
 │   └── layers.yaml                ← 上下文分层加载策略
 ├── config/
-│   └── paths.yaml                 ← 项目路径常量
-└── governance/                    ← 生命周期与质量门禁（可选）
-    ├── lifecycle.yaml
-    ├── gates.yaml
-    └── legacy-roadmap.yaml        ← 老项目改造里程碑
+│   ├── paths.yaml                 ← 项目路径常量
+│   └── rule-id.yaml               ← Rule ID 注册表
+├── governance/                    ← 生命周期与质量门禁
+│   ├── lifecycle.yaml
+│   ├── gates.yaml
+│   ├── exceptions.yaml
+│   └── legacy-roadmap.yaml
 ```
 
 ---
@@ -60,7 +62,7 @@ cp -r templates/harness/standard/. /path/to/your-project/.harness/
 | `skills/skills.yaml` | Skill 注册表（可选，详见 Skill-Governance.md） |
 | `context/layers.yaml` | 上下文分层加载（L1 常驻 / L2 阶段 / L3 按需） |
 | `config/paths.yaml` | 项目路径常量 |
-| `governance/` | 生命周期配置、质量门禁、老项目改造路线图 |
+| `governance/` | 生命周期配置、质量门禁、例外登记、老项目改造路线图 |
 
 ---
 

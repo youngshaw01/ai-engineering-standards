@@ -1,4 +1,4 @@
-# Legacy Project Migration Roadmap
+﻿# Legacy Project Migration Roadmap
 # 复制到：.harness/governance/legacy-roadmap.yaml
 # 详见：01-Engineering/Project-Lifecycle-Governance.md#legacy-migration-roadmap
 
@@ -19,7 +19,7 @@ stages:
       - knowledge/业务流程.md
       - knowledge/数据模型.md
       - knowledge/领域术语.md
-      - .standards/exceptions.yaml
+      - .harness/governance/exceptions.yaml
     exit_criteria:
       - business_docs_human_verified
       - extraction_completed: true

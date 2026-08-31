@@ -1,6 +1,6 @@
 # Rule Identity Registry
 # Every rule gets a unique ID for traceability across layers.
-# AI tools, .harness, .standards, and adapters all reference the same ID.
+# AI tools, .harness/config/, and adapters all reference the same ID.
 
 # --- Security (SEC) ---
 SEC-001:
@@ -192,7 +192,7 @@ HARNESS-004:
   severity: MUST
 
 HARNESS-005:
-  name: Skill Knowledge Attribution
+  name: Unified Harness Config
   owner: global
   layer: 0
   source: 11-AI-DevTools/Harness-Bootstrap.md#R05

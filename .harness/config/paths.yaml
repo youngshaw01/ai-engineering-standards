@@ -27,20 +27,17 @@ templates:
     bootstrap: templates/harness/bootstrap/
     standard: templates/harness/standard/
     enterprise: templates/harness/enterprise/
-  profile: templates/project-profile.yaml
-  rule_id: templates/rule-id.yaml
-  exceptions: templates/exceptions.yaml
-  harness_skills: templates/harness/standard/skills/skills.yaml
-  harness_governance: templates/harness/standard/governance/
 
 examples:
   root: examples/
 
 ai:
   harness: .harness/
-  standards: .standards/
+  harness_config: .harness/harness.yaml
   workspace: .harness/workspace/
-  current_task: .harness/workspace/current/
+  rule_id: .harness/config/rule-id.yaml
+  exceptions: .harness/governance/exceptions.yaml
+  skills_registry: .harness/skills/skills.yaml
 
 version_control:
   type: git

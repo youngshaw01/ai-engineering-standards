@@ -70,23 +70,6 @@ Adapter 无规则权力
 | **Layer 1** | `.harness/` | Project Governance | 项目约束、业务规则、技术选型、遗留系统约定 |
 | **Layer 2** | `.cursor/rules/` / `.trae/rules/` | AI Adapter | 无（纯转换层，消费 Layer 0 + Layer 1 规则） |
 
-### .harness vs .standards 职责分工
-
-当项目同时存在 `.harness` 和 `.standards` 时：
-
-| 目录 | 职责 | 内容 |
-|------|------|------|
-| `.harness/` | 项目运行时 | rules/、knowledge/、skills/、workspace/、context/、config/ |
-| `.standards/` | AI 接入声明 | profile.yaml、rule-id.yaml |
-
-```
-project/
-├── .harness/              ← 项目运行时（rules/knowledge/skills/workspace）
-└── .standards/            ← AI 接入声明（profile/rule-id）
-```
-
-**关键**：skills.yaml 和 knowledge/ 归入 `.harness/`，不放入 `.standards/`。`.standards/` 只保留 AI 接入声明。
-
 ### AI Tool Adapter 职责
 
 AI 工具规则文件**只做格式转换**，通过 Rule ID 引用，不重新定义规则：
@@ -199,7 +182,6 @@ ai-engineering-standards/
 ├── templates/          # Ready-to-use templates (Harness, profile, rule-id)
 ├── examples/         # Code examples
 ├── .harness/         # 本仓库 AI 工作空间（Standard 成熟度实例）
-└── .standards/       # AI 接入声明（profile.yaml, rule-id.yaml）
 ```
 
 ---
@@ -251,7 +233,7 @@ anti-pattern code
 1. Read [How To Use](00-Introduction/How-To-Use.md)
 2. Pick the chapter relevant to your work
 3. Apply rules using the checklist at the end of each document
-4. Use [templates/](templates/) for project profile, skills, knowledge
+4. Use [templates/](templates/) for Harness bootstrap/standard, profile, and rule-id
 
 ---
 

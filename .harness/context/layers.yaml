@@ -33,6 +33,8 @@ layers:
         paths:
           - ../11-AI-DevTools/Harness-Bootstrap.md
           - ../templates/harness/standard/README.md
+          - governance/lifecycle.yaml
+          - governance/gates.yaml
       skill_governance:
         paths:
           - ../11-AI-DevTools/Skill-Governance.md

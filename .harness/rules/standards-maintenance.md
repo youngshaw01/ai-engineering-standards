@@ -47,24 +47,35 @@
 
 ---
 
-## R05 — skills 目录规范
+## R05 — 禁止 `.standards/` 目录
 
-**MUST** — Skill 注册表路径统一为 `.harness/skills/skills.yaml`，不放入 `.standards/`。
+**MUST NOT** — 创建 `.standards/`。项目 AI 治理配置统一在 `.harness/config/`（profile.yaml、rule-id.yaml、exceptions.yaml）。
+
+详见 `11-AI-DevTools/Harness-Bootstrap.md#R05`。
+
+---
+
+## R06 — skills 目录规范
+
+**MUST** — Skill 注册表路径统一为 `.harness/skills/skills.yaml`。
 
 详见 `11-AI-DevTools/Skill-Governance.md`。
 
 ---
 
-## R06 — 最小修改
+## R07 — 最小修改
 
 **MUST** — 编辑规范文档时仅修改与任务相关的章节，禁止顺手重构无关内容或全文件格式化。
 
 ---
 
-## R07 — 路径引用规范
+## R08 — 路径引用规范
 
 **MUST** — 引用 Harness 路径时使用：
 
 - `.harness/rules/`（不是 `.harness/project/rules/`）
 - `.harness/workspace/`（不是 `.harness/project/workspace/`）
-- `.harness/skills/skills.yaml`（不是 `.standards/skills.yaml`）
+- `.harness/skills/skills.yaml`
+- `.harness/config/profile.yaml`
+- `.harness/config/rule-id.yaml`
+- `.harness/config/exceptions.yaml`

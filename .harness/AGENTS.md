@@ -53,6 +53,7 @@ AI Agent 在本仓库工作时必须遵守：
 | 仓库知识 | `knowledge/` | 目录结构、三层治理模型 |
 | 上下文分层 | `context/layers.yaml` | AI 上下文加载策略 |
 | 路径配置 | `config/paths.yaml` | 章节与模板路径常量 |
+| 生命周期门禁 | `governance/` | 标准库维护流程与合并门禁 |
 | Harness 规范 | `11-AI-DevTools/Harness-Bootstrap.md` | .harness 标准结构定义 |
 | 公共 AI 规则 | `11-AI-DevTools/Common-Rules.md` | L0-L5 安全与工程约束 |
 

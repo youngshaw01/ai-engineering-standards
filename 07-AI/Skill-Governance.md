@@ -1,4 +1,4 @@
-# Skill Governance
+﻿# Skill Governance
 
 > **本文档已合并至 Harness 规范。** 请以 Layer 0 权威文档为准。
 
@@ -20,4 +20,4 @@
 | Skill 注册表 | `.harness/skills/skills.yaml` |
 | 复制模板 | `templates/harness/standard/skills/skills.yaml` |
 
-**MUST NOT** — 不要将 Skill 配置放入 `.standards/` 或 `templates/skills.yaml`（已废弃）。
+**MUST NOT** — 不要创建 `.harness/config/` 目录。

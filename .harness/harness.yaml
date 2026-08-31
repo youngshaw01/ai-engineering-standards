@@ -8,8 +8,20 @@ maturity: standard
 
 project:
   name: ai-engineering-standards
+  description: Global AI Engineering Standard — 跨项目通用规则库
   type: new
   version_control: git
+
+technology:
+  backend: []
+  frontend: []
+  database: []
+  ai_tool:
+    - cursor
+
+architecture:
+  style:
+    - monolith
 
 workspace:
   path: .harness/workspace/
@@ -35,10 +47,18 @@ skills:
 
 rules:
   path: .harness/rules/
-  inherit_global: false            # 本仓库即 Layer 0，规则在章节文档中
+  inherit_global: false
+  priority:
+    override: false
+
+governance:
+  path: .harness/governance/
+  lifecycle: .harness/governance/lifecycle.yaml
+  gates: .harness/governance/gates.yaml
+  exceptions: .harness/governance/exceptions.yaml
 
 global_standards:
-  source: self                     # 本仓库即全局标准源
+  source: self
   inherit:
     - safety
     - coding
@@ -49,3 +69,9 @@ global_standards:
 adapters:
   enabled:
     - cursor
+
+rule_identity:
+  registry: .harness/config/rule-id.yaml
+  prefix: SEC
+
+exclude: []

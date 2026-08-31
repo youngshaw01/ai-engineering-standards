@@ -1,4 +1,4 @@
-# Changelog
+﻿# Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -8,18 +8,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- `.harness/` Standard 成熟度工作空间：AGENTS.md、harness.yaml、rules/、knowledge/、skills/、workspace/、context/、config/、governance/
+- `.harness/config/` 项目治理配置：profile.yaml、rule-id.yaml、exceptions.yaml
+- `01-Engineering/Project-Lifecycle-Governance.md`：Phase 1-7 生命周期、环境晋升、反向回归、老项目改造路线图
+- `templates/harness/standard/governance/`：lifecycle.yaml、gates.yaml、legacy-roadmap.yaml
+- `templates/harness/standard/skills/skills.yaml`：Skill 注册表模板（归入 `.harness/skills/`）
+- Harness 三层治理模型文档：`.harness/knowledge/治理模型.md`、`.harness/knowledge/架构.md`
+
+### Changed
+- **废除 `.standards/` 目录**：所有 AI 治理配置统一在 `.harness/config/`
+- **Harness 路径统一**（HARNESS-004）：`.harness/workspace/` 取代 `.harness/project/workspace/`
+- **统一 Harness 配置**（HARNESS-005）：禁止双轨 `.standards/`，单一工作空间 `.harness/`
+- `07-AI/Skill-Governance.md` 精简为指向 `11-AI-DevTools/Skill-Governance.md` 的权威引用
+- `00-Introduction/How-To-Use.md` 改为 Harness-first 接入指南
+- `11-AI-DevTools/rules.md` 移除（与 Common-Rules.md 重复）
+
+### Removed
+- `.standards/` 目录（profile/rule-id/exceptions 已迁入 `.harness/config/`）
+- `templates/project-profile.yaml`、`templates/rule-id.yaml`、`templates/exceptions.yaml`（已迁入 `templates/harness/standard/config/`）
+- `templates/skills.yaml`、`templates/knowledge.yaml`（已废弃）
+
+### Previously in Unreleased
 - MyBatis R09: persistence layer new/legacy project governance (FluentMyBatis vs XML, Dialect Adapter)
 - MyBatis R09: multi-database compatibility (MySQL / SQL Server / Oracle) via databaseIdProvider
 - Phase 4: 25 documents completed (Dependencies, Project-Structure, Maven, MyBatis, Pytest, CSS, React, TypeScript, Audit, Message-Queue, RBAC, CQRS, EventDriven, Microservice, System-Design, Evaluation, FineTuning, RAG, Workflow, API-Test, E2E-Test, Integration-Test, Unit-Test, Linux, Monitoring, Nginx, PRD, SaaS, Tech-Writing, Glossary)
-- Rules / Skills / Knowledge three-layer model (Skill-Governance.md, Knowledge-Management.md, skills.yaml, knowledge.yaml)
 - Common-Rules.md: AI Engineering Rules Core Edition v2.0 as shared constraints for all AI tools
 - SVN.md: 10 rules for SVN-based enterprise projects + SVN vs Git comparison table
 - VCS-agnostic standards: version control safety rules support both Git and SVN
 - project-profile.yaml: version_control field (git / svn / git-svn / none)
-- templates/skills.yaml, templates/knowledge.yaml, templates/exceptions.yaml
 - How-To-Use.md: complete adoption guide (new project + legacy project + SVN project paths)
 
-### Changed
+### Changed (historical)
 - Positioning: AI Native Engineering Standard, compatible with legacy SVN enterprise projects
 - Common-Rules.md L0.2: renamed "Git 高危操作" to "版本控制高危操作", added SVN commands
 - Common-Rules.md L1: added batch modification, auto-refactor, directory migration to confirmation list
