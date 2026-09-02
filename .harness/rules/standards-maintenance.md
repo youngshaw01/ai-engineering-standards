@@ -47,9 +47,18 @@
 
 ---
 
-## R05 — 禁止 `.standards/` 目录
+## R05 — 禁止 `.standards/` 双轨配置
 
-**MUST NOT** — 创建 `.standards/`。项目 AI 治理配置统一在 `.harness/config/`（profile.yaml、rule-id.yaml、exceptions.yaml）。
+**MUST NOT** — 创建 `.standards/`、`profile.yaml` 或 `project-profile.yaml` 作为平行配置入口。
+
+**MUST** — 项目 AI 治理唯一工作空间为 `.harness/`：
+
+| 内容 | 路径 |
+|------|------|
+| 项目画像与治理参数 | `harness.yaml` |
+| Rule ID 注册表 | `.harness/config/rule-id.yaml` |
+| 路径常量 | `.harness/config/paths.yaml` |
+| 例外登记 | `.harness/governance/exceptions.yaml` |
 
 详见 `11-AI-DevTools/Harness-Bootstrap.md#R05`。
 
@@ -73,9 +82,10 @@
 
 **MUST** — 引用 Harness 路径时使用：
 
+- `.harness/harness.yaml`（项目画像，不是 `profile.yaml`）
 - `.harness/rules/`（不是 `.harness/project/rules/`）
 - `.harness/workspace/`（不是 `.harness/project/workspace/`）
 - `.harness/skills/skills.yaml`
-- `.harness/config/profile.yaml`
 - `.harness/config/rule-id.yaml`
-- `.harness/config/exceptions.yaml`
+- `.harness/governance/exceptions.yaml`（不是 `.harness/config/exceptions.yaml`）
+- 禁止 `.standards/` 目录

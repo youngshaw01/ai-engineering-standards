@@ -8,24 +8,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- `.harness/` Standard 成熟度工作空间：AGENTS.md、harness.yaml、rules/、knowledge/、skills/、workspace/、context/、config/、governance/
-- `.harness/config/` 项目治理配置：profile.yaml、rule-id.yaml、exceptions.yaml
+- `04-Frontend/Detail-View-IA.md`：B 端详情查看态 IA（L0–L4 分层、查看/编辑分离、字段格式）
+- `templates/harness/standard/rules/detail/web-detail-view.md`：消费项目 Harness 细则模板
+- Rule IDs `FE-DV-001` … `FE-DV-006` in `.harness/config/rule-id.yaml`
+- `.harness/config/rule-id.yaml` Rule ID 注册表；项目画像合并入 `harness.yaml`
 - `01-Engineering/Project-Lifecycle-Governance.md`：Phase 1-7 生命周期、环境晋升、反向回归、老项目改造路线图
 - `templates/harness/standard/governance/`：lifecycle.yaml、gates.yaml、legacy-roadmap.yaml
 - `templates/harness/standard/skills/skills.yaml`：Skill 注册表模板（归入 `.harness/skills/`）
 - Harness 三层治理模型文档：`.harness/knowledge/治理模型.md`、`.harness/knowledge/架构.md`
 
 ### Changed
-- **废除 `.standards/` 目录**：所有 AI 治理配置统一在 `.harness/config/`
+- **废除 `.standards/` 目录**：项目画像并入 `harness.yaml`，rule-id 在 `config/`，exceptions 在 `governance/`
 - **Harness 路径统一**（HARNESS-004）：`.harness/workspace/` 取代 `.harness/project/workspace/`
-- **统一 Harness 配置**（HARNESS-005）：禁止双轨 `.standards/`，单一工作空间 `.harness/`
+- **统一 Harness 工作空间**（HARNESS-005）：禁止 `.standards/` 双轨，`.harness/` 为唯一 AI 治理目录
 - `07-AI/Skill-Governance.md` 精简为指向 `11-AI-DevTools/Skill-Governance.md` 的权威引用
 - `00-Introduction/How-To-Use.md` 改为 Harness-first 接入指南
 - `11-AI-DevTools/rules.md` 移除（与 Common-Rules.md 重复）
 
 ### Removed
-- `.standards/` 目录（profile/rule-id/exceptions 已迁入 `.harness/config/`）
-- `templates/project-profile.yaml`、`templates/rule-id.yaml`、`templates/exceptions.yaml`（已迁入 `templates/harness/standard/config/`）
+- `.standards/` 目录及 `templates/project-profile.yaml`（项目画像已合并入 `harness.yaml`）
+- 根目录 `templates/rule-id.yaml`、`templates/exceptions.yaml`（已迁入 `templates/harness/standard/`）
 - `templates/skills.yaml`、`templates/knowledge.yaml`（已废弃）
 
 ### Previously in Unreleased

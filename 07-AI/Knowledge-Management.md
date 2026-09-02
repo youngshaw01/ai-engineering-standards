@@ -188,24 +188,30 @@ id, email, created_at, ...  # 不完整
 
 ### R05 — Knowledge 目录结构
 
-**MUST** 遵循以下目录结构：
+**MUST** — 项目知识统一放在 `.harness/knowledge/`，索引文件为 `.harness/knowledge/README.md`。
+
+```
+.harness/
+└── knowledge/
+    ├── README.md           # 知识索引
+    ├── architecture.md
+    ├── database.md
+    ├── api.md
+    ├── business-flow.md
+    ├── deployment.md
+    ├── security.md
+    └── history.md
+```
+
+**SHOULD** — `knowledge/README.md` 与目录结构一一对应。
+
+#### ❌ Wrong
 
 ```
 <project>/
-├── docs/
-│   └── ai-knowledge/
-│       ├── architecture.md
-│       ├── database.md
-│       ├── api.md
-│       ├── business-flow.md
-│       ├── deployment.md
-│       ├── security.md
-│       └── history.md
-└── .harness/config/
-    └── README.md         # 知识索引
+├── docs/ai-knowledge/      # 与 Harness 工作空间分离
+└── .standards/             # 已废除的双轨配置
 ```
-
-**SHOULD** `knowledge/README.md` 与目录结构一一对应。
 
 **MAY** 大型项目可按子系统分目录，如 `.harness/knowledge/payment/`。
 

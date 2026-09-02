@@ -115,6 +115,34 @@
 
 ---
 
+## AI / Harness
+
+| Term | Definition |
+|------|-----------|
+| Harness | 项目级 AI 治理工作空间，目录为 `.harness/`，是 AI 在项目中的唯一配置与知识入口 |
+| harness.yaml | `.harness/` 下的项目画像与治理配置唯一入口，取代已废除的 `profile.yaml` |
+| Layer 0 | 全局标准层，`ai-engineering-standards` 仓库，定义跨项目通用规则 |
+| Layer 1 | 项目治理层，`.harness/`，保存项目规则、知识、workspace |
+| Layer 2 | AI Adapter 层，`.cursor/rules/` 等，只引用 Rule ID，不重复定义规则 |
+| Rule ID | 跨层规则唯一标识，注册于 `.harness/config/rule-id.yaml` |
+| Bootstrap | Harness 最低成熟度：AGENTS.md + rules/ + workspace/ |
+| Standard | Harness 推荐成熟度：增加 harness.yaml、knowledge/、context/、config/、governance/ |
+| workspace | AI 任务产物目录，`.harness/workspace/{task_id}/` |
+
+---
+
+## Frontend
+
+| Term | Definition |
+|------|-----------|
+| Detail View IA | 详情查看态信息架构：L0 摘要 → L1 标识 → L2 配置 → L3 运行态 → L4 元数据 |
+| L0 Context Summary | 详情页顶部一行摘要 + 状态 Tag，回答「这条记录是谁、什么状态」 |
+| L2 Business Config | 可编辑的业务配置字段在查看态中的只读展示分组 |
+| L3 Runtime State | 随业务运行变化的累计/统计字段，必须与 L2 配置视觉分区 |
+| Description List | 键值对只读布局（如 Element Plus `el-descriptions`、Ant Design `Descriptions`） |
+
+---
+
 ## Security
 
 | Term | Definition |

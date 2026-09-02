@@ -179,7 +179,7 @@ ai-engineering-standards/
 ├── 01-Engineering/
 ├── ...
 ├── 11-AI-DevTools/
-├── templates/          # Ready-to-use templates (Harness, profile, rule-id)
+├── templates/          # Ready-to-use templates (Harness bootstrap/standard/enterprise)
 ├── examples/         # Code examples
 ├── .harness/         # 本仓库 AI 工作空间（Standard 成熟度实例）
 ```
@@ -233,7 +233,7 @@ anti-pattern code
 1. Read [How To Use](00-Introduction/How-To-Use.md)
 2. Pick the chapter relevant to your work
 3. Apply rules using the checklist at the end of each document
-4. Use [templates/](templates/) for Harness bootstrap/standard, profile, and rule-id
+4. Use [templates/harness/](templates/harness/) for Harness bootstrap/standard templates
 
 ---
 

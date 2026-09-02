@@ -29,20 +29,21 @@ AI Engineering Standards — 接入指南。
 ### 新项目（Git，推荐）
 
 ```bash
-# 1. 初始化 .harness（Bootstrap，约 5 分钟）
-cp -r templates/harness/bootstrap/. your-project/.harness/
-
-# 2. 编辑 .harness/AGENTS.md 与 harness.yaml
-
-# 3. 复制 Rule ID 注册表（Standard）
-mkdir -p your-project/.harness/config
-cp templates/harness/standard/config/rule-id.yaml your-project/.harness/config/rule-id.yaml
-
-# 4. 项目成熟后升级到 Standard（约 30 分钟）
+# 1. 复制 Standard 模板（约 30 分钟，含 Bootstrap 能力）
 cp -r templates/harness/standard/. your-project/.harness/
-# 补充 knowledge/、context/layers.yaml、config/paths.yaml
 
-# 5. 配置 AI 工具 Adapter（.cursor/rules/ 等，引用 Rule ID）
+# 2. 编辑 .harness/AGENTS.md 与 harness.yaml（项目画像唯一入口）
+
+# 3. 在 rules/、knowledge/ 补充项目约束与业务知识
+
+# 4. 配置 AI 工具 Adapter（.cursor/rules/ 等，引用 Rule ID）
+```
+
+仅需最小接入时，可先使用 Bootstrap 模板（约 5 分钟）：
+
+```bash
+cp -r templates/harness/bootstrap/. your-project/.harness/
+# 后续再 cp -r templates/harness/standard/. 升级
 ```
 
 ### 老项目（SVN）

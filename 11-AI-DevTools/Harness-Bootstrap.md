@@ -155,15 +155,16 @@ AI Agent
 │   ├── current/
 │   └── history/
 ├── context/
-└── config/
+├── config/                ← rule-id.yaml、paths.yaml
+└── governance/            ← lifecycle、gates、exceptions（Standard+ 推荐）
 ```
 
 **增加**：
 
 - 项目知识（knowledge/）
-- 技术栈与路径配置（config/）
+- 技术栈与路径（config/、harness.yaml）
 - 上下文管理（context/）
-- 治理配置（harness.yaml）
+- 生命周期门禁（governance/，推荐）
 
 ### Enterprise（复杂系统，2 小时接入）
 
@@ -276,21 +277,34 @@ current/{task_id}/  →  完成后  →  history/{task_id}/
 
 详见 [Skill-Governance.md](Skill-Governance.md)。
 
-### 统一 .harness（禁止 `.harness/config/`）
+### 统一 `.harness/`（禁止 `.standards/` 双轨）
 
-**MUST NOT** — 禁止创建 `.harness/config/` 平行目录。项目画像与治理配置统一在 `harness.yaml`：
+**MUST NOT** — 创建 `.standards/` 或 `project-profile.yaml` 等平行配置目录。项目 AI 治理**唯一入口**是 `.harness/`：
 
 ```
 .harness/
-├── harness.yaml           ← 项目画像 + 治理配置（唯一入口）
+├── harness.yaml           ← 项目画像 + 治理配置（唯一配置入口）
 ├── config/
 │   ├── rule-id.yaml       ← Rule ID 注册表
-│   └── paths.yaml         ← 路径常量
-└── governance/
-    ├── exceptions.yaml    ← 老项目偏差登记（可选）
-    ├── lifecycle.yaml
-    └── gates.yaml
+│   └── paths.yaml         ← 路径常量（可选）
+├── governance/
+│   ├── exceptions.yaml    ← 老项目偏差登记（可选）
+│   ├── lifecycle.yaml
+│   └── gates.yaml
+├── rules/                 ← 项目规则
+├── knowledge/             ← 项目知识
+├── skills/                ← Skill 注册表（可选）
+└── workspace/             ← AI 工作记录
 ```
+
+**配置归属**：
+
+| 内容 | 位置 | 禁止位置 |
+|------|------|---------|
+| 项目画像（名称、技术栈、继承规则） | `harness.yaml` | `.standards/`、`profile.yaml` |
+| Rule ID 注册表 | `.harness/config/rule-id.yaml` | `.standards/` |
+| 路径常量 | `.harness/config/paths.yaml` | `.standards/` |
+| 例外登记 | `.harness/governance/exceptions.yaml` | `.standards/` |
 
 ### 职责分工
 
@@ -408,9 +422,11 @@ Global Standards
 
 **MUST** — 统一使用 `.harness/workspace/`，不使用 `.harness/project/workspace/`。workspace 是 Harness 核心能力，不属于 project 子域。
 
-### R05 — 统一 .harness 归属
+### R05 — 单一 Harness 工作空间
 
-**MUST** — 项目 AI 治理全部归入 `.harness/`（harness.yaml、config/rule-id.yaml、governance/exceptions.yaml 等）。**MUST NOT** 创建 `.harness/config/` 目录。
+**MUST** — 项目 AI 治理全部归入 `.harness/`（`harness.yaml`、`config/rule-id.yaml`、`governance/exceptions.yaml` 等）。
+
+**MUST NOT** — 创建 `.standards/` 目录，或使用 `profile.yaml` / `project-profile.yaml` 作为平行配置入口。项目画像与治理参数统一写在 `harness.yaml`。
 
 ### R06 — 老项目接入不改代码
 
@@ -438,8 +454,8 @@ Global Standards
 - [ ] 已创建 `harness.yaml`（治理配置）
 - [ ] 已创建 `knowledge/`（至少含 README.md 索引）
 - [ ] 已创建 `context/layers.yaml`（上下文分层）
-- [ ] 已创建 `config/paths.yaml`（路径配置）
-- [ ] 已创建 `governance/`（生命周期与门禁，见 [Project-Lifecycle-Governance.md](../01-Engineering/Project-Lifecycle-Governance.md)）
+- [ ] 已创建 `config/rule-id.yaml` 与 `paths.yaml`
+- [ ] 已创建 `governance/`（lifecycle、gates、exceptions，见 [Project-Lifecycle-Governance.md](../01-Engineering/Project-Lifecycle-Governance.md)）
 
 ### Enterprise 升级
 
@@ -455,4 +471,5 @@ Global Standards
 - [ ] 完成的任务已归档至 `workspace/history/`
 - [ ] task_id 遵循 `{date}_{type}-{feature}` 命名规则
 - [ ] `harness.yaml` 与 `config/rule-id.yaml` 已配置
-- [ ] 未创建 `.harness/config/` 目录
+- [ ] 未创建 `.standards/` 目录
+- [ ] 未使用 `profile.yaml` / `project-profile.yaml`（项目画像仅在 `harness.yaml`）

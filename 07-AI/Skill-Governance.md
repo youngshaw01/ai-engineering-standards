@@ -20,4 +20,4 @@
 | Skill 注册表 | `.harness/skills/skills.yaml` |
 | 复制模板 | `templates/harness/standard/skills/skills.yaml` |
 
-**MUST NOT** — 不要创建 `.harness/config/` 目录。
+**MUST NOT** — 不要创建 `.standards/` 目录；项目画像写在 `harness.yaml`，Rule ID 在 `.harness/config/rule-id.yaml`。

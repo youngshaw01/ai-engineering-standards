@@ -23,8 +23,10 @@ gates:
         rules:
           - .harness/workspace/ not .harness/project/workspace/
           - no .standards/ directory
+          - no profile.yaml or project-profile.yaml (use harness.yaml)
           - harness.yaml is the single project config entry
           - .harness/config/rule-id.yaml for Rule IDs
+          - .harness/governance/exceptions.yaml for exceptions
       - name: document-format
         command: manual
         must_pass: true

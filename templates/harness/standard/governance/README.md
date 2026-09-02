@@ -12,6 +12,7 @@
 |------|------|
 | `lifecycle.yaml` | 生命周期阶段、门禁、环境映射（机器可读） |
 | `gates.yaml` | 质量门禁：pre-commit / pre-merge / pre-deploy / post-deploy |
+| `exceptions.yaml` | 老项目已知偏差登记模板 |
 | `legacy-roadmap.yaml` | 老项目渐进改造里程碑模板 |
 
 ---
