@@ -50,4 +50,49 @@ enabled:
       manual: true
     auto_execute: false
 
+  - name: stable-iteration
+    category: workflow
+    source:
+      type: local
+      path: skills/workflow/stable-iteration/SKILL.md
+    scope:
+      - refactoring
+      - development
+      - technical-debt
+    description: |
+      7-step SOP for stable AI-assisted changes: diagnose, dependencies,
+      small steps, TDD gate, adversarial review, canary, rollback.
+    trigger:
+      manual: true
+    approval:
+      required: true
+      approved_by: {{APPROVER}}
+      approved_at: {{DATE}}
+    auto_execute: false
+
+  - name: better-harness
+    category: workflow
+    source:
+      type: external
+      repository: QoderAI/better-harness
+      url: https://github.com/QoderAI/better-harness
+      skill_path: skills/better-harness/SKILL.md
+      license: MIT
+      invoked_by: user
+    scope:
+      - workflow-audit
+      - governance
+      - retrospective
+    description: |
+      Audit AI coding workflow across five Agent Work Loop dimensions;
+      produce evidence-backed findings and remediation scope.
+    trigger:
+      manual: true
+      command: "/better-harness 分析此项目的 AI 编码工作流并生成基于证据的报告"
+    approval:
+      required: true
+      approved_by: {{APPROVER}}
+      approved_at: {{DATE}}
+    auto_execute: false
+
 excluded: []

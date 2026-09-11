@@ -29,6 +29,7 @@
 | [Production Readiness Checklist](https://playcode.io/blog/production-readiness-checklist) | 候选版本 × 目标环境的证据账本、Go/Limited-Go/No-Go 决策 |
 | [Multi-Environment Pipeline](https://alamrafiul.com/posts/multi-environment-pipeline/) | Dev→Staging→Prod 渐进晋升、环境配置隔离、生产人工审批 |
 | [Environment Strategy](https://github.com/archman-dev/website/blob/main/docs/delivery-engineering/environments-and-releases/environment-strategy-dev-test-stage-prod.mdx) | 各环境目的、数据安全、Staging 与 Prod parity |
+| [Better Harness](https://github.com/QoderAI/better-harness) | Agent Work Loop 五维审计、证据化 Findings、工作流持续改进（见 11-AI-DevTools/Better-Harness.md） |
 | 本仓库现有规范 | CI/CD、TestStrategy、Harness-Bootstrap、How-To-Use 老项目路径 |
 
 ### 生命周期总览

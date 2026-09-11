@@ -13,6 +13,7 @@ AI-assisted development tool standards: Cursor, Trae, CodeArts, Claude Code, and
 | [Trae-Rules](Trae-Rules.md) | Trae project rules, AI workflow configuration |
 | [CodeArts-Rules](CodeArts-Rules.md) | Huawei CodeArts rules, project configuration |
 | [AI-Workflow](AI-Workflow.md) | AI-assisted development workflow, prompt-chaining, context management |
+| [Better-Harness](Better-Harness.md) | **AI 工作流审计** — Agent Work Loop 五维模型、与 .harness 映射、接入与审计节奏 |
 | [Token-Optimization](Token-Optimization.md) | Token 消耗优化规范——上下文隔离、精准引用、模型分级等 10 条优化策略 |
 | [MCP-Server](MCP-Server.md) | MCP Server development, tool registration, transport |
 

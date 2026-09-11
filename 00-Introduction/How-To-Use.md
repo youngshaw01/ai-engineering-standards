@@ -20,6 +20,8 @@ AI Engineering Standards — 接入指南。
 
 三者职责不混用：Rules 约束行为，Skills 扩展能力，Knowledge 提供知识。
 
+**工作流审计（可选）**：Standard 项目可定期用 [Better Harness](../11-AI-DevTools/Better-Harness.md) 或 `governance/workflow-audit.yaml` 检查五维证据链是否闭环。
+
 > **接入前置条件**：任何项目必须先建立 `.harness/`（至少 Bootstrap 成熟度）。详见 [Harness-Bootstrap.md](../11-AI-DevTools/Harness-Bootstrap.md)。
 
 ---

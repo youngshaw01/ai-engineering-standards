@@ -276,3 +276,17 @@ FE-DV-006:
   layer: 0
   source: 04-Frontend/Detail-View-IA.md#R06
   severity: SHOULD
+
+FE-DV-007:
+  name: Detail View L0 Status Tag Highlight
+  owner: global
+  layer: 0
+  source: 04-Frontend/Detail-View-IA.md#R07
+  severity: SHOULD
+
+FE-DV-008:
+  name: Detail View Descriptions Label Width
+  owner: global
+  layer: 0
+  source: 04-Frontend/Detail-View-IA.md#R08
+  severity: SHOULD

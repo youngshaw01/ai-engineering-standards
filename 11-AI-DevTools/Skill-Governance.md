@@ -77,6 +77,7 @@ AI 默认行为
 .harness/skills/
 ├── workflow/              ← AI 工作方法论
 │   ├── superpowers-zh     任务拆解、计划生成、自检、复盘
+│   ├── stable-iteration   AI 改动 7 步稳定迭代 SOP
 │   ├── grill-me           方案挑战、架构评审、反向质疑
 │   └── review             代码审查流程
 │
@@ -188,6 +189,39 @@ skills:
 | 推荐范围 | 个人/团队开发环境 |
 | 不适用 | 简单代码修改、typo 修复 |
 | auto_execute | false |
+
+### stable-iteration
+
+| 维度 | 说明 |
+|------|------|
+| 定位 | AI 辅助改动稳定迭代 SOP（7 步防翻车流程） |
+| 能力 | 静态诊断、依赖梳理、小步重构、TDD 守门、对抗性 Review、灰度、回滚预案 |
+| 分类 | workflow |
+| 来源 | 本仓库 `templates/harness/standard/skills/workflow/stable-iteration/` |
+| 推荐范围 | AI 重构、技术债清理、核心链路改动 |
+| 不适用 | typo、注释、纯文档 |
+| trigger | manual（用户显式要求或任务类型为 refactor） |
+| invoked_by | user |
+| auto_execute | false |
+
+**关键**：Step 4（先测后改）不可省略；产出物归档至 `workspace/current/{task_id}/`。
+
+### better-harness
+
+| 维度 | 说明 |
+|------|------|
+| 定位 | AI 编码工作流全景审计（Agent Work Loop 五维） |
+| 能力 | 证据采集、Findings 分级、整改范围与验收清单、历史趋势对比 |
+| 分类 | workflow |
+| 来源 | [QoderAI/better-harness](https://github.com/QoderAI/better-harness)（MIT） |
+| 安装 | Qoder 内置；Claude Code/Codex/Copilot 见 [Better-Harness.md](Better-Harness.md)；Cursor 推荐 CLI 或 `plugin verify` |
+| 推荐范围 | Standard 项目基线审计、季度复盘、重大改造前、事故后流程复盘 |
+| 不适用 | 替代 Rules 或 gates；单次代码修改执行（用 stable-iteration） |
+| trigger | manual（`/better-harness` 或 CLI） |
+| invoked_by | user |
+| auto_execute | false |
+
+**关键**：审计结论不得覆盖 Rule；报告归档至 `workspace/history/{date}_audit-workflow/`。与 `governance/workflow-audit.yaml` 五维清单对齐。
 
 ### Grill Me
 
