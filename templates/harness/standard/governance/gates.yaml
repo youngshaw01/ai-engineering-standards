@@ -1,0 +1,105 @@
+# Quality Gates Configuration
+# 复制到：.harness/governance/gates.yaml
+# 详见：01-Engineering/Project-Lifecycle-Governance.md
+
+version: "1.0"
+
+project:
+  name: {{PROJECT_NAME}}
+
+# 借鉴 Harness OPA / Enterprise gates.yaml 思想：声明式门禁，失败即停
+
+gates:
+  pre_commit:
+    description: 本地提交前（可选，husky/pre-commit hook）
+    must_pass: true
+    checks:
+      - name: lint
+        command: {{LINT_CMD}}              # e.g. mvn checkstyle:check | npm run lint
+        must_pass: true
+      - name: unit-test-fast
+        command: {{UNIT_TEST_CMD}}         # e.g. mvn test -Dtest=*Unit*
+        must_pass: true
+
+  pre_merge:
+    description: PR 合并前（CI）
+    must_pass: true
+    checks:
+      - name: lint
+        command: {{LINT_CMD}}
+        must_pass: true
+      - name: unit-test
+        command: {{UNIT_TEST_CMD}}
+        must_pass: true
+      - name: code-review
+        command: manual
+        must_pass: true
+        min_approvers: 1
+      - name: security-scan
+        command: {{SECURITY_SCAN_CMD}}     # optional
+        must_pass: false
+        block_on: [critical, high]
+
+  pre_deploy_staging:
+    description: 部署 Staging 前
+    must_pass: true
+    checks:
+      - name: build
+        command: {{BUILD_CMD}}
+        must_pass: true
+      - name: integration-test
+        command: {{INTEGRATION_TEST_CMD}}
+        must_pass: true
+      - name: regression-smoke
+        command: {{REGRESSION_SMOKE_CMD}}
+        must_pass: true
+
+  pre_deploy_production:
+    description: 部署 Production 前
+    must_pass: true
+    checks:
+      - name: staging-verified
+        command: manual
+        must_pass: true
+        evidence:
+          - staging_test_report
+          - rollback_plan
+          - monitoring_dashboard_ready
+      - name: production-approval
+        command: manual
+        must_pass: true
+        approvers: [release_owner, tech_lead]
+      - name: regression-full
+        command: {{REGRESSION_FULL_CMD}}
+        must_pass: true
+        trigger: major_release
+
+  post_deploy:
+    description: 部署后 24h 内
+    must_pass: true
+    checks:
+      - name: smoke-test
+        command: {{SMOKE_TEST_CMD}}
+        must_pass: true
+        timeout_min: 15
+      - name: metrics-check
+        command: manual
+        must_pass: true
+        window_hours: 24
+        metrics:
+          - error_rate
+          - latency_p99
+
+# 反向回归：每个 gate 通过后，核心冒烟集永远运行
+regression:
+  core_smoke_suite: {{CORE_SMOKE_SUITE}}    # e.g. tests/smoke/
+  always_run_on: [pre_merge, pre_deploy_staging, pre_deploy_production, post_deploy]
+
+# 发布决策
+release_decision:
+  options: [go, limited_go, no_go]
+  required_evidence:
+    - test_report
+    - security_scan_summary
+    - rollback_plan
+    - changelog

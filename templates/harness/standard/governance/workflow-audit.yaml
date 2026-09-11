@@ -1,0 +1,118 @@
+# AI 工作流审计清单（Agent Work Loop 五维）
+# 复制到：.harness/governance/workflow-audit.yaml
+# 可配合 Better Harness 报告使用，或在无工具时手工自检
+# 详见：11-AI-DevTools/Better-Harness.md
+
+version: "1.0"
+
+reference:
+  tool: https://github.com/QoderAI/better-harness
+  standard_doc: ai-engineering-standards/11-AI-DevTools/Better-Harness.md
+
+cadence:
+  baseline: on_standard_adoption
+  recurring: quarterly
+  trigger_events:
+    - major_refactor
+    - production_incident
+    - ai_workflow_change
+
+report_archive: .harness/workspace/history/{date}_audit-workflow/
+
+dimensions:
+  task_understanding:
+    question: 智能体是否知道目标以及「完成」的含义？
+    evidence_paths:
+      - .harness/AGENTS.md
+      - .harness/workspace/current/*/spec.md
+      - .harness/knowledge/
+    checks:
+      - id: TU-01
+        text: AGENTS.md 含项目类型、技术栈、AI 行为约束
+        must_pass: true
+      - id: TU-02
+        text: 进行中任务有 spec.md 或等价验收标准
+        must_pass: true
+      - id: TU-03
+        text: 验收标准可测试、可度量（非模糊描述）
+        must_pass: true
+
+  controlled_execution:
+    question: 工作是否沿受支持、可重复的路径进行？
+    evidence_paths:
+      - .harness/skills/skills.yaml
+      - .harness/workspace/current/*/plan.md
+      - 11-AI-DevTools/AI-Workflow.md
+    checks:
+      - id: CE-01
+        text: 复杂任务有 plan.md 或分步任务清单
+        must_pass: true
+      - id: CE-02
+        text: 单次改动符合修改预算（≤5 文件、≤300 行）或已确认例外
+        must_pass: true
+      - id: CE-03
+        text: 启用的 Skill 已在 skills.yaml 登记且 auto_execute 为 false
+        must_pass: true
+
+  change_validation:
+    question: 是否有证据表明变更有效？
+    evidence_paths:
+      - .harness/governance/gates.yaml
+      - .harness/workspace/current/*/validation.md
+      - CI 配置与最近运行记录
+    checks:
+      - id: CV-01
+        text: pre_merge 门禁含 lint 与单测
+        must_pass: true
+      - id: CV-02
+        text: 核心改动有 validation.md 或测试报告链接
+        must_pass: true
+      - id: CV-03
+        text: AI 生成代码经编译/测试验证，非仅「能跑」
+        must_pass: true
+
+  reliable_delivery:
+    question: AI 速度是否绕过了质量检查或验收？
+    evidence_paths:
+      - .harness/governance/gates.yaml
+      - .harness/workspace/current/*/07-rollback.md
+      - PR / Code Review 记录
+    checks:
+      - id: RD-01
+        text: PR 合并前有人工 Code Review
+        must_pass: true
+      - id: RD-02
+        text: 生产变更有回滚预案或 Feature Flag 方案
+        must_pass: true
+      - id: RD-03
+        text: Staging 验证后再晋升 Production（适用时）
+        must_pass: false
+
+  learning_capture:
+    question: 下一任务能否从本次任务受益？
+    evidence_paths:
+      - .harness/workspace/history/
+      - .harness/skills/skills.yaml
+      - .harness/knowledge/
+    checks:
+      - id: LC-01
+        text: 已完成任务已从 workspace/current 归档至 history
+        must_pass: true
+      - id: LC-02
+        text: 重复性问题已写入 knowledge 或 Skill，非仅口头约定
+        must_pass: false
+      - id: LC-03
+        text: 工作流审计报告已归档，可与历史对比
+        must_pass: false
+
+remediation:
+  output: .harness/workspace/history/{date}_audit-workflow/remediation-plan.md
+  fields:
+    - finding_id
+    - dimension
+    - priority
+    - owner
+    - fix_scope
+    - acceptance_criteria
+    - target_date
+    - status

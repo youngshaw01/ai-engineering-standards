@@ -1,4 +1,4 @@
-# Cursor Rules
+﻿# Cursor Rules
 
 > 公共约束见 [Common-Rules.md](Common-Rules.md)（AI Engineering Rules Core Edition v2.0，L0-L5 全量）。
 > 本文档仅包含 Cursor 特有的配置与约定。
@@ -33,7 +33,7 @@ your-project/
 
 ## 生成方式
 
-根据项目 `.standards/profile.yaml` 中的 `rules.include`，从 ai-engineering-standards 对应章节提取适用规则，生成精简版 `.cursor/rules/` 文件。
+根据项目 `.harness/harness.yaml` 中的 `global_standards.inherit`，从 ai-engineering-standards 对应章节提取适用规则，生成精简版 `.cursor/rules/` 文件。
 
 **原则：**
 
@@ -70,7 +70,8 @@ Cursor Composer 支持 Agent 模式，配置建议：
 ```
 .cursor/rules/       ← 最高（项目级规则）
 docs/AI_AGENT_RULES.md  ← 次高（项目 AI 约束）
-.standards/profile.yaml ← 配置（声明技术栈）
+.harness/harness.yaml      ← 项目画像 + 治理配置
+.harness/config/rule-id.yaml ← Rule ID 注册表
 ```
 
 ---

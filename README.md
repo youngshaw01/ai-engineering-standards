@@ -70,23 +70,6 @@ Adapter 无规则权力
 | **Layer 1** | `.harness/` | Project Governance | 项目约束、业务规则、技术选型、遗留系统约定 |
 | **Layer 2** | `.cursor/rules/` / `.trae/rules/` | AI Adapter | 无（纯转换层，消费 Layer 0 + Layer 1 规则） |
 
-### .harness vs .standards 职责分工
-
-当项目同时存在 `.harness` 和 `.standards` 时：
-
-| 目录 | 职责 | 内容 |
-|------|------|------|
-| `.harness/` | 项目运行时 | rules/、knowledge/、skills/、workspace/、context/、config/ |
-| `.standards/` | AI 接入声明 | profile.yaml、rule-id.yaml |
-
-```
-project/
-├── .harness/              ← 项目运行时（rules/knowledge/skills/workspace）
-└── .standards/            ← AI 接入声明（profile/rule-id）
-```
-
-**关键**：skills.yaml 和 knowledge/ 归入 `.harness/`，不放入 `.standards/`。`.standards/` 只保留 AI 接入声明。
-
 ### AI Tool Adapter 职责
 
 AI 工具规则文件**只做格式转换**，通过 Rule ID 引用，不重新定义规则：
@@ -99,7 +82,7 @@ Source: ai-engineering-standards/11-AI-DevTools/Common-Rules.md
 AI 必须遵守（详见 source）
 
 ## VCS-001: SVN Commit Policy
-Source: .harness/project/rules/svn.md
+Source: .harness/rules/svn.md
 AI 必须遵守（详见 source）
 ```
 
@@ -174,17 +157,17 @@ Skill Resolution Priority:
 | # | Chapter | Description | Docs |
 |---|---------|-------------|------|
 | 00 | **Introduction** | How to use, glossary, governance model | [→](00-Introduction/) |
-| 01 | **Engineering** | Git, SVN, Code Review, Project Structure, Dependencies | [→](01-Engineering/) |
+| 01 | **Engineering** | Git, SVN, Code Review, Project Structure, Lifecycle Governance, Dependencies | [→](01-Engineering/) |
 | 02 | **Java** | Java 17, Spring Boot, MyBatis, Maven | [→](02-Java/) |
 | 03 | **Python** | Python 3, FastAPI, Pytest | [→](03-Python/) |
 | 04 | **Frontend** | TypeScript, React, CSS | [→](04-Frontend/) |
 | 05 | **Backend** | API, Security, Audit, RBAC, Database, Redis, MQ | [→](05-Backend/) |
 | 06 | **Architecture** | DDD, Microservice, Event-Driven, CQRS, System Design | [→](06-Architecture/) |
-| 07 | **AI** | Agent, MCP, Prompt, RAG, Workflow, FineTuning, Evaluation, Skill Governance, Knowledge Management | [→](07-AI/) |
+| 07 | **AI** | Agent, MCP, Prompt, RAG, Workflow, FineTuning, Evaluation, Knowledge Management | [→](07-AI/) |
 | 08 | **Testing** | Strategy, Unit, Integration, API, E2E | [→](08-Testing/) |
 | 09 | **DevOps** | Docker, Kubernetes, CI/CD, Nginx, Linux, Monitoring | [→](09-DevOps/) |
 | 10 | **Product** | PRD, SaaS, Tech Writing | [→](10-Product/) |
-| 11 | **AI DevTools** | Common Rules, Cursor Rules, Trae Rules, AI Workflow, Token Optimization, MCP Server | [→](11-AI-DevTools/) |
+| 11 | **AI DevTools** | Common Rules, Harness, Skill Governance, Cursor/Trae Rules, AI Workflow | [→](11-AI-DevTools/) |
 
 ---
 
@@ -194,18 +177,11 @@ Skill Resolution Priority:
 ai-engineering-standards/
 ├── 00-Introduction/
 ├── 01-Engineering/
-├── 02-Java/
-├── 03-Python/
-├── 04-Frontend/
-├── 05-Backend/
-├── 06-Architecture/
-├── 07-AI/
-├── 08-Testing/
-├── 09-DevOps/
-├── 10-Product/
+├── ...
 ├── 11-AI-DevTools/
-├── templates/          # Ready-to-use templates (profile.yaml, skills.yaml, etc.)
-└── examples/          # Code examples
+├── templates/          # Ready-to-use templates (Harness bootstrap/standard/enterprise)
+├── examples/         # Code examples
+├── .harness/         # 本仓库 AI 工作空间（Standard 成熟度实例）
 ```
 
 ---
@@ -257,7 +233,7 @@ anti-pattern code
 1. Read [How To Use](00-Introduction/How-To-Use.md)
 2. Pick the chapter relevant to your work
 3. Apply rules using the checklist at the end of each document
-4. Use [templates/](templates/) for project profile, skills, knowledge
+4. Use [templates/harness/](templates/harness/) for Harness bootstrap/standard templates
 
 ---
 

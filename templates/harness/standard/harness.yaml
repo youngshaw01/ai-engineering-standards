@@ -1,6 +1,5 @@
 # Harness Governance Configuration
-# 本文件定义 .harness 的治理配置
-# 详见 ai-engineering-standards/11-AI-DevTools/Harness-Bootstrap.md
+# 项目唯一治理配置 — 详见 11-AI-DevTools/Harness-Bootstrap.md
 
 version: "1.0"
 
@@ -8,8 +7,20 @@ maturity: standard              # bootstrap | standard | enterprise
 
 project:
   name: {{PROJECT_NAME}}
-  type: legacy                  # new | legacy
-  version_control: svn          # git | svn | git-svn
+  description: Brief description of the project
+  type: new                     # new | legacy
+  version_control: git          # git | svn | git-svn
+
+technology:
+  backend: []                   # java | python | go | nodejs
+  frontend: []                  # react | vue | angular
+  database: []                  # mysql | postgresql | redis
+  ai_tool:
+    - cursor                    # cursor | trae | claude-code | codex
+
+architecture:
+  style:
+    - monolith                 # monolith | microservice | ddd | event-driven
 
 workspace:
   path: .harness/workspace/
@@ -19,19 +30,31 @@ workspace:
     history: .harness/workspace/history/
 
 context:
-  strategy: layered             # layered | flat
+  strategy: layered
   layers_config: .harness/context/layers.yaml
   budget:
-    target_fill_rate: 0.40      # 会话填充率目标 < 40%
+    target_fill_rate: 0.40
     principle: just_enough_context
 
 knowledge:
   path: .harness/knowledge/
   index: .harness/knowledge/README.md
 
+skills:
+  path: .harness/skills/
+  registry: .harness/skills/skills.yaml
+
 rules:
   path: .harness/rules/
-  inherit_global: true          # 继承 ai-engineering-standards 全局规则
+  inherit_global: true
+  priority:
+    override: true              # 项目规则覆盖全局标准
+
+governance:
+  path: .harness/governance/
+  lifecycle: .harness/governance/lifecycle.yaml
+  gates: .harness/governance/gates.yaml
+  exceptions: .harness/governance/exceptions.yaml
 
 global_standards:
   source: ai-engineering-standards
@@ -43,4 +66,13 @@ global_standards:
 
 adapters:
   enabled:
-    - trae                      # trae | cursor | claude | codex
+    - cursor
+
+rule_identity:
+  registry: .harness/config/rule-id.yaml
+  prefix: SEC
+
+exclude: []
+  # - ddd
+  # - microservice
+  # - kubernetes

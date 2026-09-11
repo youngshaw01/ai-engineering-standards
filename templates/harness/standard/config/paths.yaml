@@ -27,9 +27,11 @@ docs:
 
 ai:
   harness: .harness/
-  standards: .standards/           # AI 接入声明（profile.yaml, rule-id.yaml）
+  harness_config: .harness/harness.yaml
   workspace: .harness/workspace/
   current_task: .harness/workspace/current/
+  rule_id: .harness/config/rule-id.yaml
+  exceptions: .harness/governance/exceptions.yaml
 
 version_control:
   type: svn                        # git | svn
@@ -38,4 +40,3 @@ version_control:
   tags: tags
   ignore:
     - .harness/workspace/history/  # 可选：忽略历史归档
-    - .standards/                  # 可选：忽略 AI 接入声明

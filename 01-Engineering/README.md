@@ -11,6 +11,7 @@ Foundational engineering practices: version control, code review, project struct
 | [GitHub](GitHub.md) | PR workflow, Issue templates, branch protection, Actions |
 | [Code-Review](Code-Review.md) | Review process, review checklist, review culture |
 | [Project-Structure](Project-Structure.md) | Directory layout, module organization, naming conventions |
+| [Project-Lifecycle-Governance](Project-Lifecycle-Governance.md) | **全生命周期治理** — 需求→交付、环境晋升、反向回归、老项目改造 |
 | [Dependencies](Dependencies.md) | Dependency selection, versioning, security auditing |
 
 ## Version Control Selection

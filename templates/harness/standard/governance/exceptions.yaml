@@ -1,0 +1,24 @@
+# Standards Exceptions
+# 复制到：.harness/governance/exceptions.yaml
+# 声明项目与标准之间的已知偏差，不可静默忽略。
+
+# Format:
+#   <rule_id>:
+#     reason: <why this exception exists>
+#     scope: <which files/modules are affected>
+#     owner: <who approved this exception>
+#     deadline: <when to resolve, or "permanent">
+
+examples:
+
+  SQL-INJECTION-001:
+    reason: "Legacy MyBatis mapper uses ${tableName} for dynamic table names in reporting queries."
+    scope: "com.example.reporting.mapper"
+    owner: "zhangsan"
+    deadline: "2026-09-30"
+
+  REDIS-TTL-001:
+    reason: "Configuration cache keys have no TTL because cold-load causes 200ms spike on pod restart."
+    scope: "Cache keys matching 'cfg:*'"
+    owner: "lisi"
+    deadline: "permanent"

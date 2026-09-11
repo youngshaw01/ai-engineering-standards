@@ -1,0 +1,98 @@
+# Skill Governance Configuration
+# 复制到消费项目：.harness/skills/skills.yaml
+# 详见 ai-engineering-standards/11-AI-DevTools/Skill-Governance.md
+
+version: "1.0"
+
+policy:
+  auto_install: false              # 禁止自动安装
+  require_approval: true           # 启用前需审批
+  auto_execute: false              # 禁止自动执行
+
+enabled:
+  - name: superpowers-zh
+    category: workflow
+    source:
+      type: external               # external | local
+      # path: ~/.cursor/skills/superpowers-zh
+    scope:
+      - development
+      - refactoring
+    approval:
+      required: true
+      approved_by: {{APPROVER}}
+      approved_at: {{DATE}}
+    auto_execute: false
+
+  - name: grill-me
+    category:
+      - workflow
+      - review
+    source:
+      type: external
+      repository: mattpocock/skills
+      url: https://github.com/mattpocock/skills
+      skill_path: skills/productivity/grill-me/SKILL.md
+      install: npx skills@latest add mattpocock/skills
+      author: Matt Pocock
+      license: MIT
+      invoked_by: user
+    scope:
+      - architecture
+      - design-review
+      - prd-review
+      - plan-review
+      - decision-review
+    description: |
+      Relentlessly interview the user about a plan or design
+      until every branch of the decision tree is resolved.
+    trigger:
+      manual: true
+    auto_execute: false
+
+  - name: stable-iteration
+    category: workflow
+    source:
+      type: local
+      path: skills/workflow/stable-iteration/SKILL.md
+    scope:
+      - refactoring
+      - development
+      - technical-debt
+    description: |
+      7-step SOP for stable AI-assisted changes: diagnose, dependencies,
+      small steps, TDD gate, adversarial review, canary, rollback.
+    trigger:
+      manual: true
+    approval:
+      required: true
+      approved_by: {{APPROVER}}
+      approved_at: {{DATE}}
+    auto_execute: false
+
+  - name: better-harness
+    category: workflow
+    source:
+      type: external
+      repository: QoderAI/better-harness
+      url: https://github.com/QoderAI/better-harness
+      skill_path: skills/better-harness/SKILL.md
+      license: MIT
+      invoked_by: user
+    scope:
+      - workflow-audit
+      - governance
+      - retrospective
+    description: |
+      Audit AI coding workflow across five Agent Work Loop dimensions;
+      produce evidence-backed findings and remediation scope.
+    trigger:
+      manual: true
+      command: "/better-harness 分析此项目的 AI 编码工作流并生成基于证据的报告"
+    approval:
+      required: true
+      approved_by: {{APPROVER}}
+      approved_at: {{DATE}}
+    auto_execute: false
+
+excluded: []

@@ -1,6 +1,6 @@
 # Rule Identity Registry
 # Every rule gets a unique ID for traceability across layers.
-# AI tools, .harness, .standards, and adapters all reference the same ID.
+# AI tools, .harness/config/, and adapters all reference the same ID.
 
 # --- Security (SEC) ---
 SEC-001:
@@ -86,7 +86,7 @@ VCS-002:
   name: SVN Commit Policy
   owner: project
   layer: 1
-  source: .harness/project/rules/svn.md
+  source: .harness/rules/svn.md
   severity: MUST
 
 VCS-003:
@@ -100,7 +100,7 @@ VCS-004:
   name: SVN Auto-Commit Prohibition
   owner: project
   layer: 1
-  source: .harness/project/rules/项目编码规范.md
+  source: .harness/rules/项目编码规范.md
   severity: MUST
 
 # --- Coding (CODE) ---
@@ -122,7 +122,7 @@ CODE-003:
   name: Java Constructor Injection
   owner: project
   layer: 1
-  source: .harness/project/rules/java-conventions.md
+  source: .harness/rules/java-conventions.md
   severity: MUST
 
 # --- Database (DB) ---
@@ -137,7 +137,7 @@ DB-002:
   name: Table Naming Convention
   owner: project
   layer: 1
-  source: .harness/project/rules/sql.md
+  source: .harness/rules/sql.md
   severity: MUST
 
 DB-003:
@@ -192,7 +192,7 @@ HARNESS-004:
   severity: MUST
 
 HARNESS-005:
-  name: Skill Knowledge Attribution
+  name: Single Harness Workspace (No .standards/)
   owner: global
   layer: 0
   source: 11-AI-DevTools/Harness-Bootstrap.md#R05
@@ -233,3 +233,60 @@ SKILL-004:
   layer: 0
   source: 11-AI-DevTools/Skill-Governance.md#R04
   severity: MUST
+
+# --- Frontend Detail View IA (FE-DV) ---
+FE-DV-001:
+  name: Detail View Edit Separation
+  owner: global
+  layer: 0
+  source: 04-Frontend/Detail-View-IA.md#R01
+  severity: MUST
+
+FE-DV-002:
+  name: Detail View IA Layers L0-L4
+  owner: global
+  layer: 0
+  source: 04-Frontend/Detail-View-IA.md#R02
+  severity: MUST
+
+FE-DV-003:
+  name: Detail View Container Width
+  owner: global
+  layer: 0
+  source: 04-Frontend/Detail-View-IA.md#R03
+  severity: SHOULD
+
+FE-DV-004:
+  name: Detail View Field Formatting
+  owner: global
+  layer: 0
+  source: 04-Frontend/Detail-View-IA.md#R04
+  severity: MUST
+
+FE-DV-005:
+  name: Detail View Component Conventions
+  owner: global
+  layer: 0
+  source: 04-Frontend/Detail-View-IA.md#R05
+  severity: SHOULD
+
+FE-DV-006:
+  name: Detail View Migration Path
+  owner: global
+  layer: 0
+  source: 04-Frontend/Detail-View-IA.md#R06
+  severity: SHOULD
+
+FE-DV-007:
+  name: Detail View L0 Status Tag Highlight
+  owner: global
+  layer: 0
+  source: 04-Frontend/Detail-View-IA.md#R07
+  severity: SHOULD
+
+FE-DV-008:
+  name: Detail View Descriptions Label Width
+  owner: global
+  layer: 0
+  source: 04-Frontend/Detail-View-IA.md#R08
+  severity: SHOULD

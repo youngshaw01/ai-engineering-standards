@@ -1,0 +1,292 @@
+# Rule Identity Registry
+# Every rule gets a unique ID for traceability across layers.
+# AI tools, .harness/config/, and adapters all reference the same ID.
+
+# --- Security (SEC) ---
+SEC-001:
+  name: Sensitive Information Protection
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L0-0.4
+  severity: MUST
+
+SEC-002:
+  name: Irreversible Operations Protection
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L0-0.1
+  severity: MUST
+
+SEC-003:
+  name: Version Control Dangerous Operations
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L0-0.2
+  severity: MUST
+
+SEC-004:
+  name: System State Modification
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L0-0.3
+  severity: MUST
+
+SEC-005:
+  name: AI Self-Modification Protection
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L0-0.5
+  severity: MUST
+
+# --- Engineering (ENG) ---
+ENG-001:
+  name: Minimal Change Principle
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L2-2.1
+  severity: MUST
+
+ENG-002:
+  name: Backward Compatibility
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L2-2.2
+  severity: MUST
+
+ENG-003:
+  name: Confirmation Threshold
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L1
+  severity: MUST
+
+ENG-004:
+  name: Evidence Before Action
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L3-3.2
+  severity: MUST
+
+ENG-005:
+  name: Information Insufficiency
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L3-3.3
+  severity: MUST
+
+# --- Version Control (VCS) ---
+VCS-001:
+  name: VCS Dangerous Operations
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L0-0.2
+  severity: MUST
+
+VCS-002:
+  name: SVN Commit Policy
+  owner: project
+  layer: 1
+  source: .harness/rules/svn.md
+  severity: MUST
+
+VCS-003:
+  name: SVN Chinese Commit Encoding
+  owner: project
+  layer: 1
+  source: 01-Engineering/SVN.md#R03
+  severity: MUST
+
+VCS-004:
+  name: SVN Auto-Commit Prohibition
+  owner: project
+  layer: 1
+  source: .harness/rules/项目编码规范.md
+  severity: MUST
+
+# --- Coding (CODE) ---
+CODE-001:
+  name: No Pseudocode Placeholders
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L2-2.5
+  severity: MUST
+
+CODE-002:
+  name: Type-Safe API
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Common-Rules.md#L2-2.5
+  severity: MUST
+
+CODE-003:
+  name: Java Constructor Injection
+  owner: project
+  layer: 1
+  source: .harness/rules/java-conventions.md
+  severity: MUST
+
+# --- Database (DB) ---
+DB-001:
+  name: SQL Injection Prevention
+  owner: global
+  layer: 0
+  source: 05-Backend/Database.md
+  severity: MUST
+
+DB-002:
+  name: Table Naming Convention
+  owner: project
+  layer: 1
+  source: .harness/rules/sql.md
+  severity: MUST
+
+DB-003:
+  name: Multi-Database Compatibility
+  owner: global
+  layer: 0
+  source: 02-Java/MyBatis.md#R09
+  severity: SHOULD
+
+# --- Testing (TEST) ---
+TEST-001:
+  name: TDD for New Code
+  owner: global
+  layer: 0
+  source: 08-Testing/TestStrategy.md
+  severity: SHOULD
+
+TEST-002:
+  name: Coverage Target
+  owner: global
+  layer: 0
+  source: 08-Testing/TestStrategy.md
+  severity: SHOULD
+
+# --- Harness (HARNESS) ---
+HARNESS-001:
+  name: Harness Bootstrap Prerequisite
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Harness-Bootstrap.md#R01
+  severity: MUST
+
+HARNESS-002:
+  name: AI Skill Workspace Attribution
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Harness-Bootstrap.md#R02
+  severity: MUST
+
+HARNESS-003:
+  name: Harness Maturity Level
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Harness-Bootstrap.md#R03
+  severity: SHOULD
+
+HARNESS-004:
+  name: Workspace Path Unification
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Harness-Bootstrap.md#R04
+  severity: MUST
+
+HARNESS-005:
+  name: Single Harness Workspace (No .standards/)
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Harness-Bootstrap.md#R05
+  severity: MUST
+
+HARNESS-006:
+  name: Legacy Project Non-Invasive Onboarding
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Harness-Bootstrap.md#R06
+  severity: MUST
+
+# --- Skill Governance (SKILL) ---
+SKILL-001:
+  name: Skill Is Optional Capability
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Skill-Governance.md#R01
+  severity: MUST
+
+SKILL-002:
+  name: Skill Must Not Override Rule
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Skill-Governance.md#R02
+  severity: MUST
+
+SKILL-003:
+  name: Skill Requires Project Validation
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Skill-Governance.md#R03
+  severity: MUST
+
+SKILL-004:
+  name: Skill No Auto Execute
+  owner: global
+  layer: 0
+  source: 11-AI-DevTools/Skill-Governance.md#R04
+  severity: MUST
+
+# --- Frontend Detail View IA (FE-DV) ---
+FE-DV-001:
+  name: Detail View Edit Separation
+  owner: global
+  layer: 0
+  source: 04-Frontend/Detail-View-IA.md#R01
+  severity: MUST
+
+FE-DV-002:
+  name: Detail View IA Layers L0-L4
+  owner: global
+  layer: 0
+  source: 04-Frontend/Detail-View-IA.md#R02
+  severity: MUST
+
+FE-DV-003:
+  name: Detail View Container Width
+  owner: global
+  layer: 0
+  source: 04-Frontend/Detail-View-IA.md#R03
+  severity: SHOULD
+
+FE-DV-004:
+  name: Detail View Field Formatting
+  owner: global
+  layer: 0
+  source: 04-Frontend/Detail-View-IA.md#R04
+  severity: MUST
+
+FE-DV-005:
+  name: Detail View Component Conventions
+  owner: global
+  layer: 0
+  source: 04-Frontend/Detail-View-IA.md#R05
+  severity: SHOULD
+
+FE-DV-006:
+  name: Detail View Migration Path
+  owner: global
+  layer: 0
+  source: 04-Frontend/Detail-View-IA.md#R06
+  severity: SHOULD
+
+FE-DV-007:
+  name: Detail View L0 Status Tag Highlight
+  owner: global
+  layer: 0
+  source: 04-Frontend/Detail-View-IA.md#R07
+  severity: SHOULD
+
+FE-DV-008:
+  name: Detail View Descriptions Label Width
+  owner: global
+  layer: 0
+  source: 04-Frontend/Detail-View-IA.md#R08
+  severity: SHOULD

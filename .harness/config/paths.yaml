@@ -1,0 +1,43 @@
+# Project Paths Configuration
+# ai-engineering-standards 路径常量
+
+version: "1.0"
+
+project:
+  root: .
+  name: ai-engineering-standards
+
+chapters:
+  introduction: 00-Introduction/
+  engineering: 01-Engineering/
+  java: 02-Java/
+  python: 03-Python/
+  frontend: 04-Frontend/
+  backend: 05-Backend/
+  architecture: 06-Architecture/
+  ai: 07-AI/
+  testing: 08-Testing/
+  devops: 09-DevOps/
+  product: 10-Product/
+  ai_devtools: 11-AI-DevTools/
+
+templates:
+  root: templates/
+  harness:
+    bootstrap: templates/harness/bootstrap/
+    standard: templates/harness/standard/
+    enterprise: templates/harness/enterprise/
+
+examples:
+  root: examples/
+
+ai:
+  harness: .harness/
+  harness_config: .harness/harness.yaml
+  workspace: .harness/workspace/
+  rule_id: .harness/config/rule-id.yaml
+  exceptions: .harness/governance/exceptions.yaml
+  skills_registry: .harness/skills/skills.yaml
+
+version_control:
+  type: git

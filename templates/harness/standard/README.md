@@ -32,6 +32,10 @@ cp -r templates/harness/standard/. /path/to/your-project/.harness/
 │   └── README.md                  ← 规则占位（待补充）
 ├── knowledge/
 │   └── README.md                  ← 知识索引（待补充）
+├── skills/
+│   ├── skills.yaml                ← Skill 注册表（可选）
+│   └── workflow/
+│       └── stable-iteration/      ← 稳定迭代 7 步 SOP（可选启用）
 ├── workspace/
 │   ├── current/
 │   │   └── README.md
@@ -39,8 +43,15 @@ cp -r templates/harness/standard/. /path/to/your-project/.harness/
 │       └── README.md
 ├── context/
 │   └── layers.yaml                ← 上下文分层加载策略
-└── config/
-    └── paths.yaml                 ← 项目路径常量
+├── config/
+│   ├── paths.yaml                 ← 项目路径常量
+│   └── rule-id.yaml               ← Rule ID 注册表
+├── governance/                    ← 生命周期与质量门禁
+│   ├── lifecycle.yaml
+│   ├── gates.yaml
+│   ├── workflow-audit.yaml    ← Agent Work Loop 五维自检（可选）
+│   ├── exceptions.yaml
+│   └── legacy-roadmap.yaml
 ```
 
 ---
@@ -51,8 +62,10 @@ cp -r templates/harness/standard/. /path/to/your-project/.harness/
 |---------|------|
 | `harness.yaml` | 治理配置（maturity、workspace、context 策略） |
 | `knowledge/` | 项目知识库（架构、业务流程、数据模型） |
+| `skills/skills.yaml` | Skill 注册表（可选，详见 Skill-Governance.md） |
 | `context/layers.yaml` | 上下文分层加载（L1 常驻 / L2 阶段 / L3 按需） |
 | `config/paths.yaml` | 项目路径常量 |
+| `governance/` | 生命周期配置、质量门禁、工作流审计清单、例外登记、老项目改造路线图 |
 
 ---
 

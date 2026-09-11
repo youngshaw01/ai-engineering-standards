@@ -135,6 +135,20 @@ AI 检测到项目无 `.harness/` 时，应：
 
 ---
 
+### R08 — 工作流审计
+
+**SHOULD** — Standard 成熟度项目在以下时机进行 AI 工作流审计：
+
+- 首次接入 Standard 模板（建立基线）
+- 每季度或重大重构前
+- 线上事故后的流程复盘
+
+**MAY** — 使用 [Better Harness](https://github.com/QoderAI/better-harness) 自动生成证据报告；无工具时对照 `governance/workflow-audit.yaml` 手工自检。
+
+审计报告 **SHOULD** 归档至 `.harness/workspace/history/{date}_audit-workflow/`。详见 [Better-Harness.md](Better-Harness.md)。
+
+---
+
 ## Checklist
 
 - [ ] 复杂任务已分解为小步骤
@@ -144,3 +158,4 @@ AI 检测到项目无 `.harness/` 时，应：
 - [ ] 上下文窗口有效利用
 - [ ] AI skill 产物已归入 `.harness/workspace/{task_id}/`
 - [ ] 项目已建立 `.harness/`（至少 Bootstrap 成熟度）
+- [ ] Standard 项目已按计划执行工作流审计（见 Better-Harness.md）

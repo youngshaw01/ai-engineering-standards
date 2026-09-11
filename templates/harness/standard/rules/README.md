@@ -29,6 +29,7 @@ rules/
 ├── detail/               ← 详细规则（按需加载）
 │   ├── java-conventions.md
 │   ├── web-conventions.md
+│   ├── web-detail-view.md    ← 详情查看态 IA（继承 04-Frontend/Detail-View-IA.md）
 │   └── sql.md
 └── layers/               ← 分层架构规则（按层加载）
     ├── 01-controller.md

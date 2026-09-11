@@ -1,0 +1,77 @@
+# Harness Governance Configuration
+# ai-engineering-standards 自身治理配置
+# 详见 11-AI-DevTools/Harness-Bootstrap.md
+
+version: "1.0"
+
+maturity: standard
+
+project:
+  name: ai-engineering-standards
+  description: Global AI Engineering Standard — 跨项目通用规则库
+  type: new
+  version_control: git
+
+technology:
+  backend: []
+  frontend: []
+  database: []
+  ai_tool:
+    - cursor
+
+architecture:
+  style:
+    - monolith
+
+workspace:
+  path: .harness/workspace/
+  task_id_pattern: '{date}_{type}-{feature}'
+  lifecycle:
+    current: .harness/workspace/current/
+    history: .harness/workspace/history/
+
+context:
+  strategy: layered
+  layers_config: .harness/context/layers.yaml
+  budget:
+    target_fill_rate: 0.40
+    principle: just_enough_context
+
+knowledge:
+  path: .harness/knowledge/
+  index: .harness/knowledge/README.md
+
+skills:
+  path: .harness/skills/
+  registry: .harness/skills/skills.yaml
+
+rules:
+  path: .harness/rules/
+  inherit_global: false
+  priority:
+    override: false
+
+governance:
+  path: .harness/governance/
+  lifecycle: .harness/governance/lifecycle.yaml
+  gates: .harness/governance/gates.yaml
+  exceptions: .harness/governance/exceptions.yaml
+
+global_standards:
+  source: self
+  inherit:
+    - safety
+    - coding
+    - api
+    - testing
+    - harness
+
+adapters:
+  enabled:
+    - cursor
+
+rule_identity:
+  registry: .harness/config/rule-id.yaml
+  prefix: SEC
+
+exclude: []

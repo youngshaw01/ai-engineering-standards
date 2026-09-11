@@ -130,7 +130,7 @@ Java 21
 - `.cursor/rules/`
 - `.trae/rules/`
 - `CLAUDE.md`
-- `.harness/project/rules/`
+- `.harness/rules/`
 
 模型自动加载，无需重复理解。
 
