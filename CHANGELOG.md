@@ -7,7 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- `04-Frontend/Detail-View-IA.md` **R07**：补充 Tag 数量上限、摘要区容器高亮、禁止正文纯文本主状态
+- `04-Frontend/Detail-View-IA.md` **R08**：补充 WIDE/COMPACT 分级宽度、折行防溢出、`DetailSection.labelWidth`；参考 `ICEmvParaDetail.vue`
+- `templates/harness/standard/rules/detail/web-detail-view.md`：R07/R08 项目落地表（148/172/112px）
+
 ### Added
+- `04-Frontend/Detail-View-IA.md` **R07** L0 状态 Tag 语义高亮、`FE-DV-007`
+- `04-Frontend/Detail-View-IA.md` **R08** Descriptions Label 等宽、`FE-DV-008`
 - `04-Frontend/Detail-View-IA.md`：B 端详情查看态 IA（L0–L4 分层、查看/编辑分离、字段格式）
 - `templates/harness/standard/rules/detail/web-detail-view.md`：消费项目 Harness 细则模板
 - Rule IDs `FE-DV-001` … `FE-DV-006` in `.harness/config/rule-id.yaml`
