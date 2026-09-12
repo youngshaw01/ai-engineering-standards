@@ -290,3 +290,10 @@ FE-DV-008:
   layer: 0
   source: 04-Frontend/Detail-View-IA.md#R08
   severity: SHOULD
+
+FE-DV-009:
+  name: Detail View JSON Longtext Block Layout
+  owner: global
+  layer: 0
+  source: 04-Frontend/Detail-View-IA.md#R09
+  severity: SHOULD
