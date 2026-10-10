@@ -14,6 +14,23 @@ disable-model-invocation: true
 > **定位**：workflow Skill。把「只读侦察 → 业务聚类 → 逐域深挖 → 横切关注点 → 索引 → 反向审计」串成一条**可验证流水线**，最终产出 `.harness/wiki/`。
 > **约束**：本 Skill 不覆盖项目 Rule；分析阶段**只读**，禁止修改任何源码；一切结论必须证据锚定。
 
+## 可执行工作包（推荐）
+
+在遗留项目仓库中部署完整工作规程，而非仅阅读本 Skill：
+
+```
+templates/harness/legacy-project-ai-wiki-kit/
+├── AGENTS.md
+└── .harness/
+    ├── prompts/COORDINATOR.md   ← 交给协调 Agent 的入口
+    ├── workflow/                ← 门槛、交接、STATUS
+    └── wiki/                    ← 初始化模板
+```
+
+**启动方式**：复制工作包到目标仓库 → 将 `COORDINATOR.md` 交给有仓库权限的 Agent → 从阶段 0 逐阶段执行，**不要**一次性跑完全部 Prompt。
+
+阶段 Prompt 位于工作包 `.harness/prompts/`（`00-prepare.md` … `06-independent-audit.md`；`07-finalize.md` 为交付收尾，非独立阶段）。质量门槛见 `.harness/workflow/quality-gates.md`；封版验证见 `validation-checklist.md`。
+
 ## 何时使用
 
 | 场景 | 建议 |
@@ -66,7 +83,7 @@ Phase 0 准备 → Phase 1 侦察 → Phase 2 能力提取 → Phase 3 逐域深
     → Phase 4 横切关注点 → Phase 5 索引 → Phase 6 审计校验
 ```
 
-**每阶段开新会话**，把上一阶段产物作为输入喂进去，避免上下文漂移。
+**每阶段开新会话**，把上一阶段产物作为输入喂进去，避免上下文漂移。会话中断后从 `.harness/workflow/STATUS.md` 和磁盘产物续跑，不依赖聊天上下文。
 
 ---
 
@@ -201,5 +218,6 @@ Prompt 见 [references/prompts.md](references/prompts.md#phase-6--审计校验�
 
 ## 附加资源
 
-- Prompt 模板：[references/prompts.md](references/prompts.md)
+- **可执行工作包**：`templates/harness/legacy-project-wiki-kit/`（含 COORDINATOR、分阶段 Prompt、workflow、wiki 模板）
+- Prompt 速查（会话内粘贴用）：[references/prompts.md](references/prompts.md)
 - 产物模板：[references/artifacts.md](references/artifacts.md)

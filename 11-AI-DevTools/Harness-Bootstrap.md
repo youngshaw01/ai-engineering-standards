@@ -86,8 +86,13 @@ AI Agent
 │   └── history/{task_id}/
 ├── context/               ← AI 上下文分层
 ├── config/                ← rule-id.yaml、paths.yaml
-└── governance/            ← lifecycle、gates、exceptions
+├── governance/            ← lifecycle、gates、exceptions
+├── wiki/                  ← 业务知识沉淀（遗留项目梳理产物，可选）
+├── prompts/               ← 阶段化工作流 Prompt（遗留梳理工作包，可选）
+└── workflow/              ← 阶段状态、门槛、交接（遗留梳理工作包，可选）
 ```
+
+遗留项目业务梳理：复制 `templates/harness/legacy-project-wiki-kit/` 到目标仓库，从 `.harness/prompts/COORDINATOR.md` 启动。详见该目录 `README.md` 与 Skill `legacy-project-wiki`。
 
 项目全生命周期治理（需求→交付、环境晋升、反向回归、老项目改造），详见 [Project-Lifecycle-Governance.md](../01-Engineering/Project-Lifecycle-Governance.md)。
 

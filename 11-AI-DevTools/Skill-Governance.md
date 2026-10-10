@@ -211,17 +211,19 @@ skills:
 
 | 维度 | 说明 |
 |------|------|
-| 定位 | 遗留项目业务梳理流水线（6 阶段）→ 证据锚定业务 wiki |
+| 定位 | 遗留项目业务梳理流水线（阶段 0–6 + 交付收尾）→ 证据锚定业务 wiki |
 | 能力 | 只读侦察、业务能力聚类、逐域调用链深挖、横切关注点、索引交叉链接、反向审计防幻觉 |
 | 分类 | workflow |
-| 来源 | 本仓库 `templates/harness/standard/skills/workflow/legacy-project-wiki/` |
+| Skill 概览 | `templates/harness/standard/skills/workflow/legacy-project-wiki/` |
+| **可执行工作包** | `templates/harness/legacy-project-wiki-kit/`（AGENTS.md + prompts + workflow + wiki 模板） |
+| 启动入口 | 复制工作包到目标仓库 → `.harness/prompts/COORDINATOR.md` |
 | 推荐范围 | 接手遗留系统、文档缺失、重构前摸底、新人 onboarding |
 | 不适用 | 新项目从零设计（走 PRD / 架构设计流程）、纯代码修改 |
 | trigger | manual（`/legacy-project-wiki`、"梳理业务/wiki"） |
 | invoked_by | user |
 | auto_execute | false |
 
-**关键**：结论必须证据锚定（`文件:行号`），无证据标 `[待确认]` 并汇总到 `_pending.md`；分析阶段只读，禁止修改源码；产物沉淀至 `.harness/wiki/`。
+**关键**：结论必须证据锚定（`文件:行号`），无证据标 `[待确认]` 并汇总到 `_pending.md`；分析阶段只读，禁止修改源码；产物沉淀至 `.harness/wiki/`。协调 Agent 逐阶段推进，领域分析可并行；会话中断后从 `STATUS.md` 与磁盘产物续跑。
 
 ### better-harness
 
