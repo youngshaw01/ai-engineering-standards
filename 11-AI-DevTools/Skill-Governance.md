@@ -78,6 +78,7 @@ AI 默认行为
 ├── workflow/              ← AI 工作方法论
 │   ├── superpowers-zh     任务拆解、计划生成、自检、复盘
 │   ├── stable-iteration   AI 改动 7 步稳定迭代 SOP
+│   ├── legacy-project-wiki 遗留项目业务梳理 → .harness/wiki 流水线
 │   ├── grill-me           方案挑战、架构评审、反向质疑
 │   └── review             代码审查流程
 │
@@ -205,6 +206,22 @@ skills:
 | auto_execute | false |
 
 **关键**：Step 4（先测后改）不可省略；产出物归档至 `workspace/current/{task_id}/`。
+
+### legacy-project-wiki
+
+| 维度 | 说明 |
+|------|------|
+| 定位 | 遗留项目业务梳理流水线（6 阶段）→ 证据锚定业务 wiki |
+| 能力 | 只读侦察、业务能力聚类、逐域调用链深挖、横切关注点、索引交叉链接、反向审计防幻觉 |
+| 分类 | workflow |
+| 来源 | 本仓库 `templates/harness/standard/skills/workflow/legacy-project-wiki/` |
+| 推荐范围 | 接手遗留系统、文档缺失、重构前摸底、新人 onboarding |
+| 不适用 | 新项目从零设计（走 PRD / 架构设计流程）、纯代码修改 |
+| trigger | manual（`/legacy-project-wiki`、"梳理业务/wiki"） |
+| invoked_by | user |
+| auto_execute | false |
+
+**关键**：结论必须证据锚定（`文件:行号`），无证据标 `[待确认]` 并汇总到 `_pending.md`；分析阶段只读，禁止修改源码；产物沉淀至 `.harness/wiki/`。
 
 ### better-harness
 
