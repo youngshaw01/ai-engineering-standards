@@ -1,0 +1,91 @@
+id: superpowers
+name: Superpowers
+category: workflow
+tier: recommended
+
+summary: |
+  obra/superpowers：可组合的 Agent 开发方法论（头脑风暴、计划、TDD、调试、Code Review、收尾等）。
+  适合复杂功能与多步协作；简单 typo 或单行修改不必启用整套流程。
+
+source:
+  type: external
+  repository: obra/superpowers
+  url: https://github.com/obra/superpowers
+  license: MIT
+  author: Jesse Vincent (obra)
+
+install:
+  cursor:
+    - method: marketplace
+      command: "/add-plugin superpowers"
+      notes: Agent 聊天中执行，或在插件市场搜索 superpowers
+    - method: marketplace_url
+      url: https://cursor.com/marketplace/superpowers
+  other_harnesses:
+    - See upstream README「Getting Started」按工具分节安装
+
+scope:
+  - development
+  - refactoring
+  - feature-design
+  - debugging
+  - code-review
+
+not_for:
+  - typo
+  - one-line-fix
+  - trivial-config
+
+invoked_by: model_and_user
+auto_execute: false
+
+bundled_skills:
+  - id: using-superpowers
+    role: meta
+    when: 会话开始建立 Skill 使用纪律
+  - id: brainstorming
+    when: 新功能、改行为、做设计之前
+  - id: writing-plans
+    when: 需求已清晰，需要可执行计划
+  - id: executing-plans
+    when: 已有书面计划，分阶段实施
+  - id: test-driven-development
+    when: 实现功能或修 bug 且适合 TDD
+  - id: systematic-debugging
+    when: 缺陷、测试失败、异常行为
+  - id: requesting-code-review
+    when: 完成功能或较大改动，发起审查
+  - id: receiving-code-review
+    when: 处理审查意见
+  - id: verification-before-completion
+    when: 声称完成、合并或交付前
+  - id: finishing-a-development-branch
+    when: 实现完成且测试通过，决定如何集成
+  - id: subagent-driven-development
+    when: 计划中有可并行、低耦合子任务
+  - id: dispatching-parallel-agents
+    when: 多个独立任务可并行
+  - id: using-git-worktrees
+    when: 需要隔离分支或执行计划前建 worktree
+  - id: writing-skills
+    when: 编写或维护 SKILL.md
+
+register_template:
+  # 复制到 skills.yaml 的 enabled 段（安装与审批后填写）
+  name: superpowers
+  category: workflow
+  source:
+    type: external
+    repository: obra/superpowers
+    url: https://github.com/obra/superpowers
+  scope:
+    - development
+    - refactoring
+  approval:
+    required: true
+    approved_by: "{{APPROVER}}"
+    approved_at: "{{DATE}}"
+  auto_execute: false
+
+related_catalog_ids:
+  - superpowers-zh

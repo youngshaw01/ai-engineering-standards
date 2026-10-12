@@ -1,0 +1,50 @@
+id: grill-me
+name: grill-me
+category: workflow
+tier: recommended
+
+summary: |
+  Matt Pocock 的交互式拷问 Skill：对计划/架构/PRD 连续追问，逼清决策分支。
+  仅用于设计评审；不参与日常编码。
+
+source:
+  type: external
+  repository: mattpocock/skills
+  url: https://github.com/mattpocock/skills
+  skill_path: skills/productivity/grill-me/SKILL.md
+  license: MIT
+  author: Matt Pocock
+
+install:
+  default:
+    command: npx skills@latest add mattpocock/skills
+    notes: 交互选择 grill-me
+
+scope:
+  - architecture
+  - design-review
+  - prd-review
+  - plan-review
+
+trigger:
+  manual: true
+invoked_by: user
+auto_execute: false
+
+register_template:
+  name: grill-me
+  category:
+    - workflow
+    - review
+  source:
+    type: external
+    repository: mattpocock/skills
+    url: https://github.com/mattpocock/skills
+    skill_path: skills/productivity/grill-me/SKILL.md
+    install: npx skills@latest add mattpocock/skills
+  scope:
+    - architecture
+    - design-review
+  trigger:
+    manual: true
+  auto_execute: false

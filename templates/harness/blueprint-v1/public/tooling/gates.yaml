@@ -1,0 +1,8 @@
+# 最小 fast 门禁 — 项目须实现对应 command
+version: 1
+
+gates:
+  - id: harness-sync
+    label: Rules 与生成物同步
+    modes: [fast, full]
+    command: node .harness/sync.mjs --check

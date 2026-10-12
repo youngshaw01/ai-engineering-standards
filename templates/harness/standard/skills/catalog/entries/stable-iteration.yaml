@@ -1,0 +1,40 @@
+id: stable-iteration
+name: stable-iteration
+category: workflow
+tier: recommended
+bundled: true
+
+summary: |
+  本标准库自带的 AI 辅助改动 7 步 SOP（诊断、依赖、小步、TDD 守门、对抗 Review、灰度、回滚）。
+
+source:
+  type: local
+  path: skills/workflow/stable-iteration/SKILL.md
+  template_path: templates/harness/standard/skills/workflow/stable-iteration/SKILL.md
+
+scope:
+  - refactoring
+  - development
+  - technical-debt
+
+trigger:
+  manual: true
+invoked_by: user
+auto_execute: false
+
+register_template:
+  name: stable-iteration
+  category: workflow
+  source:
+    type: local
+    path: skills/workflow/stable-iteration/SKILL.md
+  scope:
+    - refactoring
+    - development
+  trigger:
+    manual: true
+  approval:
+    required: true
+    approved_by: "{{APPROVER}}"
+    approved_at: "{{DATE}}"
+  auto_execute: false

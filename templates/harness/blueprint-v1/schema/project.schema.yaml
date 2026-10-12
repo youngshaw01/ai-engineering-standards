@@ -1,0 +1,162 @@
+# Harness Blueprint v1 — ProjectInstance Schema (YAML meta-schema)
+# 用途：校验 .harness/project.yaml；非业务数据存储。
+# blueprint@1.0.0
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "https://internal.harness/blueprint/v1/project.schema.yaml"
+title: HarnessProjectInstance
+type: object
+required:
+  - apiVersion
+  - kind
+  - metadata
+  - blueprint
+  - project
+  - tooling
+  - adapters
+additionalProperties: false
+
+properties:
+  apiVersion:
+    type: string
+    const: harness.blueprint/v1
+  kind:
+    type: string
+    const: ProjectInstance
+
+  metadata:
+    type: object
+    required: [name]
+    properties:
+      name:
+        type: string
+        pattern: "^[a-z0-9][a-z0-9-]{0,62}$"
+      display_name:
+        type: string
+      repository_root:
+        type: string
+        default: "."
+    additionalProperties: false
+
+  blueprint:
+    type: object
+    required: [version]
+    properties:
+      version:
+        type: string
+        pattern: "^\\d+\\.\\d+\\.\\d+$"
+      adopted_at:
+        type: string
+        format: date
+      last_upgrade_preview:
+        type: ["string", "null"]
+    additionalProperties: false
+
+  project:
+    type: object
+    required: [vcs, workspaces]
+    properties:
+      vcs:
+        enum: [svn, git]
+      branch:
+        type: string
+      locales:
+        type: array
+        items: { type: string }
+      workspaces:
+        type: array
+        items: { type: string }
+        minItems: 1
+      readonly_paths:
+        type: array
+        items: { type: string }
+      commit_encoding:
+        type: string
+        description: "e.g. gbk for SVN Chinese messages"
+      auto_commit:
+        type: boolean
+        const: false
+    additionalProperties: false
+
+  tooling:
+    type: object
+    required: [sync, gates_fast, gates_full]
+    properties:
+      sync:
+        type: string
+      gates_fast:
+        type: string
+      gates_full:
+        type: string
+      structure:
+        type: string
+      smoke:
+        type: string
+        description: "Optional; not required by Blueprint L0"
+    additionalProperties: true
+
+  adapters:
+    type: object
+    required: [manifest, enabled]
+    properties:
+      manifest:
+        type: string
+      enabled:
+        type: array
+        items:
+          enum: [cursor, trae, claude, windsurf, copilot]
+    additionalProperties: false
+
+  checks:
+    type: object
+    properties:
+      include:
+        type: array
+        items: { type: string }
+    additionalProperties: false
+
+  knowledge:
+    type: object
+    properties:
+      domain_ssot:
+        enum: [wiki, knowledge]
+      specs_dir:
+        type: string
+    additionalProperties: false
+
+  extensions:
+    type: object
+    description: "Path pointers only; no embedded large documents"
+    additionalProperties:
+      type: string
+
+# --- PayNow 实例示例（迁移目标，勿直接覆盖现有 harness.yaml）---
+example_paynow:
+  apiVersion: harness.blueprint/v1
+  kind: ProjectInstance
+  metadata:
+    name: malaysia-acqsys
+    display_name: Malaysia AcqSys
+  blueprint:
+    version: "1.0.0"
+    adopted_at: "2026-10-12"
+  project:
+    vcs: svn
+    branch: "20260316_MalaysiaAcqSys"
+    locales: [zh-CN]
+    workspaces: [java/, web/, docs/, database/, sql/]
+    readonly_paths: [c/]
+    commit_encoding: gbk
+    auto_commit: false
+  tooling:
+    sync: node .harness/sync.mjs
+    gates_fast: node .harness/sync.mjs --verify-gates
+    gates_full: node .harness/sync.mjs --verify-gates --full
+    structure: node .harness/public/tooling/verify-structure.mjs
+    smoke: scripts/pre-submit-smoke.ps1
+  adapters:
+    manifest: .harness/adapters/manifest.json
+    enabled: [cursor, trae]
+  knowledge:
+    domain_ssot: wiki
+    specs_dir: .harness/specs

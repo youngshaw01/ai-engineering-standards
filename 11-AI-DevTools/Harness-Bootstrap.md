@@ -64,6 +64,15 @@ AI Agent
 | **Layer 1** | `.harness/` | Project Governance | 项目规则、知识、AI 工作记录、上下文 |
 | **Layer 2** | `.cursor/rules/` / `.trae/rules/` | AI Adapter | 无（纯转换层，消费 Layer 0 + Layer 1） |
 
+### Blueprint v1（可复制契约）
+
+在 Bootstrap 之上，**Harness Engineering Blueprint v1** 定义 init/adopt/upgrade、`project.yaml` Schema 与 L0/L1 验收。契约与模板均在**本仓库 Layer 0**（不另建 `harness-blueprint` 仓）：
+
+- 规范：[Harness-Blueprint-v1.md](Harness-Blueprint-v1.md)
+- 模板：`templates/harness/blueprint-v1/`
+
+业务仓库通过 `.harness/project.yaml` 声明 `blueprint.version` 与 `blueprint.source` 指向上述路径。
+
 ---
 
 ## .harness 标准结构
@@ -77,6 +86,7 @@ AI Agent
 ├── knowledge/             ← 项目知识
 ├── skills/                ← AI 能力（可选，详见 Skill-Governance.md）
 │   ├── skills.yaml        ← Skill 注册表
+│   ├── catalog/           ← 常用 Skill 目录（选型，见 catalog.yaml）
 │   ├── workflow/          ← AI 工作方法论（superpowers-zh、grill-me）
 │   ├── engineering/       ← 工程能力（java-review、api-testing）
 │   ├── domain/            ← 领域能力（telecom、finance）

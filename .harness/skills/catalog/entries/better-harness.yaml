@@ -1,0 +1,43 @@
+id: better-harness
+name: better-harness
+category: workflow
+tier: optional
+
+summary: |
+  AI 编码工作流五维审计（证据采集、Findings、整改范围）。
+  详见 11-AI-DevTools/Better-Harness.md。
+
+source:
+  type: external
+  repository: QoderAI/better-harness
+  url: https://github.com/QoderAI/better-harness
+  skill_path: skills/better-harness/SKILL.md
+  license: MIT
+
+scope:
+  - workflow-audit
+  - governance
+  - retrospective
+
+trigger:
+  manual: true
+invoked_by: user
+auto_execute: false
+
+register_template:
+  name: better-harness
+  category: workflow
+  source:
+    type: external
+    repository: QoderAI/better-harness
+    url: https://github.com/QoderAI/better-harness
+    skill_path: skills/better-harness/SKILL.md
+  scope:
+    - workflow-audit
+  trigger:
+    manual: true
+  approval:
+    required: true
+    approved_by: "{{APPROVER}}"
+    approved_at: "{{DATE}}"
+  auto_execute: false

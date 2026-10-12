@@ -75,6 +75,9 @@ AI 默认行为
 
 ```
 .harness/skills/
+├── catalog/               ← 常用 Skill 目录（选型；见 catalog.yaml，不等于已启用）
+│   ├── catalog.yaml
+│   └── entries/
 ├── workflow/              ← AI 工作方法论
 │   ├── superpowers-zh     任务拆解、计划生成、自检、复盘
 │   ├── stable-iteration   AI 改动 7 步稳定迭代 SOP
@@ -104,6 +107,22 @@ AI 默认行为
 | **engineering** | 工程技术能力 | 按技术栈选择 | java-review、api-testing |
 | **domain** | 领域业务能力 | 按行业选择 | telecom、finance |
 | **operations** | 运维部署能力 | 按基础设施选择 | docker、kubernetes |
+
+---
+
+## 常用 Skill 目录（catalog）
+
+**SHOULD** — 团队在 `skills/catalog/` 维护常用、已评估的外部与本仓自带 Skill，与项目治理注册表分离：
+
+| 路径 | 用途 |
+|------|------|
+| `skills/catalog/catalog.yaml` | 目录索引（`tier`、`category`、指向 `entries/`） |
+| `skills/catalog/entries/*.yaml` | 单 Skill 详情：来源、安装命令、`bundled_skills`、写入 `skills.yaml` 的 `register_template` |
+| `skills/skills.yaml` | **仅**登记经审批启用的 Skill |
+
+模板位置：`templates/harness/standard/skills/catalog/`。Layer 0 实例：`.harness/skills/catalog/`。
+
+**MUST NOT** — 将 catalog 等同于 `enabled` 列表，或据此自动安装 Skill（`policy.auto_install` 仍为 false）。
 
 ---
 

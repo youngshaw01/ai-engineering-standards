@@ -62,5 +62,5 @@ Workflow Skill 概览见 `templates/harness/standard/skills/workflow/legacy-proj
 
 ```bash
 cd templates/harness
-zip -r legacy-project-ai-wiki-kit.zip legacy-project-ai-wiki-kit/
+zip -r legacy-project-wiki-kit.zip legacy-project-wiki-kit/
 ```

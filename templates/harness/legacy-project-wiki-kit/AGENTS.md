@@ -10,7 +10,7 @@
 4. 按业务能力/业务域组织文档，不按 Controller/Service/DAO 等技术分层组织业务 Wiki。技术架构作为横切文档记录。
 5. 不把目录名、类名、注释、API 名称单独当成业务事实；必须沿调用链验证到持久化、消息、外部调用或响应。
 6. 不默认项目使用某种语言、框架、数据库、MQ、业务域或部署方式。先侦察，再决定分析方法。
-7. 不声称“全量”除非做了可复现的扫描与数量校验。记录扫描命令、纳入/排除规则、生成时间、commit SHA（若可用）。
+7. 不声称“全量”除非做了可复现的扫描与数量校验。记录扫描命令、纳入/排除规则、生成时间、源码基线标识（Git commit SHA 或 SVN revision，若可用）。
 8. 对动态路由、反射注册、代码生成、插件、运行时配置、外部仓库或不可访问依赖，要明确记录覆盖限制。
 9. 禁止为了填满模板而写空洞内容。没有对应机制时写“在已检查范围内未发现”，并列出检查范围；不能据此断言全项目不存在。
 10. 每阶段必须先检查输入和输出；未通过验收不得宣告完成。修订应保留审计可追溯性。
@@ -29,13 +29,13 @@
 
 ## Wiki 版本绑定
 维护 `.harness/wiki/_manifest.yaml`，至少包含：
-- `source_commit`：分析对应的源码提交
+- `source_commit`：分析对应的源码基线标识（Git commit SHA 或 SVN revision）
 - `analyzed_at`：分析日期
 - `coverage_status`：`complete` | `partial` | `blocked`
 - `audit_status`：`not_audited` | `passed` | `conditional` | `failed`
 - `pending_count`：未关闭待确认项数量
 
-源码变更后：比较 `source_commit` 与当前 HEAD，按变更路径重审受影响业务域，更新 `domains_needing_reanalysis`；不得默认旧 Wiki 仍然有效。
+源码变更后：比较 `source_commit` 与当前 revision，按变更路径重审受影响业务域，更新 `domains_needing_reanalysis`；不得默认旧 Wiki 仍然有效。
 
 ## 安全与隐私
 - 不复制 `.env`、私钥、token、证书、真实个人数据或生产数据到 Wiki。

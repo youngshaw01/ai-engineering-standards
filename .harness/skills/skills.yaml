@@ -1,6 +1,7 @@
 # Skill Governance Configuration
 # 本仓库（标准库）的 Skill 治理配置
 # 详见 11-AI-DevTools/Skill-Governance.md
+# 常用 Skill 目录（选型，非启用）：.harness/skills/catalog/catalog.yaml
 
 version: "1.0"
 

@@ -20,7 +20,7 @@ Key principle: **Standards are not bound to Git. Version control is just one par
 
 `.harness` 是项目的 **AI Governance Workspace**——AI 在项目中的工作空间。
 
-详见 [Harness-Bootstrap.md](11-AI-DevTools/Harness-Bootstrap.md)。
+详见 [Harness-Bootstrap.md](11-AI-DevTools/Harness-Bootstrap.md)。可复制契约见 [Harness-Blueprint-v1.md](11-AI-DevTools/Harness-Blueprint-v1.md)（模板 `templates/harness/blueprint-v1/`）。
 
 ---
 

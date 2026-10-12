@@ -155,7 +155,7 @@ Prompt 见 [references/prompts.md](references/prompts.md#phase-4--横切关注�
 
 ## Phase 5 — 索引与交叉链接
 
-产出 `.harness/wiki/README.md`：按「新人上手路径」排序阅读顺序、每文件一句话摘要、业务域 → 代码路径反查表；汇总所有 `[待确认]` 到根 `_pending.md`；检查交叉引用链接（相对链接）；报告孤立文件。
+产出 `.harness/wiki/README.md`：按「新人上手路径」排序阅读顺序、每文件一句话摘要、业务域 → 代码路径反查表；汇总所有 `[待确认]` 到根 `_pending.md`，须**两部分并存**——分类台账 + **附录 A 各域条目全量索引**（机械抽取、原文照录、不得改写截断），附录条数须与 `_audit.md` 覆盖度核对及 `_manifest.yaml` 的 `pending_count` 口径一致；检查交叉引用链接（相对链接）；报告孤立文件。
 
 Prompt 见 [references/prompts.md](references/prompts.md#phase-5--索引与交叉链接)。
 
@@ -163,7 +163,7 @@ Prompt 见 [references/prompts.md](references/prompts.md#phase-5--索引与交�
 
 ## Phase 6 — 审计校验（防幻觉）
 
-用**第二个 agent** 扮演「找茬」，随机抽 20 条结论回源码验证（优先抽业务规则 / 状态机 / 数据模型），判定 `通过 / 过度推断 / 错误 / 遗漏`，输出 `_audit.md`，修正反馈给 Phase 3 修订。
+用**第二个 agent** 扮演「找茬」，随机抽 20 条结论回源码验证（优先抽业务规则 / 状态机 / 数据模型），判定 `通过 / 部分支持 / 错误 / 无法验证`，输出 `_audit.md`：须含审计方法与可复现口径（含基线时点声明）、量化结果、覆盖度核对、审计发现（AUD-nn，带 🟢/🟡/🔴 与「已修复」标记）、抽样回溯、反模式核对、完成检查清单统计（无未修正 ❌）、P0/P1/P2 分级修正建议、审计局限；修正反馈给 Phase 3 修订。
 
 Prompt 见 [references/prompts.md](references/prompts.md#phase-6--审计校验防幻觉)。
 
@@ -201,8 +201,8 @@ Prompt 见 [references/prompts.md](references/prompts.md#phase-6--审计校验�
 - [ ] domains/*.md：每条业务规则有代码位置；推断已标 [推断]
 - [ ] 02-architecture.md + data/* + flows/* 已产出
 - [ ] README.md：阅读顺序 + 反查表 + 交叉链接完整
-- [ ] _pending.md：所有 [待确认] 已汇总
-- [ ] _audit.md：抽检 20 条，错误项已反馈修订
+- [ ] _pending.md：分类台账 + 附录 A 各域条目全量索引两部分并存，附录条数与 _audit.md / _manifest.yaml 口径一致
+- [ ] _audit.md：抽检 20 条，含审计口径时点声明、完成检查清单统计（无未修正 ❌）与审计局限
 - [ ] 全流程只读，未修改任何源码
 ```
 

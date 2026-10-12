@@ -1,0 +1,59 @@
+id: superpowers-zh
+name: superpowers-zh（中文增强版）
+category: workflow
+tier: recommended
+locale: zh-Hans
+
+summary: |
+  基于 obra/superpowers 的汉化与增强发行版，含中文 Skill 与多工具一键安装。
+  若团队已用 Cursor 官方 Superpowers 插件，勿与 superpowers-zh 重复安装同一套流程，择一即可。
+
+source:
+  type: external
+  repository: jnMetaCode/superpowers-zh
+  url: https://github.com/jnMetaCode/superpowers-zh
+  npm: superpowers-zh
+  license: 见上游仓库
+
+install:
+  cursor:
+    - method: npx
+      command: npx superpowers-zh --tool cursor
+      target_dir: .cursor/skills/
+    - method: manual
+      command: cp -r superpowers-zh/skills /your/project/.cursor/skills
+  notes: |
+    自动检测失败时使用 --tool cursor。
+    安装会写入工具适配目录；与项目 .harness/skills/ 治理注册表相互独立。
+
+scope:
+  - development
+  - refactoring
+  - feature-design
+
+not_for:
+  - typo
+  - one-line-fix
+
+invoked_by: model_and_user
+auto_execute: false
+
+register_template:
+  name: superpowers-zh
+  category: workflow
+  source:
+    type: external
+    repository: jnMetaCode/superpowers-zh
+    url: https://github.com/jnMetaCode/superpowers-zh
+    install: npx superpowers-zh --tool cursor
+  scope:
+    - development
+    - refactoring
+  approval:
+    required: true
+    approved_by: "{{APPROVER}}"
+    approved_at: "{{DATE}}"
+  auto_execute: false
+
+related_catalog_ids:
+  - superpowers

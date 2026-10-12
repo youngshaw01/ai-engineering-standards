@@ -1,0 +1,41 @@
+# 复制到业务仓库：.harness/project.yaml
+apiVersion: harness.blueprint/v1
+kind: ProjectInstance
+
+metadata:
+  name: "{{PROJECT_ID}}"
+  display_name: "{{PROJECT_DISPLAY_NAME}}"
+
+blueprint:
+  version: "1.0.0"
+  source:
+    repository: ai-engineering-standards
+    spec: 11-AI-DevTools/Harness-Blueprint-v1.md
+    templates: templates/harness/blueprint-v1/
+  adopted_at: "{{YYYY-MM-DD}}"
+
+project:
+  vcs: git
+  branch: main
+  locales: [zh-CN]
+  workspaces:
+    - src/
+  readonly_paths: []
+  commit_encoding: utf-8
+  auto_commit: false
+
+tooling:
+  sync: node .harness/sync.mjs
+  gates_fast: node .harness/sync.mjs --verify-gates
+  gates_full: node .harness/sync.mjs --verify-gates --full
+  structure: node .harness/public/tooling/verify-structure.mjs
+
+adapters:
+  manifest: .harness/adapters/manifest.json
+  enabled: [cursor]
+
+knowledge:
+  domain_ssot: knowledge
+  specs_dir: .harness/specs
+
+legacy_index: {}

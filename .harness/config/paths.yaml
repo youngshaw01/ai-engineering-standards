@@ -38,6 +38,7 @@ ai:
   rule_id: .harness/config/rule-id.yaml
   exceptions: .harness/governance/exceptions.yaml
   skills_registry: .harness/skills/skills.yaml
+  skills_catalog: .harness/skills/catalog/catalog.yaml
 
 version_control:
   type: git

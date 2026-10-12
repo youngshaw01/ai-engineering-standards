@@ -1,0 +1,16 @@
+# Standards Exceptions — 项目登记模板
+# 路径：.harness/governance/exceptions.yaml
+#
+# 格式：
+#   RULE-ID:
+#     reason: ...
+#     scope: ...
+#     owner: ...
+#     deadline: permanent | YYYY-MM-DD
+
+# 示例（接入后删除或改为真实例外）：
+# EXAMPLE-001:
+#   reason: "模板占位，非项目实际例外"
+#   scope: "none"
+#   owner: "team"
+#   deadline: "2026-12-31"

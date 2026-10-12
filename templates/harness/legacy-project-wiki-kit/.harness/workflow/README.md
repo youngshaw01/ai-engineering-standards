@@ -94,14 +94,14 @@
 
 每次分析维护 `.harness/wiki/_manifest.yaml`（自 `_manifest.template.yaml` 初始化）：
 
-- `source_commit`：分析对应的源码 HEAD
+- `source_commit`：分析对应的源码基线标识（Git commit SHA 或 SVN revision）
 - `analyzed_at`：分析日期
 - `coverage_status`：`complete` | `partial` | `blocked`
 - `audit_status`：`not_audited` | `passed` | `conditional` | `failed`
 - `pending_count`：未关闭待确认项数量
 - `domains[]`：各域 slug、`source_commit`、`coverage_status`、主要路径
 
-**源码变更后**：若当前 HEAD ≠ `source_commit`，标记 `stale: true`，用 `git diff source_commit..HEAD --name-only` 识别受影响路径，更新 `domains_needing_reanalysis`，仅重审受影响域及相关横切文档（入口注册机制变更时重跑阶段 1–2）。
+**源码变更后**：若当前 revision ≠ `source_commit`，标记 `stale: true`，用版本控制工具的差异命令识别受影响路径（Git：`git diff source_commit..HEAD --name-only`；SVN：`svn diff -r <rev>:HEAD --summarize`），更新 `domains_needing_reanalysis`，仅重审受影响域及相关横切文档（入口注册机制变更时重跑阶段 1–2）。
 
 ## 阶段门槛
 | 阶段 | 必须交付 | 推进条件 |
@@ -111,8 +111,8 @@
 | 2 能力地图 | `.harness/wiki/01-capability-map.md` | endpoint/入口清单与分类计数可复核；未分类项显式列出 |
 | 3 领域分析 | `.harness/wiki/domains/*.md` | 每个选定领域按模板完成；关键规则均有证据；待确认项转入总清单 |
 | 4 横切分析 | 架构、ER、状态机、跨域流程、集成文档 | 只汇总已验证信息；关系和流程标明证据及推断 |
-| 5 索引 | `README.md`、`_pending.md` | 链接有效、待确认项去重、业务域反查表完整 |
-| 6 审计 | `_audit.md` | 抽样可复现；错误已修订并复核；最终结论为通过或有条件通过 |
+| 5 索引 | `README.md`、`_pending.md`（含附录：各域「待确认」全量索引） | 链接有效、待确认项去重、业务域反查表完整；附录条数已核对 |
+| 6 审计 | `_audit.md` | 抽样可复现；错误已修订并复核；口径时点、清单统计、审计局限已写明；最终结论为通过或有条件通过 |
 | 交付收尾 | 交付报告（聊天或 `workspace/`） | `07-finalize.md` 检查通过；`_manifest.yaml` 与审计一致 |
 
 ## 推荐执行节奏
@@ -130,8 +130,8 @@
 4. 若 commit SHA 变化，标记旧 Wiki 可能过期；比较改动范围，重跑受影响的阶段和引用审计。
 5. 失败重试最多两次；仍失败时记录具体阻塞、已尝试方法与需要的人类决策，不得无限探索。
 
-## Git 与提交
-- 开始和结束均记录 `git status --short` 与 commit SHA。
+## 版本控制与提交
+- 开始和结束均记录工作区状态与源码基线标识（Git：`git status --short` + commit SHA；SVN：`svn status` + revision）。
 - 默认不自动 commit、不 push、不创建 PR；除非用户明确授权。
 - 只允许提交用户要求的文档目录；绝不把源码改动、秘密文件或无关格式化混入。
 - 完成后提供变更文件清单、阶段门槛结果、未覆盖范围、审计结果和建议的人工确认事项。

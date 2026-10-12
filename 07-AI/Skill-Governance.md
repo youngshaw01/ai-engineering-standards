@@ -18,6 +18,7 @@
 | 用途 | 路径 |
 |------|------|
 | Skill 注册表 | `.harness/skills/skills.yaml` |
-| 复制模板 | `templates/harness/standard/skills/skills.yaml` |
+| 常用 Skill 目录 | `.harness/skills/catalog/catalog.yaml` |
+| 复制模板 | `templates/harness/standard/skills/skills.yaml`、`templates/harness/standard/skills/catalog/` |
 
 **MUST NOT** — 不要创建 `.standards/` 目录；项目画像写在 `harness.yaml`，Rule ID 在 `.harness/config/rule-id.yaml`。

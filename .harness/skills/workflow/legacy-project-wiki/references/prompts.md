@@ -1,5 +1,7 @@
-# Legacy Project Wiki — Prompt 模板
+# Legacy Project Wiki — Prompt 速查
 
+> **推荐**：在遗留项目仓库部署可执行工作包 `templates/harness/legacy-project-wiki-kit/`，从 `.harness/prompts/COORDINATOR.md` 启动协调 Agent。以下为会话内快速粘贴版；完整版见工作包 `.harness/prompts/`。
+>
 > 每阶段**开新会话**执行；将上一阶段产物文件作为输入喂入。
 > 占位符 `{...}` 使用时替换为实际路径 / 名域，避免整库粘贴。
 

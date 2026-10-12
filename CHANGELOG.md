@@ -1,4 +1,4 @@
-﻿# Changelog
+# Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -7,13 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `11-AI-DevTools/Harness-Blueprint-v1.md`：Harness Engineering Blueprint v1 契约（Layer 0 SSOT，不另建 harness-blueprint 仓）
+- `templates/harness/blueprint-v1/`：最小项目骨架（AGENTS、project.yaml、governance、adapters、gates、workflows、schema）
+
 ### Changed
 - `04-Frontend/Detail-View-IA.md` **R08**：补充多列 grid 对齐原理图（双列 4n+1/4n+3 同宽）、三列 nth-child 表、`table-layout: fixed` 三要素
 - `04-Frontend/Detail-View-IA.md` **R07**：补充 Tag 数量上限、摘要区容器高亮、禁止正文纯文本主状态
 - `04-Frontend/Detail-View-IA.md` **R08**：补充 WIDE/COMPACT 分级宽度、折行防溢出、`DetailSection.labelWidth`；参考 `ICEmvParaDetail.vue`
 - `templates/harness/standard/rules/detail/web-detail-view.md`：R07/R08 项目落地表（148/172/112px）
+- `legacy-project-wiki-kit`：修正打包命令与 Skill 引用路径 `legacy-project-ai-wiki-kit` → `legacy-project-wiki-kit`
+- `legacy-project-wiki-kit/.harness/prompts/05-index-and-pending.md`：明确 `_pending.md` 须「分类台账 + 附录 A 各域条目全量索引」两部分并存
+- `legacy-project-wiki-kit/.harness/prompts/06-independent-audit.md`：补审计口径与基线时点声明、反模式与完成清单核对分级、报告自身不得残留未修正 ❌
+- `legacy-project-wiki-kit/.harness/workflow/quality-gates.md`：G5 增附录索引条数与拆块核对；G6 增口径时点、清单统计、P0/P1/P2 分级与审计局限
+- `legacy-project-wiki-kit/.harness/workflow/README.md`、`legacy-project-wiki-kit/AGENTS.md`：`source_commit` 与源码变更比对改为 VCS-agnostic（Git commit SHA 或 SVN revision）
+- `skills/workflow/legacy-project-wiki/SKILL.md`：Phase 5 增全文索引要求；Phase 6 判定词统一为 `通过 / 部分支持 / 错误 / 无法验证` 并补审计章节；完成检查清单两行改写
+- `skills/workflow/legacy-project-wiki/references/prompts.md`：标题改「Prompt 速查」并补可执行工作包推荐说明
 
 ### Added
+- `templates/harness/standard/skills/catalog/`：常用 Skill 目录（`catalog.yaml` + `entries/`，含 superpowers、superpowers-zh、grill-me 等）；同步 `.harness/skills/catalog/`
 - `04-Frontend/Detail-View-IA.md` **R08** 多列 grid label 竖向对齐原理（`:column="2/3"` + nth-child + `table-layout: fixed`）
 - `04-Frontend/Detail-View-IA.md` **R07** L0 状态 Tag 语义高亮、`FE-DV-007`
 - `04-Frontend/Detail-View-IA.md` **R08** Descriptions Label 等宽、`FE-DV-008`
@@ -25,6 +37,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `templates/harness/standard/governance/`：lifecycle.yaml、gates.yaml、legacy-roadmap.yaml
 - `templates/harness/standard/skills/skills.yaml`：Skill 注册表模板（归入 `.harness/skills/`）
 - Harness 三层治理模型文档：`.harness/knowledge/治理模型.md`、`.harness/knowledge/架构.md`
+- `templates/harness/legacy-project-wiki-kit/`：遗留项目 Wiki 可执行工作包（Prompt 流水线、workflow 门槛、wiki 模板）（`ca2b01c`，2026-10-10）
+- `.harness/skills/workflow/legacy-project-wiki/`：遗留项目 Wiki 工作流 Skill（`cd87ea0`，2026-10-10）
+- `legacy-project-wiki-kit/.harness/wiki/_pending.template.md`：新增「附录 A 各域『待确认』条目全量索引」、拆块与条数核对口径
+- `legacy-project-wiki-kit/.harness/wiki/_audit.template.md`：扩展为 9 章结构（审计口径声明 / 量化结果 / 覆盖度核对 / 审计发现 / 抽样回溯 / 反模式核对 / 清单统计 / 修正建议 / 审计局限）
 
 ### Changed
 - **废除 `.standards/` 目录**：项目画像并入 `harness.yaml`，rule-id 在 `config/`，exceptions 在 `governance/`

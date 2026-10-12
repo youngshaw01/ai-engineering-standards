@@ -1,0 +1,44 @@
+# 常用 Skill 目录索引
+# 详见 catalog/README.md；治理启用见 ../skills.yaml
+
+version: "1.0"
+updated_at: "2026-10-12"
+
+policy:
+  # 目录条目仅供选型；禁止据此自动安装或默认启用
+  auto_install: false
+  require_project_registration: true
+
+entries:
+  - id: superpowers
+    file: entries/superpowers.yaml
+    tier: recommended
+    category: workflow
+
+  - id: superpowers-zh
+    file: entries/superpowers-zh.yaml
+    tier: recommended
+    category: workflow
+    locale: zh-Hans
+
+  - id: grill-me
+    file: entries/grill-me.yaml
+    tier: recommended
+    category: workflow
+
+  - id: stable-iteration
+    file: entries/stable-iteration.yaml
+    tier: recommended
+    category: workflow
+    bundled: true
+
+  - id: legacy-project-wiki
+    file: entries/legacy-project-wiki.yaml
+    tier: recommended
+    category: workflow
+    bundled: true
+
+  - id: better-harness
+    file: entries/better-harness.yaml
+    tier: optional
+    category: workflow

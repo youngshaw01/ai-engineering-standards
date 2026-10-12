@@ -68,6 +68,8 @@
 
 **MUST** — Skill 注册表路径统一为 `.harness/skills/skills.yaml`。
 
+**SHOULD** — 常用 Skill 选型目录为 `.harness/skills/catalog/`（与 `skills.yaml` 同步维护模板 `templates/harness/standard/skills/catalog/`）。
+
 详见 `11-AI-DevTools/Skill-Governance.md`。
 
 ---

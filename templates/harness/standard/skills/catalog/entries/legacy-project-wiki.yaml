@@ -1,0 +1,40 @@
+id: legacy-project-wiki
+name: legacy-project-wiki
+category: workflow
+tier: recommended
+bundled: true
+
+summary: |
+  遗留项目业务梳理流水线（阶段 0–6），产出证据锚定的 `.harness/wiki/`。
+  可执行工作包见 templates/harness/legacy-project-wiki-kit/。
+
+source:
+  type: local
+  path: skills/workflow/legacy-project-wiki/SKILL.md
+  kit_path: templates/harness/legacy-project-wiki-kit/
+
+scope:
+  - legacy-onboarding
+  - business-documentation
+  - pre-refactor-discovery
+
+trigger:
+  manual: true
+invoked_by: user
+auto_execute: false
+
+register_template:
+  name: legacy-project-wiki
+  category: workflow
+  source:
+    type: local
+    path: skills/workflow/legacy-project-wiki/SKILL.md
+  scope:
+    - legacy-onboarding
+  trigger:
+    manual: true
+  approval:
+    required: true
+    approved_by: "{{APPROVER}}"
+    approved_at: "{{DATE}}"
+  auto_execute: false

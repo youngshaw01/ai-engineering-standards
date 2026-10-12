@@ -1,0 +1,15 @@
+{
+  "$schema": "harness-adapter-manifest-v1",
+  "version": "1.0",
+  "description": "最小示例 — 接入时按项目扩展 cursorRules / tools",
+  "generatedBanner": "<!-- 本文件由 sync 生成物对应源为 rules/detail；manifest 本身可手写映射表 -->",
+  "hub": {
+    "entry": "AGENTS.md",
+    "rules_dir": ".harness/rules/",
+    "spec": "11-AI-DevTools/Harness-Blueprint-v1.md"
+  },
+  "cursorRules": [],
+  "tools": {
+    "cursor": { "enabled": true, "entry_files": "cursorRules" }
+  }
+}
