@@ -38,8 +38,13 @@ export const CONSUMER_REQUIRED = [
   ".harness/workspace",
 ];
 
+/** Contract §3.3 — paths that must not exist as parallel SSOT in consumer projects. */
 export const FORBIDDEN_LEGACY_PATHS = [
   ".harness/harness.yaml",
+  ".harness/rules",
+  ".harness/skills",
+  ".harness/knowledge",
+  ".harness/wiki",
   ".standards",
 ];
 

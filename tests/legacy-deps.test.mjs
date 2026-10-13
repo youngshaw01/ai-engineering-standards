@@ -6,9 +6,9 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
+/** v1 runtime paths only — not detection strings (see legacy.mjs / paths.mjs). */
 const BANNED_PATTERNS = [
   /templates\/harness\//,
-  /harness\.yaml/,
   /11-AI-DevTools/,
   /archive\/2026/,
   /skills\.yaml/,
@@ -25,13 +25,14 @@ function walk(dir, files = []) {
   return files;
 }
 
-test("entrypoints do not reference v1 active paths", () => {
-  const entrypoints = ["src/init.mjs", "src/adopt.mjs", "src/validate.mjs"].map((f) => path.join(root, f));
+test("src/**/*.mjs do not reference v1 active runtime paths", () => {
+  const srcDir = path.join(root, "src");
+  const files = walk(srcDir);
   const hits = [];
-  for (const file of entrypoints) {
+  for (const file of files) {
     const text = fs.readFileSync(file, "utf8");
     for (const pat of BANNED_PATTERNS) {
-      if (pat.test(text)) hits.push(`${file}: ${pat}`);
+      if (pat.test(text)) hits.push(`${path.relative(root, file)}: ${pat}`);
     }
   }
   assert.deepEqual(hits, []);
