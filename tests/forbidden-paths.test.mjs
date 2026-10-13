@@ -20,6 +20,24 @@ test("FORBIDDEN_LEGACY_PATHS matches contract §3.3 list", () => {
   ]);
 });
 
+test("adopt does not block on forbidden paths; validate does", () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "aes-boundary-"));
+  fs.mkdirSync(path.join(tmp, ".harness", "wiki"), { recursive: true });
+  const adopt = spawnSync(process.execPath, [path.join(root, "src/adopt.mjs"), "--project", tmp], {
+    cwd: root,
+    encoding: "utf8",
+  });
+  assert.equal(adopt.status, 0, adopt.stdout + adopt.stderr);
+  const val = spawnSync(process.execPath, [path.join(root, "src/validate.mjs"), "--project", tmp], {
+    cwd: root,
+    encoding: "utf8",
+  });
+  assert.equal(val.status, 1);
+  const report = JSON.parse(val.stdout);
+  assert.ok(report.configErrors.some((e) => e.includes(".harness/wiki")));
+  fs.rmSync(tmp, { recursive: true, force: true });
+});
+
 test("validate fails when forbidden legacy directory exists", () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "aes-forbidden-"));
   fs.mkdirSync(path.join(tmp, ".harness", "skills"), { recursive: true });

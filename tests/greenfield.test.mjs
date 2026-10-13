@@ -21,5 +21,8 @@ test("greenfield init + independent validate", () => {
   const yaml = fs.readFileSync(path.join(tmp, ".harness/project.yaml"), "utf8");
   assert.match(yaml, /schemaVersion: "2.0.0"/);
   assert.match(yaml, /projectId: demo/);
+  const hreadme = fs.readFileSync(path.join(tmp, ".harness/README.md"), "utf8");
+  assert.match(hreadme, /project\.yaml/);
+  assert.doesNotMatch(hreadme, /project\.json/);
   fs.rmSync(tmp, { recursive: true, force: true });
 });

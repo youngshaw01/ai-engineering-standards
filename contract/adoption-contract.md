@@ -42,3 +42,11 @@ node src/adopt.mjs --project <repo-root> [--dry-run] [--force] [--acknowledge-le
 - [ ] `adopt --dry-run` 可审阅  
 - [ ] 重复 adopt 幂等（冲突退出 2）  
 - [ ] 未移动 `src/`、`java/` 等业务目录  
+
+## 6. 职责边界（adopt 与 validate）
+
+adopt 负责**现状发现**：只检测会阻塞接入的 v1 配置信号（§3 表），**不**检查 `FORBIDDEN_LEGACY_PATHS`（`.harness/rules`、`.harness/skills`、`.harness/knowledge`、`.harness/wiki`、`.standards`）。
+
+禁止路径属于**合规判定**，由 `validate` 负责：存在即 `forbidden path` 失败。
+
+原因：禁止路径不阻塞文件生成（生成物仅 `AGENTS.md` / `project.yaml` / `README.md` / `workspace/`），接入阶段允许其存在，由人工决定迁移或清理；`validate` 阶段强制判定合规。二者退出策略不同，属有意设计，由测试 `tests/forbidden-paths.test.mjs` 锁定。
