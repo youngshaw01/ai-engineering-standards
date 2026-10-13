@@ -1,18 +1,18 @@
 # Changelog
 
-## [2.0.0-cleanroom] - 2026-10-13
-
-### Changed
-
-- **策略**：Clean-room 重建；v1 封板为 `v1-sealed-20261013` / `sealed/v1-full`，不参与生成与校验。
-- **活动布局**：`contract/`、`templates/minimal/`、`src/init.mjs`、`src/validate.mjs`、`examples/`、`tests/`。
-- 移除 transitional `harness/`、根 `.harness/`、`AGENTS.md`（标准库内不保留元副本）。
+## [2.0.0] - 2026-10-13
 
 ### Added
 
-- `contract/harness-contract.md`、`adoption-contract.md`、`project-config.schema.json`
-- 无第三方依赖的 `init` / `validate` 与 `node --test` 验收用例
+- Harness Contract v2：`contract/harness-contract.md`、`adoption-contract.md`、`project-config.schema.json`
+- `src/init.mjs`、`src/adopt.mjs`、`src/validate.mjs`（无第三方依赖）
+- `templates/minimal/` 与 `.harness/project.yaml`（`schemaVersion: 2.0.0`，支持 `git`/`svn`）
+- 自动化测试：`tests/*.test.mjs`（契约、绿场、幂等、接入、SVN 模拟、v1 依赖扫描）
 
-## [2.0.0] - 2026-10-13
+### Removed
 
-- 过渡性 `harness/` 布局（已由 clean-room 取代）
+- `contract/rebuild-checklist.md`、过渡性 `project.json` 模板
+
+### Notes
+
+- v1 只读封板：`v1-sealed-20261013` / `sealed/v1-full`

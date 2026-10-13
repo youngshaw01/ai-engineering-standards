@@ -1,42 +1,67 @@
 # ai-engineering-standards
 
-**v2 · Clean-room**：在明确契约上重建的最小 Harness 标准库，不继承 v1 目录树与旧工具链。
+契约驱动的 **Harness v2** 标准库：用 `contract/` 定义形状，用 `init` / `adopt` / `validate` 生成与独立校验消费项目 `.harness/`。
 
-| 文件 | 说明 |
-| --- | --- |
-| [`VERSION`](VERSION) | 活动标准版本 |
-| [`contract/harness-contract.md`](contract/harness-contract.md) | 目录、职责、SSOT、工具边界 |
-| [`contract/adoption-contract.md`](contract/adoption-contract.md) | 既有项目接入与冲突策略 |
-| [`contract/project-config.schema.json`](contract/project-config.schema.json) | `.harness/project.json` Schema |
+v1 全量实现已退出运行路径；只读封板：`git checkout v1-sealed-20261013` 或分支 `sealed/v1-full`。
 
-## 原则（摘要）
+## 解决什么问题
 
-- 旧版 **退出运行路径**；封板只读：`git checkout v1-sealed-20261013` 或分支 `sealed/v1-full`。  
-- 新版 **不读取** v1 配置、同步脚本、生成器。  
-- 先在本仓库完成 **init → validate → tests** 闭环，再推广到业务项目（如 PayNow）。
+- 为新仓库生成最小 `.harness/project.yaml` + `AGENTS.md` + `workspace/`  
+- 为已有仓库 **保守接入**（冲突则跳过，不覆盖业务目录）  
+- 用 **独立校验器** 验证结构，不依赖生成器自证  
 
-## 工具
+## 要求
+
+- Node.js 18+（仅标准库工具链；消费项目无运行时依赖）  
+- Git 或 SVN 工作副本（`vcs` 字段；存在 `.svn/` 时默认 `svn`）
+
+## 新项目
 
 ```bash
-# Layer 0 自检
+git clone https://github.com/youngshaw01/ai-engineering-standards.git
+cd your-empty-repo
+node /path/to/ai-engineering-standards/src/init.mjs \
+  --project . \
+  --project-id my-app \
+  --display-name "My App"
+node /path/to/ai-engineering-standards/src/validate.mjs --project .
+```
+
+## 已有项目（接入）
+
+```bash
+# 预览
+node /path/to/ai-engineering-standards/src/adopt.mjs --project . --dry-run
+
+# 执行（遇冲突退出码 2；遇 v1 残留退出码 3，需 --acknowledge-legacy）
+node /path/to/ai-engineering-standards/src/adopt.mjs --project .
+```
+
+## 校验
+
+```bash
+# 标准库自检
 node src/validate.mjs
 
-# 初始化消费项目（空目录或既有仓库）
-node src/init.mjs --project /path/to/repo --project-id my-app --display-name "My App"
+# 消费项目（可选 --strict 将 v1 残留视为失败）
 node src/validate.mjs --project /path/to/repo
+```
 
-# 测试
+## 升级
+
+1. 拉取新版本 `ai-engineering-standards`，阅读 `CHANGELOG.md` 与 `contract/harness-contract.md`。  
+2. `adopt --dry-run` 查看将写入的文件。  
+3. 不自动覆盖已有 `AGENTS.md` / `project.yaml`；人工合并后 `validate --strict`。
+
+## 测试
+
+```bash
 node --test tests/*.test.mjs
 ```
 
-## 仓库布局（活动实现）
+## 仓库布局
 
-见 `contract/harness-contract.md` §1。初始仅含 `contract/`、`templates/minimal/`、`src/init.mjs`、`src/validate.mjs`、`examples/`、`tests/`。
-
-## 分支
-
-- **活动实现**：`main`（仅此一条活动线）
-- **v1 封板**：标签 `v1-sealed-20261013`、分支 `sealed/v1-full`（只读，不参与生成/校验）
+见 [`contract/harness-contract.md`](contract/harness-contract.md) §2。
 
 ## License
 
