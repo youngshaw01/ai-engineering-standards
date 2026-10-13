@@ -1,8 +1,12 @@
 # ai-engineering-standards
 
-契约驱动的 **Harness v2** 标准库：用 `contract/` 定义形状，用 `init` / `adopt` / `validate` 生成与独立校验消费项目 `.harness/`。
+**Harness Runtime Contract（R0）** 标准库：定义 Agent 接入项目的可验证最小形状（`contract/`），提供 `init` / `adopt` / `validate` 生成与**独立**校验消费项目 `.harness/`。
+
+本仓库**不是**语言/框架规范百科；领域规范若未来出现，应独立于 Layer 0 契约扩展（见 `contract/harness-contract.md`）。
 
 v1 全量实现已退出运行路径；只读封板：`git checkout v1-sealed-20261013` 或分支 `sealed/v1-full`。
+
+**R0 非目标**：不生成 `governance/`、`knowledge/`、`workflows/`、`checks/` 等 Runtime Layout 目录；不维护多工具适配器树。
 
 ## 解决什么问题
 
@@ -13,7 +17,7 @@ v1 全量实现已退出运行路径；只读封板：`git checkout v1-sealed-20
 ## 要求
 
 - Node.js 18+（仅标准库工具链；消费项目无运行时依赖）  
-- Git 或 SVN 工作副本（`vcs` 字段；存在 `.svn/` 时默认 `svn`）
+- Git 或 SVN 工作副本（`vcs` 字段；存在 `.svn/` 时默认 `svn`，**无** `.git`/`.svn` 时默认 `git`——仅为字段默认值，**不表示**工具已确认目录是 Git 工作副本）
 
 ## 新项目
 

@@ -60,6 +60,8 @@ ai-engineering-standards/
 
 `harness.yaml`、v1 `apiVersion: harness.blueprint/v1` 配置、`.harness/rules/`、`.harness/skills/`、`.harness/knowledge/`、`.harness/wiki/`、`.standards/`。
 
+校验器 **必须** 检测上述路径（文件或目录）是否存在；规则集合与 `FORBIDDEN_LEGACY_PATHS`（`src/lib/paths.mjs`）及测试保持一致。
+
 ## 4. 文件职责（SSOT）
 
 | 路径 | 唯一职责 | 禁止 |
@@ -80,7 +82,7 @@ ai-engineering-standards/
 ## 6. project.yaml
 
 - **格式**：YAML。  
-- **Schema**：`project-config.schema.json`（`schemaVersion` **必须**为 `2.0.0`）。  
+- **Schema**：`project-config.schema.json`（`schemaVersion` **必须**为 `2.0.0`）；校验器 **必须**按该 JSON Schema 文件执行验证（`src/lib/json-schema.mjs`），不得维护与之冲突的平行规则集；**未实现**的 JSON Schema 关键字须 **fail-closed**（拒绝加载或校验），不得静默忽略。  
 - **必填**：`schemaVersion`、`projectId`、`vcs`（`git` | `svn`）、`standards.repository`、`standards.version`。  
 - **默认**：`standards.contract` 缺省视为 `contract/harness-contract.md`（校验器按此补全后验证）。  
 - **版本策略**：不兼容变更 bump `schemaVersion`；工具拒绝未知主版本。
