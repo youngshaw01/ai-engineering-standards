@@ -1,10 +1,6 @@
-# 新项目示例
-
-在空仓库根目录：
+# 新项目
 
 ```bash
-node /path/to/ai-engineering-standards/src/init.mjs --project . --project-id demo-app --display-name "Demo App"
-node /path/to/ai-engineering-standards/src/validate.mjs --project .
+node ../../src/init.mjs --project /tmp/my-new-repo --project-id demo --display-name "Demo"
+node ../../src/validate.mjs --project /tmp/my-new-repo
 ```
-
-预期：生成 `AGENTS.md` 与 `.harness/project.json`，`validate` 退出码 0。

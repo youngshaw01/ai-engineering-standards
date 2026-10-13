@@ -7,6 +7,6 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 test("validate layer0 passes on standards repo", () => {
-  const r = spawnSync(process.execPath, ["src/validate.mjs"], { cwd: root, encoding: "utf8" });
+  const r = spawnSync(process.execPath, [path.join(root, "src/validate.mjs")], { cwd: root, encoding: "utf8" });
   assert.equal(r.status, 0, r.stderr || r.stdout);
 });
