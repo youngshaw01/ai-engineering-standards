@@ -1,0 +1,31 @@
+{
+  "pilotId": "ai-out-center",
+  "standardsRepository": "ai-engineering-standards",
+  "standardsCommit": "fd233a5",
+  "standardsTag": "r0-stable-20261013",
+  "scenario": "existing-project-adoption",
+  "recordedAt": "2026-10-13",
+  "commands": [
+    "node <standards>/src/adopt.mjs --project <business-repo> --dry-run",
+    "node <standards>/src/adopt.mjs --project <business-repo>",
+    "node <standards>/src/validate.mjs --project <business-repo>"
+  ],
+  "outcomes": {
+    "adoptDryRunExitCode": null,
+    "adoptExitCode": null,
+    "validateExitCode": null,
+    "validateOk": null,
+    "notes": "Fill after reproducible run on business repo. Pilot confirmed validate can pass post-adoption; update fields with captured stdout JSON."
+  },
+  "manualSteps": [],
+  "pilotFindingsAbsorbedInStandards": [
+    "templates/minimal/.harness/README.md linked project.json instead of project.yaml",
+    "adoption-contract documents adopt vs validate forbidden-path boundary",
+    "forbidden-paths.test locks adopt non-blocking vs validate failing"
+  ],
+  "excludedFromContract": [
+    "business migration playbooks",
+    "language toolchain availability",
+    "database operations"
+  ]
+}
