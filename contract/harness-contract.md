@@ -1,20 +1,27 @@
-# Harness Contract（v2 · Clean-room）
+# Harness Contract v2
 
-> **标准版本**：见根目录 `VERSION`  
-> **配置 Schema**：[`project-config.schema.json`](project-config.schema.json)  
-> **接入规则**：[`adoption-contract.md`](adoption-contract.md)
+> **版本**：`2.0.0`（与 `project.yaml` → `schemaVersion` 一致）  
+> **配置 Schema**：[`project-config.schema.json`](project-config.schema.json)（校验解析后的对象）  
+> **接入**：[`adoption-contract.md`](adoption-contract.md)
 
-## 0. 重建原则（非协商）
+## 1. 目的、范围与非目标
 
-1. **不继承** v1 目录树、生成器、同步脚本、目录校验逻辑。  
-2. **不保留** 旧路径兼容层；v1 仅通过 Git 封板（`v1-sealed-20261013`）只读参考。  
-3. **新版工具**（`src/init`、`src/validate`）不得读取 v1 配置、脚本或索引。  
-4. **扩展** 须先修订本契约与 Schema，再改模板与校验器；禁止「边跑边发明目录」。  
-5. **先闭环本仓库**，再推广到 PayNow 等业务仓库。
+### 1.1 目的
 
-## 1. 标准库仓库布局（Layer 0 · 活动实现）
+为消费项目提供 **可验证、可复制** 的 `.harness/` 最小工作区：机器可读配置、短入口 `AGENTS.md`、过程产物目录。
 
-本仓库 **活动路径** 仅包含下列树；未列出的目录不得作为生成或校验依赖。
+### 1.2 适用范围
+
+- Git 或 SVN 工作副本上的应用/库仓库。  
+- 通过本仓库 `src/init.mjs`、`src/adopt.mjs`、`src/validate.mjs` 生成与校验（**不得**依赖 v1 封板树内脚本）。
+
+### 1.3 非目标
+
+- 语言/框架规范大全、`rules/` 并列体系、`wiki/`/`knowledge/`/`context/`/`index/`/`agents/` 未经契约扩展不得出现。  
+- MCP、插件自动同步、多 Agent 编排、跨仓库索引。  
+- 自动搬迁业务源码或删除用户目录。
+
+## 2. 标准库仓库（Layer 0）布局
 
 ```
 ai-engineering-standards/
@@ -22,66 +29,95 @@ ai-engineering-standards/
 ├── VERSION
 ├── CHANGELOG.md
 ├── LICENSE
-├── contract/                 # 契约 SSOT（本文件 + schema + adoption）
-├── templates/minimal/        # 唯一官方初始化母版
-├── src/init.mjs              # 初始化（Node，无 v1 依赖）
-├── src/validate.mjs          # 校验（Node，无 v1 依赖）
-├── examples/                 # 用法说明与夹具路径约定
-└── tests/                    # 独立验收测试
+├── contract/
+│   ├── harness-contract.md          # 本文件（SSOT）
+│   ├── project-config.schema.json
+│   └── adoption-contract.md
+├── templates/minimal/
+├── src/init.mjs | adopt.mjs | validate.mjs
+├── examples/new-project/ | existing-project/
+└── tests/
 ```
 
-**明确不在 v2 初始范围内**：`wiki/`、`context/`、`index/`、`agents/`、`rules/` 并列体系、语言章节规范、MCP、插件自动同步、`.harness/` 元副本于标准库根。
+**禁止** Layer 0 根目录出现 `.harness/` 元副本、`archive/`、v1 章节目录作为活动实现。
 
-## 2. 消费项目布局（Layer 1 · 由 init 生成）
+## 3. 消费项目（Layer 1）最小布局
 
-`init` 从 `templates/minimal/` 生成；**不得**追加 v1 的 `harness.yaml`、Blueprint v1 `project.yaml` 等字段。
+### 3.1 必需
 
-```
-<consumer-repo>/
-├── AGENTS.md                 # 短入口（模板提供，可编辑）
-└── .harness/
-    ├── project.json          # 机器 SSOT，符合 project-config.schema.json
-    ├── README.md
-    └── workspace/
-        └── .gitkeep
-```
-
-### 职责
-
-| 路径 | 职责 |
+| 路径 | 必需 |
 | --- | --- |
-| `AGENTS.md` | Agent 入口；不堆业务知识 |
-| `.harness/project.json` | 项目身份、契约版本、校验声明 |
-| `.harness/workspace/` | 过程产物；非长期规范 SSOT |
+| `AGENTS.md` | 是（init/adopt 生成，可编辑） |
+| `.harness/project.yaml` | 是 |
+| `.harness/README.md` | 是 |
+| `.harness/workspace/` | 是（目录存在即可） |
 
-## 3. SSOT 优先级（消费项目内）
+### 3.2 可选（契约 v2.0.0 未定义则不生成）
 
-1. 代码、迁移、可重复通过的测试/门禁日志  
-2. `.harness/project.json`（契约版本与工具声明）  
-3. 本仓库 `contract/`（引用，非项目内事实）  
-4. v1 封板内容（**仅人工参考**，不参与生成与 validate）
+无。扩展须 bump `schemaVersion` 并修订本契约。
 
-## 4. 工具行为边界
+### 3.3 禁止（未经扩展不得作为并列 SSOT）
 
-| 工具 | 允许 | 禁止 |
+`harness.yaml`、v1 `apiVersion: harness.blueprint/v1` 配置、`.harness/rules/`、`.harness/skills/`、`.harness/knowledge/`、`.harness/wiki/`、`.standards/`。
+
+## 4. 文件职责（SSOT）
+
+| 路径 | 唯一职责 | 禁止 |
 | --- | --- | --- |
-| `src/init` | 从 `templates/minimal` 复制；`--dry-run`；跳过已存在文件（除非 `--force` 显式） | 读 v1 路径；调用旧 sync/verify；静默覆盖业务目录 |
-| `src/validate` | 校验 Layer 0 自检或 `--project <path>` 消费项目结构 + `project.json` | 依赖 v1 脚本；修改目标仓库 |
+| `AGENTS.md` | Agent 入口；≤120 行 | 长 SOP、重复 project.yaml 字段表 |
+| `.harness/project.yaml` | 身份、`vcs`、标准库版本引用 | 业务模块表、密钥 |
+| `.harness/workspace/` | 任务过程产物 | 永久规范正文 |
+| `contract/*`（标准库） | 契约 SSOT | 项目内复制整份契约 |
 
-## 5. 验收顺序（发布门禁）
+**重复内容**：业务事实以代码/测试为准；契约只定义 Harness 形状，不定义业务规则正文。
 
-1. **Contract 评审**：目录、职责、配置、SSOT、扩展边界无歧义。  
-2. **空目录生成**：`init` 在空目录结果与契约一致。  
-3. **幂等**：重复 `init` 不重复创建、不静默覆盖。  
-4. **旧项目接入**：见 `adoption-contract.md`（只报告冲突，不擅自搬迁）。  
-5. **独立校验**：`validate` 不依赖 v1。  
-6. **切换活动版本**：`main` 为唯一活动实现；v1 退出运行路径；不保留平行活动分支（如已废弃的 `v2` 线）。
+## 5. AGENTS.md
 
-## 6. v1 封板（历史，非运行依赖）
+- **长度**：目标 50–120 行。  
+- **必须**：指向 `.harness/project.yaml`；说明 workspace 用途。  
+- **不得**：复制 `harness-contract.md` 全文；不得定义与契约冲突的目录。
 
-| 引用 | 用途 |
-| --- | --- |
-| Git tag `v1-sealed-20261013` | 只读全量 v1 树 |
-| Branch `sealed/v1-full` | 同快照维护 |
+## 6. project.yaml
 
-新版 **不得** 在运行时 `import`、读取或 `exec` v1 树内脚本。
+- **格式**：YAML。  
+- **Schema**：`project-config.schema.json`（`schemaVersion` **必须**为 `2.0.0`）。  
+- **必填**：`schemaVersion`、`projectId`、`vcs`（`git` | `svn`）、`standards.repository`、`standards.version`。  
+- **默认**：`standards.contract` 缺省视为 `contract/harness-contract.md`（校验器按此补全后验证）。  
+- **版本策略**：不兼容变更 bump `schemaVersion`；工具拒绝未知主版本。
+
+## 7. 优先级（消费项目内）
+
+1. 代码、迁移、可重复测试/门禁日志  
+2. `.harness/project.yaml`  
+3. 本仓库 `contract/`（引用，非项目内第二副本）  
+4. v1 Git 封板 `v1-sealed-20261013`（**仅人工阅读**，工具 **禁止**读取）
+
+## 8. 生命周期
+
+| 操作 | 命令 | 失败码 |
+| --- | --- | --- |
+| 新项目 | `node src/init.mjs --project <dir> ...` | 2=冲突 |
+| 已有项目 | `node src/adopt.mjs --project <dir> ...` | 2=冲突, 3=legacy 未确认 |
+| 校验 Layer 0 | `node src/validate.mjs` | 1=失败 |
+| 校验消费项目 | `node src/validate.mjs --project <dir>` | 1=失败 |
+| 升级 | 修订契约后 bump VERSION；`adopt --dry-run` 预览；**无**自动覆盖用户 AGENTS.md | — |
+| 回滚 | 用户 VCS 回滚；工具不写回滚逻辑 | — |
+| 退出 | 删除 `.harness/` 与 AGENTS.md（人工）；工具不提供 uninstall | — |
+
+**保守默认**：存在目标文件则 **跳过** 并报告 `CONFLICT_EXISTS`；仅 `--force` 覆盖模板列表内文件。
+
+## 9. 校验器规则与通过标准
+
+`validate.mjs` **独立**于 `init`/`adopt` 实现（单独模块校验路径与 Schema）。
+
+通过当且仅当：
+
+- Layer 0：§2 所列路径均存在；`src/**` 无 v1 运行依赖（见 `tests/legacy-deps.test.mjs`）。  
+- 消费项目：§3.1 满足；`project.yaml` 解析后通过 Schema；若存在 v1 残留则 **警告** `LEGACY_V1_*` 且 `strict` 模式下失败。
+
+`--strict`：将 LEGACY 警告视为失败。
+
+## 10. 兼容性
+
+- v2 **不**向后兼容 v1 `harness.yaml` / Blueprint `project.yaml`。  
+- 接入 v1 项目 = **并存检测 + 人工迁移**，见 `adoption-contract.md`。
