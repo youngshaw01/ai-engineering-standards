@@ -1,7 +1,7 @@
 {
   "pilotId": "ai-out-center",
   "standardsRepository": "ai-engineering-standards",
-  "standardsCommit": "2a57a66",
+  "standardsCommit": "a31d705",
   "standardsTag": "r0-stable-20261013",
   "scenario": "existing-project-adoption",
   "recordedAt": "2026-10-13",
