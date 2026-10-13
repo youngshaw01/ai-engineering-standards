@@ -4,7 +4,7 @@
 
 ## Project
 
-- 机器配置：`.harness/project.json`
+- 机器配置：`.harness/project.yaml`
 - 过程产物：`.harness/workspace/`
 
 ## Rules

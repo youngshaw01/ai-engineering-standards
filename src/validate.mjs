@@ -1,48 +1,34 @@
 #!/usr/bin/env node
-/**
- * v2 Clean-room validate — Layer 0 self-check or consumer --project.
- */
 import fs from "node:fs";
 import path from "node:path";
-import { repoRoot, LAYER0_LAYOUT, CONSUMER_REQUIRED } from "./lib/paths.mjs";
-import { loadProjectJson } from "./lib/schema.mjs";
-
-function parseArgs(argv) {
-  const opts = { mode: "layer0", project: null };
-  for (let i = 2; i < argv.length; i++) {
-    const a = argv[i];
-    if (a === "--project" && argv[i + 1]) {
-      opts.mode = "consumer";
-      opts.project = path.resolve(argv[++i]);
-    } else if (a === "--help") {
-      console.log("Usage: node src/validate.mjs [--project <consumer-repo>]");
-      process.exit(0);
-    }
-  }
-  return opts;
-}
+import { repoRoot, LAYER0_LAYOUT, CONSUMER_REQUIRED, FORBIDDEN_LEGACY_PATHS } from "./lib/paths.mjs";
+import { loadProjectConfig } from "./lib/schema.mjs";
+import { scanLegacy } from "./lib/legacy.mjs";
+import { parseCommonArgs } from "./lib/cli.mjs";
 
 function validateLayer0(root) {
   const missing = LAYER0_LAYOUT.filter((rel) => !fs.existsSync(path.join(root, rel)));
   return { ok: missing.length === 0, missing };
 }
 
-function validateConsumer(projectRoot) {
+function validateConsumer(projectRoot, standardsRoot, strict) {
   const missing = CONSUMER_REQUIRED.filter((rel) => !fs.existsSync(path.join(projectRoot, rel)));
-  const { errors, data } = loadProjectJson(projectRoot);
-  const legacy = [];
-  if (fs.existsSync(path.join(projectRoot, ".harness", "harness.yaml"))) legacy.push("LEGACY_V1_PRESENT");
-  if (fs.existsSync(path.join(projectRoot, ".harness", "project.yaml"))) legacy.push("LEGACY_V1_PRESENT");
-  const ok = missing.length === 0 && errors.length === 0;
-  return { ok, missing, configErrors: errors, projectId: data?.projectId, legacy };
+  if (!fs.existsSync(path.join(projectRoot, "AGENTS.md"))) missing.push("AGENTS.md");
+  const forbidden = FORBIDDEN_LEGACY_PATHS.filter((rel) => fs.existsSync(path.join(projectRoot, rel)));
+  const { errors, data } = loadProjectConfig(projectRoot, standardsRoot);
+  const legacy = scanLegacy(projectRoot);
+  const configErrors = [...errors, ...forbidden.map((f) => `forbidden path: ${f}`)];
+  const legacyBlocks = strict && legacy.some((l) => l.startsWith("LEGACY_V1"));
+  const ok = missing.length === 0 && configErrors.length === 0 && !legacyBlocks;
+  return { ok, missing, configErrors, projectId: data?.projectId, vcs: data?.vcs, legacy };
 }
 
 function main() {
-  const opts = parseArgs(process.argv);
-  const report =
-    opts.mode === "layer0"
-      ? { tool: "validate", target: "layer0", ...validateLayer0(repoRoot()) }
-      : { tool: "validate", target: opts.project, ...validateConsumer(opts.project) };
+  const opts = parseCommonArgs(process.argv);
+  const root = repoRoot();
+  const report = process.argv.includes("--project")
+    ? { tool: "validate", target: opts.project, ...validateConsumer(opts.project, root, opts.strict) }
+    : { tool: "validate", target: "layer0", ...validateLayer0(root) };
   console.log(JSON.stringify(report, null, 2));
   if (!report.ok) process.exit(1);
 }
