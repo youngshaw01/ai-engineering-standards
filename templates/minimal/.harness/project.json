@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "2.0.0",
+  "projectId": "{{PROJECT_ID}}",
+  "displayName": "{{PROJECT_DISPLAY_NAME}}",
+  "standards": {
+    "repository": "ai-engineering-standards",
+    "version": "{{STANDARDS_VERSION}}",
+    "contract": "contract/harness-contract.md"
+  },
+  "adoptedAt": "{{YYYY-MM-DD}}"
+}

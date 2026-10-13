@@ -1,0 +1,7 @@
+_trash_*/
+_backup_*/
+_validation/
+
+# 本地草稿（若需保留请放入 workspace）
+.DS_Store
+Thumbs.db
