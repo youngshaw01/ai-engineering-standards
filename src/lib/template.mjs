@@ -21,7 +21,7 @@ export function applyTemplates(opts) {
     PROJECT_DISPLAY_NAME: opts.displayName,
     STANDARDS_VERSION: readVersion(),
     VCS: vcsInfo.vcs,
-    "YYYY-MM-DD": today,
+    ADOPTED_AT: today,
   };
 
   const results = TEMPLATE_FILES.map((rel) => {
@@ -40,5 +40,19 @@ export function applyTemplates(opts) {
   });
 
   const legacy = scanLegacy(opts.project);
-  return { results, legacy, vcs: vcsInfo.vcs };
+  return { results, legacy, vcs: vcsInfo.vcs, summary: summarizeResults(results) };
+}
+
+export function summarizeResults(results) {
+  const skip = [];
+  const wouldWrite = [];
+  const create = [];
+  const overwrite = [];
+  for (const r of results) {
+    if (r.reason === "CONFLICT_EXISTS") skip.push(r.rel);
+    else if (r.action === "would-write") wouldWrite.push(r.rel);
+    else if (r.action === "create") create.push(r.rel);
+    else if (r.action === "overwrite") overwrite.push(r.rel);
+  }
+  return { skip, wouldWrite, create, overwrite };
 }

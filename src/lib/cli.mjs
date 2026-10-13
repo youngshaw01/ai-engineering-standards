@@ -1,5 +1,18 @@
 import path from "node:path";
 
+const FLAG_VALUE = new Set(["--project", "--project-id", "--display-name", "--vcs"]);
+
+const KNOWN_FLAGS = new Set([
+  "--dry-run",
+  "--force",
+  "--strict",
+  "--acknowledge-legacy",
+  "--project",
+  "--project-id",
+  "--display-name",
+  "--vcs",
+]);
+
 export function parseCommonArgs(argv) {
   const opts = {
     project: process.cwd(),
@@ -11,16 +24,46 @@ export function parseCommonArgs(argv) {
     acknowledgeLegacy: false,
     strict: false,
   };
+  const errors = [];
+
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i];
+    if (!a.startsWith("--")) {
+      errors.push(`unexpected argument: ${a}`);
+      continue;
+    }
+    if (!KNOWN_FLAGS.has(a)) {
+      errors.push(`unknown option: ${a}`);
+      continue;
+    }
+    if (FLAG_VALUE.has(a)) {
+      const v = argv[i + 1];
+      if (!v || v.startsWith("--")) {
+        errors.push(`${a} requires a value`);
+        continue;
+      }
+      i++;
+      if (a === "--project") opts.project = path.resolve(v);
+      else if (a === "--project-id") opts.projectId = v;
+      else if (a === "--display-name") opts.displayName = v;
+      else if (a === "--vcs") {
+        if (!["git", "svn"].includes(v)) errors.push(`--vcs must be git or svn, got: ${v}`);
+        else opts.vcs = v;
+      }
+      continue;
+    }
     if (a === "--dry-run") opts.dryRun = true;
     else if (a === "--force") opts.force = true;
     else if (a === "--strict") opts.strict = true;
     else if (a === "--acknowledge-legacy") opts.acknowledgeLegacy = true;
-    else if (a === "--project" && argv[i + 1]) opts.project = path.resolve(argv[++i]);
-    else if (a === "--project-id" && argv[i + 1]) opts.projectId = argv[++i];
-    else if (a === "--display-name" && argv[i + 1]) opts.displayName = argv[++i];
-    else if (a === "--vcs" && argv[i + 1]) opts.vcs = argv[++i];
   }
-  return opts;
+
+  return { opts, errors };
+}
+
+export function exitOnCliErrors(tool, errors) {
+  if (!errors.length) return false;
+  console.log(JSON.stringify({ tool, error: "INVALID_ARGS", details: errors }, null, 2));
+  process.exit(1);
+  return true;
 }

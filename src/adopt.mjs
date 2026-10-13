@@ -1,10 +1,11 @@
 #!/usr/bin/env node
-import { parseCommonArgs } from "./lib/cli.mjs";
+import { parseCommonArgs, exitOnCliErrors } from "./lib/cli.mjs";
 import { applyTemplates } from "./lib/template.mjs";
 import { scanLegacy, hasBlockingLegacy } from "./lib/legacy.mjs";
 
 function main() {
-  const opts = parseCommonArgs(process.argv);
+  const { opts, errors } = parseCommonArgs(process.argv);
+  if (exitOnCliErrors("adopt", errors)) return;
   const preLegacy = scanLegacy(opts.project);
   if (hasBlockingLegacy(preLegacy) && !opts.acknowledgeLegacy) {
     console.log(JSON.stringify({ tool: "adopt", project: opts.project, blocked: true, legacy: preLegacy }, null, 2));

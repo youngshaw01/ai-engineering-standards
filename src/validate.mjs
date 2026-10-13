@@ -4,7 +4,7 @@ import path from "node:path";
 import { repoRoot, LAYER0_LAYOUT, CONSUMER_REQUIRED, FORBIDDEN_LEGACY_PATHS } from "./lib/paths.mjs";
 import { loadProjectConfig } from "./lib/schema.mjs";
 import { scanLegacy } from "./lib/legacy.mjs";
-import { parseCommonArgs } from "./lib/cli.mjs";
+import { parseCommonArgs, exitOnCliErrors } from "./lib/cli.mjs";
 
 function validateLayer0(root) {
   const missing = LAYER0_LAYOUT.filter((rel) => !fs.existsSync(path.join(root, rel)));
@@ -24,7 +24,8 @@ function validateConsumer(projectRoot, standardsRoot, strict) {
 }
 
 function main() {
-  const opts = parseCommonArgs(process.argv);
+  const { opts, errors } = parseCommonArgs(process.argv);
+  if (exitOnCliErrors("validate", errors)) return;
   const root = repoRoot();
   const report = process.argv.includes("--project")
     ? { tool: "validate", target: opts.project, ...validateConsumer(opts.project, root, opts.strict) }
