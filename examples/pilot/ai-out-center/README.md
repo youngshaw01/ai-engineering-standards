@@ -32,8 +32,9 @@
 
 1. 工具链固定使用 **`r0-stable-20261013`（`9377838`）**（例如 `git worktree add` 检出 tag），**不要移动该 tag**。  
 2. 在目标业务仓库执行 `adopt --dry-run` → `adopt` → `validate --project`，将 **真实退出码** 与 JSON 摘要写入 [`validation-result.json`](validation-result.json)；详细 stdout 可附 [`validation-run-*.json`](validation-run-20261014.json)。  
-3. **2026-10-14**：已在独立 fixture 上完成 Harness 协议实测（见 `validation-result.json` → `executionScope`）；**AI-Out-center 生产树** 仍应在原仓库复跑并补 `manualSteps`。  
-4. 若有 **人工修改**（合并 AGENTS、删旧目录等），列入 `manualSteps`；不得把人工后的成功记为全自动 adopt 成功。
+3. **Fixture（tag 工具）**：[`validation-run-20261014.json`](validation-run-20261014.json) + [`validation-result.json`](validation-result.json) → `executionScope`。  
+4. **生产树（AI-Out-center）**：[`production-run-20261014.json`](production-run-20261014.json) — 已有 R0 文件时 `adopt` / `adopt --dry-run` 为 **退出码 2（CONFLICT_EXISTS，无写入）**；`validate` 为 **退出码 0**。勿将 EXIT=2 记为 adopt 命令成功。  
+5. 若有 **人工修改**（合并 AGENTS、删旧目录等），列入 `manualSteps`；不得把人工后的成功记为全自动 adopt 成功。
 
 ## 相关契约
 
