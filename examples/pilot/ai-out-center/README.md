@@ -30,9 +30,10 @@
 
 ## 使用方式
 
-1. 在目标业务仓库按 [`validation-result.json`](validation-result.json) 中的 `commands` 复现（或更新该文件）。  
-2. 将 `validate` 的 `ok` 与 `configErrors` 摘要写入 JSON。  
-3. 若有 **人工修改**（合并 AGENTS、删旧目录等），列入 `manualSteps`；不得把人工后的成功记为全自动 adopt 成功。
+1. 工具链固定使用 **`r0-stable-20261013`（`9377838`）**（例如 `git worktree add` 检出 tag），**不要移动该 tag**。  
+2. 在目标业务仓库执行 `adopt --dry-run` → `adopt` → `validate --project`，将 **真实退出码** 与 JSON 摘要写入 [`validation-result.json`](validation-result.json)；详细 stdout 可附 [`validation-run-*.json`](validation-run-20261014.json)。  
+3. **2026-10-14**：已在独立 fixture 上完成 Harness 协议实测（见 `validation-result.json` → `executionScope`）；**AI-Out-center 生产树** 仍应在原仓库复跑并补 `manualSteps`。  
+4. 若有 **人工修改**（合并 AGENTS、删旧目录等），列入 `manualSteps`；不得把人工后的成功记为全自动 adopt 成功。
 
 ## 相关契约
 

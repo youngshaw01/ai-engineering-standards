@@ -2,29 +2,36 @@
   "pilotId": "ai-out-center",
   "standardsRepository": "ai-engineering-standards",
   "standardsReleaseRef": "r0-stable-20261013",
+  "standardsToolsCommit": "9377838b74a1787c126f0c7df36411b3881b0f9d",
   "scenario": "existing-project-adoption",
-  "recordedAt": "2026-10-13",
+  "recordedAt": "2026-10-14",
+  "executionScope": {
+    "harnessProtocol": "Recorded by running release-tag tools against an isolated pre-adopt fixture (README + src/). This closes R0 adopt/validate exit-code evidence for tag r0-stable-20261013.",
+    "aiOutCenterProductionTree": "Not this run. When the real AI-Out-center working copy is available, re-run the same three commands there and append manualSteps / any non-zero legacy paths without replacing tag semantics."
+  },
   "commands": [
-    "node <standards>/src/adopt.mjs --project <business-repo> --dry-run",
-    "node <standards>/src/adopt.mjs --project <business-repo>",
-    "node <standards>/src/validate.mjs --project <business-repo>"
+    "node D:/project_ai/person/ai-engineering-standards-r0-pilot/src/adopt.mjs --project <fixture> --dry-run --project-id ai-out-pilot --display-name \"AI Out Pilot Fixture\"",
+    "node D:/project_ai/person/ai-engineering-standards-r0-pilot/src/adopt.mjs --project <fixture> --project-id ai-out-pilot --display-name \"AI Out Pilot Fixture\"",
+    "node D:/project_ai/person/ai-engineering-standards-r0-pilot/src/validate.mjs --project <fixture>"
   ],
   "outcomes": {
-    "adoptDryRunExitCode": null,
-    "adoptExitCode": null,
-    "validateExitCode": null,
-    "validateOk": null,
-    "notes": "Fill after reproducible run on business repo. Pilot confirmed validate can pass post-adoption; update fields with captured stdout JSON."
+    "adoptDryRunExitCode": 0,
+    "adoptExitCode": 0,
+    "validateExitCode": 0,
+    "validateOk": true,
+    "fixturePath": "C:\\Users\\B29\\AppData\\Local\\Temp\\aes-pilot-ai-out-fixture-1027038164",
+    "notes": "Dry-run summary.wouldWrite listed four template paths; adopt summary.create matched; validate ok true, projectId ai-out-pilot. Fixture removed after run; see validation-run-20261014.json for captured stdout."
   },
   "manualSteps": [],
   "pilotFindingsAbsorbedInStandards": [
-    "templates/minimal/.harness/README.md linked project.json instead of project.yaml",
-    "adoption-contract documents adopt vs validate forbidden-path boundary",
+    "templates/minimal/.harness/README.md linked project.json instead of project.yaml (fix in fd233a5, included in 9377838 ancestry)",
+    "adoption-contract documents adopt vs validate forbidden-path boundary (post-tag on main; not required to move r0-stable-20261013)",
     "forbidden-paths.test locks adopt non-blocking vs validate failing"
   ],
   "excludedFromContract": [
     "business migration playbooks",
     "language toolchain availability",
     "database operations"
-  ]
+  ],
+  "releaseRelationship": "r0-stable-20261013 remains pinned to 9377838. This evidence commit documents harness execution only; it does not redefine the published release artifact."
 }

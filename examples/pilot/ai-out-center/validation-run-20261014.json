@@ -1,0 +1,46 @@
+{
+  "recordedAt": "2026-10-14",
+  "standardsReleaseRef": "r0-stable-20261013",
+  "standardsToolsCommit": "9377838",
+  "worktree": "D:/project_ai/person/ai-engineering-standards-r0-pilot",
+  "fixture": "C:\\Users\\B29\\AppData\\Local\\Temp\\aes-pilot-ai-out-fixture-1027038164",
+  "runs": [
+    {
+      "command": "adopt --dry-run",
+      "exitCode": 0,
+      "highlights": {
+        "dryRun": true,
+        "summaryWouldWrite": [
+          "AGENTS.md",
+          ".harness/project.yaml",
+          ".harness/README.md",
+          ".harness/workspace/.gitkeep"
+        ],
+        "legacy": []
+      }
+    },
+    {
+      "command": "adopt",
+      "exitCode": 0,
+      "highlights": {
+        "summaryCreate": [
+          "AGENTS.md",
+          ".harness/project.yaml",
+          ".harness/README.md",
+          ".harness/workspace/.gitkeep"
+        ],
+        "legacy": []
+      }
+    },
+    {
+      "command": "validate --project",
+      "exitCode": 0,
+      "highlights": {
+        "ok": true,
+        "projectId": "ai-out-pilot",
+        "configErrors": [],
+        "legacy": []
+      }
+    }
+  ]
+}
