@@ -1,4 +1,4 @@
-schemaVersion: "2.0.0"
+schemaVersion: "3.0.0"
 projectId: {{PROJECT_ID}}
 displayName: "{{PROJECT_DISPLAY_NAME}}"
 vcs: {{VCS}}
@@ -7,3 +7,6 @@ standards:
   version: "{{STANDARDS_VERSION}}"
   contract: contract/harness-contract.md
 adoptedAt: "{{ADOPTED_AT}}"
+# 可选：定制变更类型清单（缺省 feature|bugfix|refactor|docs|ops）
+# workflow:
+#   types: [feature, bugfix, refactor, docs, ops]

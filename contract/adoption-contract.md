@@ -31,6 +31,8 @@ node src/adopt.mjs --project <repo-root> [--dry-run] [--force] [--acknowledge-le
 
 **不得**自动删除或合并 v1 树。
 
+> v2（`schemaVersion: 2.0.0`）项目升级到 v3：见 [`migration-guide.md`](migration-guide.md)。
+
 ## 4. SVN
 
 - 存在 `.svn/` 时，`init`/`adopt` 默认 `vcs: svn`（可用 `--vcs git` 覆盖）。  

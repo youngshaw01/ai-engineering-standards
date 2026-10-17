@@ -1,0 +1,42 @@
+# Wiki 版本绑定清单 — 由协调 Agent 在阶段 5 汇总、交付收尾时最终核对
+# 复制到目标仓库后，重命名为 _manifest.yaml
+
+wiki_schema_version: "1.0"
+
+# 分析对应的源码提交（阶段 0 记录基线，阶段 5/6 核对是否仍有效）
+source_commit: ""
+
+# 最近一次完整分析或索引更新的日期（ISO 8601，如 2026-10-10）
+analyzed_at: ""
+
+# 整体覆盖：complete | partial | blocked
+coverage_status: blocked
+
+# 审计状态：not_audited | passed | conditional | failed
+audit_status: not_audited
+
+# _pending.md 中未关闭问题数量（阶段 5 汇总）
+pending_count: 0
+
+# 各类入口独立计数（口径须与 01-capability-map.md 一致，不可混算）
+entry_counts:
+  http_raw: null          # 扫描到的 HTTP 注册行数 N
+  http_unique: null       # 去重后 N_unique（须写明去重规则）
+  http_classified: null   # 已归类 M
+  http_unclassified: null # 未分类 U（须满足 N_unique = M + U）
+  non_http: null          # MQ / 定时任务 / CLI / Webhook / 事件等合计
+  non_http_by_type: {}    # 例：{ mq_consumer: 3, cron: 2, cli: 1 }
+
+# 各业务域版本绑定（阶段 3 完成后由协调 Agent 汇总）
+domains: []
+# 示例：
+# - slug: order
+#   source_commit: abc123
+#   analyzed_at: 2026-10-10
+#   coverage_status: partial
+#   main_paths: ["src/order/"]
+
+# 源码变更后的重审提示（当前 HEAD != source_commit 时由 Agent 填写）
+stale: false
+stale_reason: ""
+domains_needing_reanalysis: []

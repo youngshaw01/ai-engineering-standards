@@ -1,14 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/youngshaw01/ai-engineering-standards/contract/project-config.schema.json",
-  "title": "HarnessProjectConfigV2",
+  "title": "HarnessProjectConfigV3",
   "type": "object",
   "additionalProperties": false,
   "required": ["schemaVersion", "projectId", "vcs", "standards"],
   "properties": {
     "schemaVersion": {
       "type": "string",
-      "const": "2.0.0"
+      "const": "3.0.0"
     },
     "projectId": {
       "type": "string",
@@ -44,6 +44,22 @@
     "adoptedAt": {
       "type": "string",
       "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "workflow": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "types": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
     }
   }
 }
