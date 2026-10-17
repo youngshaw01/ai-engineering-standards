@@ -1,19 +1,34 @@
 # 3.0.2 发布核对记录 — CHANGELOG 与 commit 链映射（2026-10-17）
 
-> 性质：发布审计记录（release audit）· 核对对象：`CHANGELOG.md` [3.0.2] 条目 vs 3.0.1（`64e92c6`）之后的全部 commit 与归档变更单元  
-> 结论：**覆盖完整，无遗漏**（逐项映射见下）
+> 性质：发布审计记录（release audit）· 核对对象：`CHANGELOG.md` [3.0.2] 条目 vs 推送链全部 commit 与归档变更单元  
+> 结论：**覆盖完整，无遗漏**（逐项映射见下）  
+> 扩展记录（2026-10-17 第二版）：§1 由「3.0.1 之后 5 commit」扩展为**完整 13 commit 推送链**（`06827f1..40e0bc5`），3.0.0 区间 6 commit 与审计 commit 自身补入映射；SHA 以远程 `origin/main` fetch 后核验为准。
 
-## 1. Commit 链 → CHANGELOG 条目映射
+## 1. Commit 链 → CHANGELOG 条目映射（完整 13 commit 推送链）
 
-3.0.1 发布 commit `64e92c6` 之后共 **5 个 commit**，全部有归属：
+推送 `06827f1..40e0bc5`（main → origin/main），链条 = v3 工程全程，全部有归属：
 
-| Commit | 主题 | CHANGELOG 3.0.2 覆盖位置 |
-| --- | --- | --- |
-| `7568850` | ITS 迁移复盘（rollout 2/3） | Docs 第 2 条（ITS 部分） |
-| `eb9b57f` | detectVcs 祖先上溯修复 + 5 测试 | **Fixed** 全条 |
-| `572cae7` | PayNow 迁移复盘（rollout 3/3，E155040/E200009 教训） | Docs 第 2 条（PayNow 部分） |
-| `fe6295d` | adoption-contract §4.1 验证通过记录 + 两复盘遗留项闭环 | Docs 第 1 条 |
-| `26b792f` | 3.0.2 发布本身（CHANGELOG / VERSION / 自举 project.yaml） | 即条目自身 |
+| # | Commit | 主题 | CHANGELOG 覆盖位置 |
+| --- | --- | --- | --- |
+| 1 | `98c098f` | v3 契约起草（workspace 工作流 + 知识落位） | [3.0.0] Added（契约/模板/迁移指南） |
+| 2 | `c63459d` | 工具链升级（分级 findings + 红线检测） | [3.0.0] Added（validate 报告模式与红线） |
+| 3 | `1c2c629` | 测试套件迁移 v3 + 红线覆盖 | [3.0.0] Notes（测试迁移，73 项基线） |
+| 4 | `e510d18` | Layer 0 自举 v3 消费项目形态 | [3.0.0] Changed（自举 project.yaml 3.0.0） |
+| 5 | `182cd3a` | 清理误入库临时文件 | 无条目（仓库卫生，见 §3.3） |
+| 6 | `7816801` | MPOC 试点复盘（phase 5） | [3.0.0] 区间复盘惯例（直接 commit，不走变更单元） |
+| 7 | `64e92c6` | 3.0.1 契约缺陷修复（含 VERSION/CHANGELOG 并入） | [3.0.1] 全条目 |
+| 8 | `7568850` | ITS 迁移复盘（rollout 2/3） | [3.0.2] Docs 第 2 条（ITS 部分） |
+| 9 | `eb9b57f` | detectVcs 祖先上溯修复 + 5 测试 | [3.0.2] **Fixed** 全条 |
+| 10 | `572cae7` | PayNow 迁移复盘（rollout 3/3，E155040/E200009 教训） | [3.0.2] Docs 第 2 条（PayNow 部分） |
+| 11 | `fe6295d` | adoption-contract §4.1 验证通过记录 + 两复盘遗留项闭环 | [3.0.2] Docs 第 1 条 |
+| 12 | `26b792f` | 3.0.2 发布（CHANGELOG / VERSION / 自举 project.yaml） | [3.0.2] 即条目自身 |
+| 13 | `40e0bc5` | 本核对记录（首版，覆盖 3.0.1 后 5 commit） | 审计留痕（本记录 §1 首版 + 本扩展版） |
+
+### 1.1 边界锚点
+
+- 推送起点：`06827f1`（3.0.0 发布 commit，即 v3 工程启动前的 origin/main 顶点；CHANGELOG [3.0.0] 条目所在）
+- 推送终点：`40e0bc5`（本记录首版）
+- 13 commit SHA 已与远程 `origin/main`（fetch 后 `git log origin/main -13`）逐一核验一致，无漂移
 
 ## 2. 归档变更单元 → 版本归属
 
@@ -37,7 +52,7 @@
 
 ### 3.3 无变更单元遗漏
 
-复盘文档按 MPOC 惯例（`7816801`）直接 commit、不走变更单元，故 3.0.2 区间内两份复盘（`7568850`/`572cae7`）无对应单元属预期，非遗漏。
+复盘文档按 MPOC 惯例（`7816801`）直接 commit、不走变更单元，故推送链内三份复盘（`7816801`/`7568850`/`572cae7`）与本记录首版（`40e0bc5`）无对应单元属预期，非遗漏；`182cd3a`（临时文件清理）为仓库卫生操作，无 CHANGELOG 条目与变更单元均属预期。
 
 ## 4. 风格差异备注（无需处理）
 
@@ -45,6 +60,5 @@
 
 ## 5. 核对时点状态
 
-- HEAD：`26b792f`，工作区干净
-- `node src/validate.mjs --project . --strict`：0 error / 0 warning
-- 全量测试：73/73（fail 0）
+- 首版核对（HEAD `26b792f` 时点）：工作区干净 · `--strict` 0 error / 0 warning · 73/73（fail 0）
+- 扩展版核对（推送后时点）：本地与 `origin/main` 同步于 `40e0bc5`（ahead 0 / behind 0，fetch 后核验）· 13 commit SHA 与远程逐一一致 · 工作区干净
