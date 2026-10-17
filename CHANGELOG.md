@@ -1,5 +1,21 @@
 # Changelog
 
+## [3.0.2] - 2026-10-17
+
+### Fixed
+
+- `detectVcs` 祖先上溯探测：项目根无 `.svn`/`.git` 标记时沿祖先目录上溯（SVN 1.7+ 仅 WC 根有 `.svn`，git 仅仓库根有 `.git`），修复嵌套工作副本项目被误判 `vcs: git`（ITS 复盘 §4-1 发现，PayNow 迁移实战免参数验证通过）。`--vcs` 显式参数优先级不变；根双标记 `AMBIGUOUS_VCS` 与无标记默认 git 行为不回归（新增 5 测试，73/73）
+
+### Docs
+
+- adoption-contract §4.1 补「验证通过记录」：ITS r16392/r16393 + PayNow r16394/r16395 跨项目端到端验证 AI 提交 `-F <UTF-8 文件> --encoding UTF-8` 约定（`svn log --xml` 字节级核验无损，覆盖 `--targets` 批量与 move 调度场景）；与 r16389/r16390 损坏实证构成失败 + 通过双记录
+- 三项目推广复盘归档：[ITS](docs/superpowers/retros/2026-10-17-its-migration-retro.md)（轻度自造型，r16392/16393）、[PayNow](docs/superpowers/retros/2026-10-17-paynow-migration-retro.md)（重度 v1 遗产型，r16394/16395，含 E155040 混合版本处置协议与 E200009 move 一致性批次教训）；MPOC/ITS/PayNow 三画像全部走通，v3 推广收官
+
+### Notes
+
+- detectVcs 为向后兼容的工具行为修复；消费项目无需升级 `schemaVersion`
+- 变更单元：`.harness/workspace/archive/20261017-bugfix-detectvcs-ancestors-001/`、`20261017-docs-svn-encoding-evidence-001/`
+
 ## [3.0.1] - 2026-10-17
 
 ### Fixed

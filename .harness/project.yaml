@@ -4,6 +4,6 @@ displayName: "AI Engineering Standards"
 vcs: git
 standards:
   repository: ai-engineering-standards
-  version: "3.0.1"
+  version: "3.0.2"
   contract: contract/harness-contract.md
 adoptedAt: "2026-10-13"
