@@ -79,6 +79,7 @@ function checkThickAiRules(projectRoot, findings) {
     if (!fs.existsSync(p) || !fs.statSync(p).isFile()) continue;
     const text = fs.readFileSync(p, "utf8");
     const lines = text.split(/\r?\n/);
+    if (lines.length && lines[lines.length - 1] === "") lines.pop(); // trailing newline is not a line
     const matched = THICK_RULE_PATTERNS.filter((re) => re.test(text)).map((re) => re.source);
     if (lines.length > THICK_RULE_MAX_LINES || matched.length) {
       const why = [];

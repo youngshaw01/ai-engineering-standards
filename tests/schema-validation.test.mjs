@@ -8,10 +8,10 @@ import { assertSchemaSupported, collectUnsupportedSchemaKeywords } from "../src/
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 const valid = {
-  schemaVersion: "2.0.0",
+  schemaVersion: "3.0.0",
   projectId: "demo-app",
   vcs: "git",
-  standards: { repository: "ai-engineering-standards", version: "2.0.0" },
+  standards: { repository: "ai-engineering-standards", version: "3.0.0" },
 };
 
 test("schema accepts minimal valid config", () => {
@@ -19,10 +19,58 @@ test("schema accepts minimal valid config", () => {
   assert.deepEqual(validateAgainstSchema(valid, schema), []);
 });
 
+test("schema accepts optional workflow.types", () => {
+  const schema = loadSchema(root);
+  const errs = validateAgainstSchema(
+    { ...valid, workflow: { types: ["feature", "bugfix", "hotfix"] } },
+    schema,
+  );
+  assert.deepEqual(errs, []);
+});
+
+test("schema rejects empty workflow.types (minItems)", () => {
+  const schema = loadSchema(root);
+  const errs = validateAgainstSchema({ ...valid, workflow: { types: [] } }, schema);
+  assert.ok(errs.some((e) => e.includes("minItems")));
+});
+
+test("schema rejects non-lowercase workflow type (pattern)", () => {
+  const schema = loadSchema(root);
+  const errs = validateAgainstSchema({ ...valid, workflow: { types: ["Feature"] } }, schema);
+  assert.ok(errs.some((e) => e.includes("pattern")));
+});
+
+test("schema rejects duplicate workflow types (uniqueItems)", () => {
+  const schema = loadSchema(root);
+  const errs = validateAgainstSchema(
+    { ...valid, workflow: { types: ["feature", "feature"] } },
+    schema,
+  );
+  assert.ok(errs.some((e) => e.includes("unique")));
+});
+
+test("schema rejects non-string workflow type (items type)", () => {
+  const schema = loadSchema(root);
+  const errs = validateAgainstSchema({ ...valid, workflow: { types: [1] } }, schema);
+  assert.ok(errs.length > 0);
+});
+
+test("schema rejects unknown workflow property", () => {
+  const schema = loadSchema(root);
+  const errs = validateAgainstSchema({ ...valid, workflow: { modes: ["a"] } }, schema);
+  assert.ok(errs.some((e) => e.includes("additional property 'modes'")));
+});
+
 test("schema rejects unknown top-level fields", () => {
   const schema = loadSchema(root);
   const errs = validateAgainstSchema({ ...valid, extra: true }, schema);
   assert.ok(errs.some((e) => e.includes("additional property 'extra'")));
+});
+
+test("schema rejects v2 schemaVersion", () => {
+  const schema = loadSchema(root);
+  const errs = validateAgainstSchema({ ...valid, schemaVersion: "2.0.0" }, schema);
+  assert.ok(errs.some((e) => e.includes("schemaVersion")));
 });
 
 test("schema rejects empty displayName", () => {

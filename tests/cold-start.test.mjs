@@ -13,11 +13,11 @@ function run(script, args) {
   return spawnSync(process.execPath, [path.join(root, script), ...args], { cwd: root, encoding: "utf8" });
 }
 
-test("cold start: empty directory init then independent validate", () => {
+test("cold start: empty directory init then independent validate (strict)", () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "aes-cold-empty-"));
   const init = run("src/init.mjs", ["--project", tmp, "--project-id", "cold", "--display-name", "Cold"]);
   assert.equal(init.status, 0, init.stdout + init.stderr);
-  const val = run("src/validate.mjs", ["--project", tmp]);
+  const val = run("src/validate.mjs", ["--project", tmp, "--strict"]);
   assert.equal(val.status, 0, val.stdout);
   fs.rmSync(tmp, { recursive: true, force: true });
 });

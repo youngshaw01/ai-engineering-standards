@@ -10,10 +10,10 @@
 | 检查项 | 位置 | 通过标准 |
 |--------|------|----------|
 | 阶段编号 | `prompts/COORDINATOR.md`、`workflow/README.md`、`workflow/STATUS.template.md`、各 `prompts/0x-*.md` 标题 | 主流程为**阶段 0–6**；`07-finalize.md` 标注为**交付收尾**，不占阶段编号 |
-| 路径引用 | `workflow/README.md`、各 Prompt | 无 `.harness/wiki`、`.harness/prompts`、`.harness/workflow` 等 v1 路径；产物一律 `docs/knowledge/`，规程一律标准库 `templates/bootstrap/` |
+| 路径引用 | `workflow/README.md`、各 Prompt | 无 v1 历史路径（`.harness` 下的 wiki、prompts、workflow、knowledge 子目录）；产物一律 `docs/knowledge/`，规程一律标准库 `templates/bootstrap/` |
 | 状态命名 | `STATUS.template.md`、`quality-gates.md`、`07-finalize.md`、`_audit.template.md` | 阶段状态：`未开始` / `进行中` / `通过` / `有条件通过` / `阻塞`；审计结论：`通过` / `有条件通过` / `不通过` |
 | 追溯约定 | `artifacts/*.template.md` | 实例化后的 knowledge 文档含"变更记录"小节（来源记 `bootstrap`），符合 harness-contract §5.2 |
-| 无悬空引用 | 全部文件 | 不引用 v1 Skill catalog、`sealed/v1-full` 内路径 |
+| 无悬空引用 | 全部文件 | 不引用 v1 Skill catalog 或 Git 封板内路径 |
 
 ---
 

@@ -1,26 +1,31 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
-import { spawnSync } from "node:child_process";
-import { fileURLToPath } from "node:url";
+import { makeV3Project, validate } from "./helpers.mjs";
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-
-function run(cmd, args, cwd) {
-  return spawnSync(process.execPath, [cmd, ...args], { cwd, encoding: "utf8" });
-}
-
-test("greenfield init + independent validate", () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "aes-green-"));
-  const init = run(path.join(root, "src/init.mjs"), ["--project", tmp, "--project-id", "demo", "--display-name", "Demo"], root);
-  assert.equal(init.status, 0, init.stdout + init.stderr);
-  const val = run(path.join(root, "src/validate.mjs"), ["--project", tmp], root);
+test("greenfield init + independent validate (strict)", () => {
+  const tmp = makeV3Project("aes-green-");
+  const val = validate(tmp, ["--strict"]);
   assert.equal(val.status, 0, val.stdout);
+
   const yaml = fs.readFileSync(path.join(tmp, ".harness/project.yaml"), "utf8");
-  assert.match(yaml, /schemaVersion: "2.0.0"/);
-  assert.match(yaml, /projectId: demo/);
+  assert.match(yaml, /schemaVersion: "3.0.0"/);
+  assert.match(yaml, /projectId: t/);
+
+  // v3 required tree (contract §3.1)
+  for (const rel of [
+    ".harness/README.md",
+    ".harness/workspace/changes/README.md",
+    ".harness/workspace/archive/README.md",
+    "docs/knowledge/README.md",
+    "docs/rules/README.md",
+  ]) {
+    assert.ok(fs.existsSync(path.join(tmp, rel)), `missing ${rel}`);
+  }
+  // v2 placeholder is gone
+  assert.equal(fs.existsSync(path.join(tmp, ".harness/workspace/.gitkeep")), false);
+
   const hreadme = fs.readFileSync(path.join(tmp, ".harness/README.md"), "utf8");
   assert.match(hreadme, /project\.yaml/);
   assert.doesNotMatch(hreadme, /project\.json/);
