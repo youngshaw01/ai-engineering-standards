@@ -9,4 +9,4 @@
 
 | 文件 | 摘要 |
 | --- | --- |
-| （示例）svn.md | SVN 提交规范（commit --encoding gbk 等） |
+| （示例）svn.md | SVN 提交规范（人工 GBK 控制台 `--encoding gbk`；AI 提交 `-F <UTF-8 文件> --encoding UTF-8`，见标准库 adoption-contract §4.1） |

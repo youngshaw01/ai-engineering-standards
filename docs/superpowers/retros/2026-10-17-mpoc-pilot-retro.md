@@ -10,7 +10,7 @@
 | `validate --strict` 0 error / 0 warning | ✅ | 迁移终验 + 变更单元归档后终验均 PASS |
 | ≥1 真实变更走完 proposal → tasks → verify → archive | ✅ | `docs-database-extract-001`：抽取 database.md 导航层，发现并修正真实知识缺陷（`mpoc_audit_log` 过时设计 → 实际 4 张 `audit_*` 表） |
 | 负担可接受 | ✅ | 见 §2 |
-| 契约缺陷修订回 Layer 0 | ⚠️ | 2 项待修订（见 §3），不阻塞推广 |
+| 契约缺陷修订回 Layer 0 | ✅ | 2 项已修订（[bugfix-contract-defects-001](../../.harness/workspace/archive/20261017-bugfix-contract-defects-001/proposal.md)；§3-2 方案经 r16390 实测后修正） |
 
 ## 2. 负担数据
 
@@ -24,8 +24,8 @@
 
 ## 3. 契约缺陷与改进项
 
-1. **migration-guide 画像偏差（待修订）**：MPOC 被判为"零包袱型"，实际存在 v1 bootstrap wiki 资产（23 篇已对抗审计，~500KB）。→ migration-guide §2.1 应补充"v1 wiki 资产"处置指引：整目录平移 `docs/knowledge/wiki/` + 批量 changelog 追加 + 探测垃圾（`_probe*.txt`）清理。
-2. **SVN commit 编码陷阱（待修订）**：AI 环境（UTF-8 传参）使用 `--encoding gbk` 导致 r16389 日志中文损坏为 `?`（已入库）。→ adoption-contract/AGENTS 模板应注明：**AI 执行 svn commit 用 `-F <UTF-8 文件>` 且不带 `--encoding`；人工 GBK 控制台保持 `--encoding gbk`**。r16389 修复需 `svn propset --revprop`（待用户决策）。
+1. **migration-guide 画像偏差（已修订）**：MPOC 被判为"零包袱型"，实际存在 v1 bootstrap wiki 资产（23 篇已对抗审计，~500KB）。→ migration-guide §2.1 已补充"零包袱"以 workspace 调度遗产为准的判定口径，及 v1 wiki 资产处置指引（整目录平移 `docs/knowledge/wiki/` + 批量 changelog 追加 + 探测垃圾清理）。
+2. **SVN commit 编码陷阱（已修订，方案经实测修正）**：AI 环境两条路径均实测损坏——① 内联中文 + `--encoding gbk`（r16389，日志中文变字面 `?`）；② 无 locale shell 用 `-F UTF-8 文件`**不带** `--encoding`（r16390，按 Latin-1 误读，双重编码 `æŠ½å–` 型；文件内容无损，仅日志损坏）。→ 正确约定已写入 adoption-contract §4.1：**AI 执行 `svn commit -F <UTF-8 文件> --encoding UTF-8`；人工 GBK 控制台保持 `--encoding gbk`**。r16389/r16390 日志修复需 `svn propset --revprop`（服务器未启用 pre-revprop-change hook，`E175008` 拒绝，待管理员处理）。
 3. **执行注意（非契约缺陷）**：Trae PS 包装器白名单会拦截项目目录外的文件移动——跨项目操作统一走 Node `fs` 脚本（本次两次使用，均成功）。
 4. **可选改进**：knowledge README 模板可提示 wiki 子库结构惯例（domains/flows/data/integrations），契约不强制。
 
@@ -44,9 +44,9 @@
 
 ### 通用
 
-- 推广前先完成 §3-1/§3-2 两项契约修订；
-- AI 侧 svn commit 一律 `-F UTF-8`；业务代码零触碰（本次全程仅 docs/.harness/AGENTS/AI_RULES）。
+- 推广前先完成 §3-1/§3-2 两项契约修订（✅ 已完成，见 [bugfix-contract-defects-001](../../.harness/workspace/archive/20261017-bugfix-contract-defects-001/proposal.md)）；
+- AI 侧 svn commit 一律 `-F <UTF-8 文件> --encoding UTF-8`；业务代码零触碰（本次全程仅 docs/.harness/AGENTS/AI_RULES）。
 
 ## 5. 结论
 
-v3 契约在真实 SVN 项目上完整走通（差距判定 → 迁移 → 红线豁免 → 变更单元 → 归档 → 知识回流），负担可控，具备推广条件；两处契约修订完成后可启动 ITS/PayNow。
+v3 契约在真实 SVN 项目上完整走通（差距判定 → 迁移 → 红线豁免 → 变更单元 → 归档 → 知识回流），负担可控，具备推广条件；两处契约修订已完成（`bugfix-contract-defects-001`），可启动 ITS/PayNow。

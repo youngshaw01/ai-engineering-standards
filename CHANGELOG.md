@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.0.1] - 2026-10-17
+
+### Fixed
+
+- migration-guide §2.1：修正"零包袱型"判定口径（以 workspace 调度遗产为准，知识资产另判），补充 v1 bootstrap wiki 资产处置指引（整目录平移 `docs/knowledge/wiki/` + 批量 changelog + 探测垃圾清理）（MPOC 试点复盘 §3-1）
+- adoption-contract 新增 §4.1 SVN 提交编码约定：AI 用 `-F <UTF-8 文件> --encoding UTF-8`（无 locale 环境省略 `--encoding` 会按 Latin-1 误读），人工 GBK 控制台保持 `--encoding gbk`；记载 r16389/r16390 两种实测损坏模式与 `propset --revprop` 修复路径（MPOC 试点复盘 §3-2）
+- `templates/minimal/docs/rules/README.md` svn.md 示例同步编码约定
+
+### Notes
+
+- 文档/模板修订，无工具行为变更；消费项目无需升级 `schemaVersion`
+- 变更单元：`.harness/workspace/archive/20261017-bugfix-contract-defects-001/`
+
 ## [3.0.0] - 2026-10-17
 
 ### Added

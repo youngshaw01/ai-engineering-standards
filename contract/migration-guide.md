@@ -18,8 +18,12 @@
 
 ### 2.1 零包袱型（如 MPOC-AM）
 
-- 现状：workspace 为空，AGENTS.md 为模板原文，无 v1 遗产。
+- 现状：workspace 无 v1 **调度**遗产（无 task.yaml、无自造 change 流），AGENTS.md 为模板原文；但**可能仍有 v1 bootstrap 知识资产**（如已对抗审计的 wiki 子库，MPOC 实测 23 篇 ~500KB）——画像判定以 workspace 调度遗产为准，勿把知识资产误当"零包袱"忽略。
 - 动作：通用步骤 1–6；知识从现有位置（如 `docs/ai-knowledge/`）**平移**进 `docs/knowledge/`（changelog 记 `bootstrap`，原位置删除）；AI 规则适配层转薄指针（≤60 行）。
+- **v1 wiki 资产处置**（存在时）：
+  - 整目录平移至 `docs/knowledge/wiki/`，保留子库结构（如 `domains/flows/data/integrations`）；已对抗审计的正文**不逐篇改写**，导航层（`database.md` 等骨架文档）另行维护。
+  - 批量追加 changelog（脚本化机械追加，来源记 `bootstrap`，MPOC 实测 28 篇一次完成）。
+  - 清理探测垃圾（`_probe*.txt` 等一次性产物），不带入知识库。
 
 ### 2.2 轻度自造型（如 ITS AdPush）
 

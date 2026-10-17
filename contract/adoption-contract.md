@@ -39,6 +39,18 @@ node src/adopt.mjs --project <repo-root> [--dry-run] [--force] [--acknowledge-le
 - 存在 `.git/` 时，默认 `vcs: git`。  
 - 两者并存：退出码 **4**，要求 `--vcs` 显式指定。
 
+### 4.1 提交编码约定（防中文日志损坏）
+
+| 执行者 | 环境 | 命令 |
+| --- | --- | --- |
+| AI | UTF-8 / 无 locale shell | `svn commit -F <UTF-8 文件> --encoding UTF-8`（文件无 BOM） |
+| 人 | GBK 控制台 | `svn commit -m "..." --encoding gbk` |
+
+- 两种**已实测损坏**的模式（MPOC r16389/r16390 实证）：
+  - AI 环境内联中文参数 + `--encoding gbk` → 日志中文变字面 `?`；
+  - AI 无 locale shell 用 `-F UTF-8 文件` **不带** `--encoding` → 客户端按 Latin-1 误读，日志双重编码损坏（`æŠ½å–` 型）。文件内容不受影响（走字节流），仅日志消息损坏。
+- 已损坏日志的修复需 `svn propset --revprop -r <REV> svn:log -F <UTF-8 文件> --encoding UTF-8`，且服务器须启用 pre-revprop-change hook（否则 `E175008` 拒绝）。
+
 ## 5. 验收
 
 - [ ] `adopt --dry-run` 可审阅  
