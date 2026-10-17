@@ -101,5 +101,18 @@ export function detectVcs(projectRoot) {
   if (hasGit && hasSvn) return { vcs: null, error: "AMBIGUOUS_VCS" };
   if (hasGit) return { vcs: "git" };
   if (hasSvn) return { vcs: "svn" };
+  // Contract §4 — SVN 1.7+ keeps .svn only at WC root; git keeps .git at repo root.
+  // Walk ancestors so a project nested inside a checkout is still detected.
+  let dir = path.dirname(path.resolve(projectRoot));
+  for (let depth = 0; depth < 40; depth += 1) {
+    const parent = path.dirname(dir);
+    if (parent === dir) break; // filesystem root
+    const ancGit = fs.existsSync(path.join(dir, ".git"));
+    const ancSvn = fs.existsSync(path.join(dir, ".svn"));
+    if (ancGit && ancSvn) return { vcs: null, error: "AMBIGUOUS_VCS" };
+    if (ancSvn) return { vcs: "svn" };
+    if (ancGit) return { vcs: "git" };
+    dir = parent;
+  }
   return { vcs: "git" };
 }
