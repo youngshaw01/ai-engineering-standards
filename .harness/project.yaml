@@ -1,9 +1,9 @@
-schemaVersion: "2.0.0"
+schemaVersion: "3.0.0"
 projectId: ai-engineering-standards
 displayName: "AI Engineering Standards"
 vcs: git
 standards:
   repository: ai-engineering-standards
-  version: "2.0.0"
+  version: "3.0.0"
   contract: contract/harness-contract.md
 adoptedAt: "2026-10-13"

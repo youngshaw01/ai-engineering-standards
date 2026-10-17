@@ -1,0 +1,11 @@
+chore: bootstrap Layer 0 repo itself to v3 consumer shape
+
+- .harness/project.yaml: schemaVersion + standards.version → 3.0.0
+- workspace: v2 .gitkeep placeholder replaced by changes/ + archive/
+  with README guides (change-unit model, dated archive prefix)
+- docs/knowledge + docs/rules: index READMEs instantiated from
+  templates (content to be backfilled after pilot)
+- AGENTS.md: v3 entry shape plus Layer 0 section (contract changes
+  go through spec → plan → phased delivery; dual validate gates)
+- verified: layer0 self-check and --project . --strict both pass;
+  test suite 68/68 green
