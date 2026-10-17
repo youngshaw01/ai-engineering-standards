@@ -2,7 +2,8 @@
 
 > 性质：发布审计记录（release audit）· 核对对象：`CHANGELOG.md` [3.0.2] 条目 vs 推送链全部 commit 与归档变更单元  
 > 结论：**覆盖完整，无遗漏**（逐项映射见下）  
-> 扩展记录（2026-10-17 第二版）：§1 由「3.0.1 之后 5 commit」扩展为**完整 13 commit 推送链**（`06827f1..40e0bc5`），3.0.0 区间 6 commit 与审计 commit 自身补入映射；SHA 以远程 `origin/main` fetch 后核验为准。
+> 扩展记录（2026-10-17 第二版）：§1 由「3.0.1 之后 5 commit」扩展为**完整 13 commit 推送链**（`06827f1..40e0bc5`），3.0.0 区间 6 commit 与审计 commit 自身补入映射；SHA 以远程 `origin/main` fetch 后核验为准。  
+> 终版（2026-10-17 闭环）：扩展版已随第二次推送（`40e0bc5..aede084`）入库并核验同步，本版补记审计闭环状态后封版。审计演进 commit（`40e0bc5` 首版、`aede084` 扩展版、本闭环 commit）属审计自身历史，**不计入 §1 发布链映射**（自指截断，见 §1.1）。
 
 ## 1. Commit 链 → CHANGELOG 条目映射（完整 13 commit 推送链）
 
@@ -29,6 +30,7 @@
 - 推送起点：`06827f1`（3.0.0 发布 commit，即 v3 工程启动前的 origin/main 顶点；CHANGELOG [3.0.0] 条目所在）
 - 推送终点：`40e0bc5`（本记录首版）
 - 13 commit SHA 已与远程 `origin/main`（fetch 后 `git log origin/main -13`）逐一核验一致，无漂移
+- 审计演进链（不计入发布链）：`40e0bc5`（首版）→ `aede084`（扩展版，第二次推送 `40e0bc5..aede084`）→ 本闭环 commit；第二次推送后 fetch 核验 local == remote == `aede084708f7...`
 
 ## 2. 归档变更单元 → 版本归属
 
@@ -62,3 +64,4 @@
 
 - 首版核对（HEAD `26b792f` 时点）：工作区干净 · `--strict` 0 error / 0 warning · 73/73（fail 0）
 - 扩展版核对（推送后时点）：本地与 `origin/main` 同步于 `40e0bc5`（ahead 0 / behind 0，fetch 后核验）· 13 commit SHA 与远程逐一一致 · 工作区干净
+- 终版闭环：扩展版 `aede084` 已推送并 fetch 核验同步（local == remote）· 本闭环 commit 封版后待随下次推送入库 · 3.0.2 发布审计至此闭环
