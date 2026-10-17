@@ -29,5 +29,5 @@ HTTP 表格：
 - 深入分析 Top 10 能力域及排序理由（入口数量、核心业务影响、数据/资金/权限风险；未知影响标待确认）
 
 重要：不能将“归类数”按 endpoint 行重复计数。若一个 endpoint 映射多个能力域，主分类只能有一个，其他关联另列。非 HTTP 入口不得并入 HTTP 表或 HTTP 计数。
-结束时更新 `STATUS.md` 与 `_manifest.yaml` 的 `entry_counts`。
+结束时更新 `STATUS.md` 与 `_manifest.yaml` 的 `entry_counts`。文档尾部加 `## 变更记录` 小节，初始行来源记 `bootstrap`。
 验收：抽查 endpoint 注册点与 handler；计数公式成立；每条 endpoint 有 handler 与证据；未分类和盲区透明。失败时先修正，不进入领域分析。

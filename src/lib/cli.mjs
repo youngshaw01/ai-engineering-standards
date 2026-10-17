@@ -1,6 +1,6 @@
 import path from "node:path";
 
-const FLAG_VALUE = new Set(["--project", "--project-id", "--display-name", "--vcs"]);
+const FLAG_VALUE = new Set(["--project", "--project-id", "--display-name", "--vcs", "--report"]);
 
 const KNOWN_FLAGS = new Set([
   "--dry-run",
@@ -11,6 +11,7 @@ const KNOWN_FLAGS = new Set([
   "--project-id",
   "--display-name",
   "--vcs",
+  "--report",
 ]);
 
 export function parseCommonArgs(argv) {
@@ -23,6 +24,7 @@ export function parseCommonArgs(argv) {
     vcs: null,
     acknowledgeLegacy: false,
     strict: false,
+    report: "json",
   };
   const errors = [];
 
@@ -46,6 +48,10 @@ export function parseCommonArgs(argv) {
       if (a === "--project") opts.project = path.resolve(v);
       else if (a === "--project-id") opts.projectId = v;
       else if (a === "--display-name") opts.displayName = v;
+      else if (a === "--report") {
+        if (!["text", "json"].includes(v)) errors.push(`--report must be text or json, got: ${v}`);
+        else opts.report = v;
+      }
       else if (a === "--vcs") {
         if (!["git", "svn"].includes(v)) errors.push(`--vcs must be git or svn, got: ${v}`);
         else opts.vcs = v;

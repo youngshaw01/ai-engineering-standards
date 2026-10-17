@@ -13,6 +13,9 @@ const SCHEMA_VALIDATION_KEYS = new Set([
   "additionalProperties",
   "minLength",
   "pattern",
+  "items",
+  "minItems",
+  "uniqueItems",
 ]);
 
 const ALLOWED_SCHEMA_KEYS = new Set([...SCHEMA_META_KEYS, ...SCHEMA_VALIDATION_KEYS]);
@@ -34,6 +37,9 @@ export function collectUnsupportedSchemaKeywords(schema, pointer = "#", errors =
     for (const [k, sub] of Object.entries(schema.properties)) {
       collectUnsupportedSchemaKeywords(sub, `${pointer}/properties/${k}`, errors);
     }
+  }
+  if (schema.items && typeof schema.items === "object" && !Array.isArray(schema.items)) {
+    collectUnsupportedSchemaKeywords(schema.items, `${pointer}/items`, errors);
   }
   return errors;
 }
@@ -76,6 +82,28 @@ export function validateJsonSchema(value, schema, pointer = "$", errors = []) {
       }
       if (schema.pattern && !new RegExp(schema.pattern).test(value)) {
         errors.push(`${pointer}: pattern ${schema.pattern}`);
+      }
+    }
+  }
+
+  if (schema.type === "array" && Array.isArray(value)) {
+    if (schema.minItems !== undefined && value.length < schema.minItems) {
+      errors.push(`${pointer}: minItems ${schema.minItems}`);
+    }
+    if (schema.uniqueItems) {
+      const seen = new Set();
+      for (const item of value) {
+        const key = JSON.stringify(item);
+        if (seen.has(key)) {
+          errors.push(`${pointer}: items must be unique`);
+          break;
+        }
+        seen.add(key);
+      }
+    }
+    if (schema.items && typeof schema.items === "object" && !Array.isArray(schema.items)) {
+      for (let i = 0; i < value.length; i++) {
+        validateJsonSchema(value[i], schema.items, `${pointer}[${i}]`, errors);
       }
     }
   }
