@@ -49,6 +49,7 @@ node src/adopt.mjs --project <repo-root> [--dry-run] [--force] [--acknowledge-le
 - 两种**已实测损坏**的模式（MPOC r16389/r16390 实证）：
   - AI 环境内联中文参数 + `--encoding gbk` → 日志中文变字面 `?`；
   - AI 无 locale shell 用 `-F UTF-8 文件` **不带** `--encoding` → 客户端按 Latin-1 误读，日志双重编码损坏（`æŠ½å–` 型）。文件内容不受影响（走字节流），仅日志消息损坏。
+- **验证通过记录**（ITS r16392/r16393、PayNow r16394/r16395）：AI 路径 `-F <UTF-8 文件> --encoding UTF-8` 跨项目端到端验证通过，日志中文均经 `svn log -r <REV> --xml` 字节级核验无损，覆盖多行中文消息、`--targets` 批量提交（22 paths）、move 结构调度混合等场景；约定确立后未再出现损坏，视为稳定可用。
 - 已损坏日志的修复需 `svn propset --revprop -r <REV> svn:log -F <UTF-8 文件> --encoding UTF-8`，且服务器须启用 pre-revprop-change hook（否则 `E175008` 拒绝）。
 
 ## 5. 验收

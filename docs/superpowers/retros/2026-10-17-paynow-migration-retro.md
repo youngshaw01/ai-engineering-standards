@@ -104,6 +104,6 @@
 
 遗留（均低优先级）：
 
-1. **adoption-contract §4.1 补实证**：r16392（ITS）+ r16394/16395（PayNow）已三站验证 `-F UTF-8 --encoding UTF-8` 约定，证据齐备，可补入契约实证记录（ITS 复盘 §4-2 遗留项）。
+1. **adoption-contract §4.1 补实证（已完成 2026-10-17，Layer 0 `docs-svn-encoding-evidence-001`）**：`-F UTF-8 --encoding UTF-8` 约定实证已入契约（ITS r16392/r16393 + PayNow r16394/r16395，ITS 复盘 §4-2 遗留项同步闭环）。
 2. **PayNow `_pending` 条目消化**：`docs/knowledge/evidence/_pending.md` 的 `[待确认]` 风险条目按需开变更单元逐个核实，无需全量 bootstrap（知识骨架质量已高）。
 3. **ops-prod-deploy-001 生产推进**：SQL manifest 执行与部署冒烟由真实流程完成后归档。

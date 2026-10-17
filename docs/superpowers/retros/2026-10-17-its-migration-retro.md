@@ -37,7 +37,7 @@
 ## 4. 发现的缺陷与改进项
 
 1. **`detectVcs` 祖先探测缺陷（待修订，Layer 0）**：SVN 工作副本根在祖先目录（`D:\document\svn\posp`），项目根无 `.svn` → adopt 误判 `vcs: git`。本次以 `--vcs svn` 显式绕过。**PayNow（同为 posp 子目录）必然复现**，启动时直接带 `--vcs svn`，或先修 Layer 0（沿祖先目录上溯探测）。
-2. **adoption-contract §4.1 补实证（待修订，Layer 0）**：r16392 为第二个项目端到端验证 `--encoding UTF-8` 约定，可将「实证记录」补进契约（现仅 MPOC r16389/r16390 失败案例）。
+2. **adoption-contract §4.1 补实证（已补，Layer 0 `docs-svn-encoding-evidence-001`）**：r16392 为第二个项目端到端验证 `--encoding UTF-8` 约定；实证记录已入契约（含 PayNow r16394/r16395 证据，2026-10-17）。
 3. **svn.md「仓库 GBK」论断修正（本项目已修，模式可复用）**：ITS 原规则断言服务端按 GBK 解析，被 MPOC r16390 实测推翻（服务端透明存储）——**存量项目的编码结论须以字节级实测为准，不轻信历史文档论断**。
 4. **执行注意**：Trae PS 包装器为 PowerShell 5.1，不支持 `&&`（用 `;` 串联）；跨行 Grep glob 在该项目路径下部分失效，改目录级搜索。
 
