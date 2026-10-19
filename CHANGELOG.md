@@ -1,5 +1,24 @@
 # Changelog
 
+## [3.1.0] - 2026-10-19
+
+### Added
+
+- 契约 additive 增强（`schemaVersion` 保持 `3.0.0`，消费项目零改动）：
+  - §4.2 产物分级新增 `explore.md`（可选，意图前置）与 `retro.md`（可选，归档复盘）
+  - §4.3 生命周期补 explore 前置态与 retro 后置态
+  - 新增 §4.4 验收证据 ID（AC）约定：proposal 验收标准 `AC-<n>` 编号，verify 逐条引用，校验 opt-in
+  - 新增 §5.4 项目宪法（charter）：落位 `docs/rules/charter.md`，一次定义的不可协商原则
+- `templates/change/explore.md`、`templates/change/retro.md`（新增）；`proposal.md` 验收标准改 AC 编号；`verify.md` 人工核查改 AC 逐条核对表
+- `templates/minimal/` 四文件同步（AGENTS.md / changes/README.md / archive/README.md / docs/rules/README.md）
+- `validate.mjs` 新增 `--garden` 巡检（info 级：`GARDEN_AC_NOT_ADOPTED` / `GARDEN_VERIFY_AC_GAP` / `GARDEN_RETRO_MISSING`，不影响退出码）与 warning `VERIFY_AC_UNCOVERED`（opt-in：仅对已采用 AC 编号的 change 生效，存量项目零误报）
+- 测试：`tests/v31-intent-evidence.test.mjs`（AC opt-in 语义 + garden 行为）
+
+### Notes
+
+- 设计依据：开源生态调研（OpenSpec / spec-kit / spec-kitty / gsd-core / lattice / ProductSpec 等 Top 20），spec 与 plan 见 `docs/superpowers/`
+- 变更单元：`.harness/workspace/archive/20261019-feature-harness-v31-intent-evidence-001/`
+
 ## [3.0.2] - 2026-10-17
 
 ### Fixed

@@ -35,6 +35,21 @@ function formatText(report) {
   lines.push(`findings: ${errors.length} error(s), ${warnings.length} warning(s)`);
   lines.push(`result: ${report.ok ? "PASS" : "FAIL"}${report.strict ? " (strict)" : ""}`);
 
+  if (report.garden) {
+    const g = report.garden.findings ?? [];
+    lines.push("");
+    lines.push("GARDEN (info; does not affect result):");
+    if (g.length) {
+      for (const f of g) lines.push(`  [info]  ${f.code}  ${f.path ?? ""}${f.path ? " — " : ""}${f.message}`);
+    } else {
+      lines.push("  no gaps");
+    }
+    const counts = Object.entries(report.garden.counts ?? {})
+      .map(([k, v]) => `${k}=${v}`)
+      .join(", ");
+    if (counts) lines.push(`  counts: ${counts}`);
+  }
+
   const codes = new Set(findings.map((f) => f.code));
   if (!report.ok) {
     if (codes.has("SCHEMA") || codes.has("MISSING_REQUIRED")) {

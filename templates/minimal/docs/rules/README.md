@@ -10,3 +10,4 @@
 | 文件 | 摘要 |
 | --- | --- |
 | （示例）svn.md | SVN 提交规范（人工 GBK 控制台 `--encoding gbk`；AI 提交 `-F <UTF-8 文件> --encoding UTF-8`，见标准库 adoption-contract §4.1） |
+| （推荐）charter.md | 项目宪法：一次定义的不可协商原则（契约 §5.4） |

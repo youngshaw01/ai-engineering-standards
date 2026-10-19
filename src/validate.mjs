@@ -18,6 +18,8 @@ import {
   THICK_RULE_PATTERNS,
   KNOWLEDGE_CHANGELOG_HEADING,
   KNOWLEDGE_DIR,
+  AC_ID_RE,
+  GARDEN_CODES,
 } from "./lib/paths.mjs";
 import { loadProjectConfig } from "./lib/schema.mjs";
 import { scanLegacy } from "./lib/legacy.mjs";
@@ -169,6 +171,84 @@ function checkKnowledgeChangelog(projectRoot, findings) {
   }
 }
 
+/** Contract §4.4 — opt-in AC evidence coverage (warning level).
+ *  Only fires for changes whose proposal already adopted `AC-<n>` IDs;
+ *  projects that have not adopted the convention see zero findings. */
+function checkVerifyAcCoverage(projectRoot, findings) {
+  for (const { dir, rel } of collectChangeDirs(projectRoot)) {
+    const proposalPath = path.join(dir, "proposal.md");
+    const verifyPath = path.join(dir, "verify.md");
+    if (!fs.existsSync(proposalPath) || !fs.existsSync(verifyPath)) continue;
+    const proposal = fs.readFileSync(proposalPath, "utf8");
+    if (!AC_ID_RE.test(proposal)) continue; // convention not adopted here
+    const verify = fs.readFileSync(verifyPath, "utf8");
+    if (!AC_ID_RE.test(verify)) {
+      findings.push({
+        level: "warning",
+        code: "VERIFY_AC_UNCOVERED",
+        path: `${rel}/verify.md`,
+        message: "proposal adopted AC-<n> IDs but verify.md cites none (contract §4.4)",
+      });
+    }
+  }
+}
+
+/** Iterate change directories under workspace/changes and workspace/archive. */
+function collectChangeDirs(projectRoot) {
+  const out = [];
+  const workspace = path.join(projectRoot, ".harness", "workspace");
+  for (const [sub, archived] of [["changes", false], ["archive", true]]) {
+    const dir = path.join(workspace, sub);
+    if (!fs.existsSync(dir)) continue;
+    for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (!e.isDirectory()) continue;
+      if (archived && ARCHIVE_VAULT_DIRS.has(e.name)) continue;
+      out.push({ dir: path.join(dir, e.name), rel: `.harness/workspace/${sub}/${e.name}`, archived });
+    }
+  }
+  return out;
+}
+
+/** Contract §12 — garden巡检: info-level gaps; never affects ok/exit code. */
+function gardenReport(projectRoot) {
+  const findings = [];
+  for (const { dir, rel, archived } of collectChangeDirs(projectRoot)) {
+    const proposalPath = path.join(dir, "proposal.md");
+    const verifyPath = path.join(dir, "verify.md");
+    let acAdopted = false;
+    if (fs.existsSync(proposalPath)) {
+      acAdopted = AC_ID_RE.test(fs.readFileSync(proposalPath, "utf8"));
+      if (!acAdopted) {
+        findings.push({
+          level: "info",
+          code: GARDEN_CODES.acNotAdopted,
+          path: rel,
+          message: "proposal without AC-<n> acceptance IDs (contract §4.4)",
+        });
+      }
+    }
+    if (acAdopted && fs.existsSync(verifyPath) && !AC_ID_RE.test(fs.readFileSync(verifyPath, "utf8"))) {
+      findings.push({
+        level: "info",
+        code: GARDEN_CODES.verifyAcGap,
+        path: `${rel}/verify.md`,
+        message: "verify.md does not cite any AC ID",
+      });
+    }
+    if (archived && !fs.existsSync(path.join(dir, "retro.md"))) {
+      findings.push({
+        level: "info",
+        code: GARDEN_CODES.retroMissing,
+        path: rel,
+        message: "archived change without retro.md (contract §4.2)",
+      });
+    }
+  }
+  const counts = {};
+  for (const f of findings) counts[f.code] = (counts[f.code] ?? 0) + 1;
+  return { findings, counts };
+}
+
 function validateConsumer(projectRoot, standardsRoot, strict) {
   const findings = [];
   const missing = [];
@@ -201,6 +281,7 @@ function validateConsumer(projectRoot, standardsRoot, strict) {
   checkStandardsTreeCopy(projectRoot, findings);
   checkThickAiRules(projectRoot, findings);
   checkWorkflow(projectRoot, data, findings);
+  checkVerifyAcCoverage(projectRoot, findings);
   checkKnowledgeChangelog(projectRoot, findings);
 
   const legacy = scanLegacy(projectRoot);
@@ -228,9 +309,14 @@ function main() {
   const { opts, errors } = parseCommonArgs(process.argv);
   if (exitOnCliErrors("validate", errors)) return;
   const root = repoRoot();
-  const report = process.argv.includes("--project")
+  const isProject = process.argv.includes("--project");
+  const report = isProject
     ? { tool: "validate", target: opts.project, strict: opts.strict, ...validateConsumer(opts.project, root, opts.strict) }
     : { tool: "validate", target: "layer0", strict: opts.strict, ...validateLayer0(root) };
+  if (opts.garden) {
+    // Info-level only: garden findings never change ok/exit code (contract §12).
+    report.garden = gardenReport(isProject ? opts.project : root);
+  }
   console.log(formatReport(report, opts.report));
   if (!report.ok) process.exit(1);
 }
