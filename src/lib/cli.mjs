@@ -6,6 +6,7 @@ const KNOWN_FLAGS = new Set([
   "--dry-run",
   "--force",
   "--strict",
+  "--garden",
   "--acknowledge-legacy",
   "--project",
   "--project-id",
@@ -24,6 +25,7 @@ export function parseCommonArgs(argv) {
     vcs: null,
     acknowledgeLegacy: false,
     strict: false,
+    garden: false,
     report: "json",
   };
   const errors = [];
@@ -61,6 +63,7 @@ export function parseCommonArgs(argv) {
     if (a === "--dry-run") opts.dryRun = true;
     else if (a === "--force") opts.force = true;
     else if (a === "--strict") opts.strict = true;
+    else if (a === "--garden") opts.garden = true;
     else if (a === "--acknowledge-legacy") opts.acknowledgeLegacy = true;
   }
 

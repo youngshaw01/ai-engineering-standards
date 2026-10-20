@@ -95,6 +95,17 @@ export const THICK_RULE_PATTERNS = [
 export const KNOWLEDGE_CHANGELOG_HEADING = "## 变更记录";
 export const KNOWLEDGE_DIR = "docs/knowledge";
 
+/** Contract §4.4 — acceptance-criteria evidence IDs cited by proposal/verify. */
+export const AC_ID_RE = /AC-\d+/;
+/** Contract §4.2 — optional change-unit artifacts (convention only, no machine enforcement). */
+export const CHANGE_OPTIONAL_ARTIFACTS = ["explore.md", "retro.md"];
+/** Contract §12 — garden (info-level) finding codes; never affect ok/exit code. */
+export const GARDEN_CODES = {
+  acNotAdopted: "GARDEN_AC_NOT_ADOPTED",
+  verifyAcGap: "GARDEN_VERIFY_AC_GAP",
+  retroMissing: "GARDEN_RETRO_MISSING",
+};
+
 export function detectVcs(projectRoot) {
   const hasGit = fs.existsSync(path.join(projectRoot, ".git"));
   const hasSvn = fs.existsSync(path.join(projectRoot, ".svn"));

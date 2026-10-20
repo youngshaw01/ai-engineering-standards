@@ -1,12 +1,12 @@
 # AGENTS.md
 
-> v3 入口。契约：`ai-engineering-standards` → `contract/harness-contract.md`（本仓库即 Layer 0）
+> v3.1 入口。契约：`ai-engineering-standards` → `contract/harness-contract.md`（本仓库即 Layer 0）
 
 ## Project
 
 - 机器配置：`.harness/project.yaml`（本仓库自举为 v3 消费项目）
 - 变更工作区：`.harness/workspace/changes/`（进行中）· `.harness/workspace/archive/`（已归档）
-- 领域知识：`docs/knowledge/` · 项目特化规则：`docs/rules/`
+- 领域知识：`docs/knowledge/` · 项目特化规则：`docs/rules/`（含 `charter.md` 项目宪法）
 
 ## Rules
 
@@ -16,11 +16,12 @@
 
 ## Workflow（变更单元）
 
-1. 创建 change：`{type}-{slug}-{NNN}/`，从标准库 `templates/change/` 起草 proposal + tasks
-2. 最小改动实现，勾选 tasks
-3. verify 记录构建/测试证据；未验证不得声称通过
-4. 归档：移入 `archive/` 并加 `{YYYYMMDD}-` 前缀
-5. 有持久认知价值 → 合并进 `docs/knowledge/` 并登记"变更记录"
+1. （方向不明时）先写 `explore.md`：问题 / 选项 / 约束 / 待决问题过一遍，人拍板后再动笔
+2. 创建 change：`{type}-{slug}-{NNN}/`，从标准库 `templates/change/` 起草 proposal + tasks；proposal 验收标准用 `AC-<n>` 编号
+3. 最小改动实现，勾选 tasks
+4. verify 记录构建/测试证据，人工核查逐条引用 AC 编号；未验证不得声称通过
+5. 归档：移入 `archive/` 并加 `{YYYYMMDD}-` 前缀；建议补 `retro.md` 复盘
+6. 有持久认知价值 → 合并进 `docs/knowledge/` 并登记"变更记录"
 
 ## Layer 0 特有
 

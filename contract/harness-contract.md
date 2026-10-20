@@ -1,6 +1,6 @@
 # Harness Contract v3
 
-> **版本**：`3.0.0`（与 `project.yaml` → `schemaVersion` 一致）  
+> **版本**：`3.1.0`（additive 约定层；配置 Schema 仍为 `schemaVersion 3.0.0`——本版无新配置字段，消费项目零改动）  
 > **配置 Schema**：[`project-config.schema.json`](project-config.schema.json)（校验解析后的对象）  
 > **接入**：[`adoption-contract.md`](adoption-contract.md) · **v2 → v3 升级**：[`migration-guide.md`](migration-guide.md)
 
@@ -82,7 +82,7 @@ docs/
 │   └── business.md / architecture.md / database.md / deployment.md（推荐初始集）
 └── rules/                         # 项目特化规则："必须怎么做"
     ├── README.md
-    └── *.md                       # 如 svn.md、pci-compliance.md
+    └── *.md                       # 如 svn.md、pci-compliance.md；charter.md（推荐，项目宪法，见 §5.4）
 ```
 
 推荐初始集文件按需创建；运行 bootstrap 流水线（§5.3）时以其产物结构（recon / capability-map / domains / flows / data / integrations 等）扩展 `docs/knowledge/`。`workspace/.gitkeep`（v2 遗留占位）不再生成。
@@ -106,10 +106,12 @@ docs/
 
 | 产物 | 要求 | 说明 |
 | --- | --- | --- |
-| `proposal.md` | 必备 | Why / What Changes / Out of Scope / 验收标准 / Impact |
+| `explore.md` | 可选 | 意图前置：写代码前的探索/讨论记录（问题 / 选项 / 约束 / 待决问题 / 结论）；大需求或方向不明时启用 |
+| `proposal.md` | 必备 | Why / What Changes / Out of Scope / 验收标准（条目用 `AC-<n>` 编号，见 §4.4）/ Impact |
 | `tasks.md` | 必备 | 任务清单（checkbox）；小变更可仅 3 行 |
 | `design.md` | 可选 | 跨模块 / 影响架构 / 修改接口的变更才要求 |
-| `verify.md` | 归档前必备 | 构建/测试/验证记录；未验证不得声称通过 |
+| `verify.md` | 归档前必备 | 构建/测试/验证记录；未验证不得声称通过；人工核查逐条引用 proposal 的 AC ID |
+| `retro.md` | 可选 | 归档复盘：做得好的 / 踩坑 / 改进项；有持久价值部分回流 `docs/knowledge/` |
 | `artifacts/` | 可选 | 变更专属产物；禁止散落 workspace 根 |
 
 模板：标准库 `templates/change/`（项目内不保留副本，创建 change 时引用）。
@@ -117,13 +119,20 @@ docs/
 ### 4.3 生命周期
 
 ```
-创建 change（proposal + tasks）→ [design 可选] → 实现（勾选 tasks）
-→ verify（记录证据）→ archive（移入 archive/，加日期前缀）
-→ [可选] 知识回流：已验证认知合并进 docs/knowledge/ 并登记变更记录
+[explore 可选] → 创建 change（proposal + tasks）→ [design 可选] → 实现（勾选 tasks）
+→ verify（记录证据，逐条引用 AC）→ archive（移入 archive/，加日期前缀）
+→ [retro 可选] → [可选] 知识回流：已验证认知合并进 docs/knowledge/ 并登记变更记录
 ```
 
 - `workspace/changes/` 根目录禁止散落文件（产物必须位于 change 目录内）。  
 - 知识回流为人工动作；回流时 **必须** 在目标 knowledge 文档"变更记录"登记一行（§5.2）。
+
+### 4.4 验收证据 ID（AC）
+
+- proposal 验收标准条目使用稳定编号：`AC-1`、`AC-2`…；编号在变更生命周期内不变。
+- verify.md 的人工核查与测试证据 **逐条引用 AC ID**，使"验收标准 → 证据"可机器核对。
+- 校验语义为 **opt-in**：仅当 proposal 已采用 `AC-<n>` 编号时，才要求 verify 引用（warning `VERIFY_AC_UNCOVERED`，§12）；未采用方不受影响。
+- 采用率与缺口可通过 `validate --garden` 观测（§11）。
 
 ## 5. 知识与规则落位
 
@@ -161,6 +170,13 @@ docs/
 - 产物落 `docs/knowledge/`，变更记录来源记 `bootstrap`。  
 - 对已有旧文档的项目：定位为"校验现有文档与代码一致性 + 补缺口"，非从零重写。
 
+### 5.4 项目宪法（charter）
+
+- 落位：`docs/rules/charter.md`（推荐，非必备）；一次定义、跨 change 稳定的**不可协商原则**（质量底线、技术禁区、协作纪律）。
+- 与 `docs/rules/` 其他规则的关系：charter 是原则层（"什么永不做"），rules 是执行层（"必须怎么做"）；冲突时以 charter 为准并修订 rules。
+- `AGENTS.md` **应**指向 charter；change 的 proposal 不得与 charter 冲突（架构设计审查时核对）。
+- 修改 charter 视为契约级决策：须经人工确认，且可在变更记录中追溯。
+
 ## 6. 红线
 
 | # | 红线 | 执行方式 |
@@ -179,6 +195,7 @@ docs/
 | `.harness/workspace/` | 变更单元与过程产物 | 永久规范正文 |
 | `docs/knowledge/` | 领域知识当前态 + 变更记录 | 过程产物、规则正文 |
 | `docs/rules/` | 项目特化规则 | 标准库规则副本 |
+| `docs/rules/charter.md` | 项目宪法（不可协商原则，一次定义） | 与 proposal 冲突；过程产物 |
 | `contract/*`（标准库） | 契约 SSOT | 项目内复制整份契约 |
 
 **重复内容**：业务事实以代码/测试为准；契约只定义 Harness 形状，不定义业务规则正文。
@@ -213,6 +230,7 @@ docs/
 | 已有项目 | `node src/adopt.mjs --project <dir> ...` | 2=冲突, 3=legacy 未确认 |
 | 校验 Layer 0 | `node src/validate.mjs` | 1=失败 |
 | 校验消费项目 | `node src/validate.mjs --project <dir> [--report text]` | 1=失败 |
+| 巡检（garden） | `node src/validate.mjs --project <dir> --garden` | info 级缺口报告；不影响退出码 |
 | v2 → v3 升级 | 见 `migration-guide.md`：`adopt --dry-run` → 人工升级 → `validate` 迭代 | — |
 | 回滚 | 用户 VCS 回滚；工具不写回滚逻辑 | — |
 | 退出 | 删除 `.harness/` 与 AGENTS.md（人工）；工具不提供 uninstall | — |
@@ -229,9 +247,15 @@ docs/
 
 **warning**（`--strict` 模式下失败）：
 
-- change 目录命名不合规（type 不在清单 / 格式错误 / 归档目录缺日期前缀）；`changes/` 根散落文件；`docs/knowledge/**/*.md` 缺"变更记录"小节；进行中 change 缺 `proposal.md` 或 `tasks.md`；v1 残留 `LEGACY_V1_*`（沿袭 v2）。
+- change 目录命名不合规（type 不在清单 / 格式错误 / 归档目录缺日期前缀）；`changes/` 根散落文件；`docs/knowledge/**/*.md` 缺"变更记录"小节；进行中 change 缺 `proposal.md` 或 `tasks.md`；proposal 已采用 AC 编号但 verify.md 未引用任何 AC ID（`VERIFY_AC_UNCOVERED`，opt-in）；v1 残留 `LEGACY_V1_*`（沿袭 v2）。
 
 **通过**：`ok = errors.length === 0 && (!strict || warnings.length === 0)`；失败退出码 1。
+
+**garden 巡检**（`--garden`，info 级，不影响 `ok` 与退出码）：
+
+- `GARDEN_AC_NOT_ADOPTED`：change 的 proposal 未采用 AC 编号（约定普及度观测）；
+- `GARDEN_VERIFY_AC_GAP`：采用 AC 但 verify 未引用（与 `VERIFY_AC_UNCOVERED` 同源的汇总视图）；
+- `GARDEN_RETRO_MISSING`：archived change 无 `retro.md`。
 
 ## 13. 兼容性
 
