@@ -9,6 +9,7 @@ description: 需要"按 Harness 流程完整走一遍"时使用——把变更�
 
 ## 前置
 读 `.harness/project.yaml` 确认 `vcs`；确认已接入 Harness（`.harness/workspace/` 存在）。
+- 未接入 → 先加载 `harness-adopt` 完成接入与校验门禁，再回到本清单第 1 步。
 
 ## 顺序清单
 1. 加载 `harness-change`，推进变更单元至 `verify`（含 AC 逐条核对）。
@@ -20,5 +21,5 @@ description: 需要"按 Harness 流程完整走一遍"时使用——把变更�
 4. 归档 +（可选）retro + 知识回流登记。
 
 ## 引用
-- 同级 skill：`harness-change`、`harness-vcs`
+- 同级 skill：`harness-adopt`、`harness-change`、`harness-vcs`
 - 契约 `contract/harness-contract.md` §11（生命周期命令表）
