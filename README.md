@@ -2,7 +2,7 @@
 
 **Harness Runtime Contract（R0）** 标准库：定义 Agent 接入项目的可验证最小形状（`contract/`），提供 `init` / `adopt` / `validate` 生成与**独立**校验消费项目 `.harness/`。
 
-本仓库**不是**语言/框架规范百科；领域规范若未来出现，应独立于 Layer 0 契约扩展（见 `contract/harness-contract.md`）。
+本仓库**不是**语言/框架规范百科；领域规范只以 §2.1 登记的**规则型 skill 包**形式进入 `.trae/skills/`，用于分发给消费项目引用，不构成并列契约体系（见 `contract/harness-contract.md` §2.1）。
 
 v1 全量实现已退出运行路径；只读封板：`git checkout v1-sealed-20261013` 或分支 `sealed/v1-full`。
 

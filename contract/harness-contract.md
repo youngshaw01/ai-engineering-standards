@@ -1,6 +1,6 @@
 # Harness Contract v3
 
-> **版本**：`3.1.0`（additive 约定层；配置 Schema 仍为 `schemaVersion 3.0.0`——本版无新配置字段，消费项目零改动）  
+> **版本**：`3.2.0`（additive 约定层；配置 Schema 仍为 `schemaVersion 3.0.0`——本版无新配置字段，消费项目零改动）  
 > **配置 Schema**：[`project-config.schema.json`](project-config.schema.json)（校验解析后的对象）  
 > **接入**：[`adoption-contract.md`](adoption-contract.md) · **v2 → v3 升级**：[`migration-guide.md`](migration-guide.md)
 
@@ -17,7 +17,7 @@
 
 ### 1.3 非目标
 
-- 语言/框架规范大全、`rules/` 并列体系、`.harness/` 内 `wiki/`/`knowledge/`/`context/`/`index/`/`agents/` 未经契约扩展不得出现。  
+- 语言/框架规范大全、`rules/` 并列体系、`.harness/` 内 `wiki/`/`knowledge/`/`context/`/`index/`/`agents/` 未经契约扩展不得出现。**例外**：经 §2.1 登记的语言专项规则型 skill 包（当前仅 Java 三包），且只收规则编号体系，不收框架用法大全。  
 - MCP、插件自动同步、多 Agent 编排、跨仓库索引。  
 - 自动搬迁业务源码或删除用户目录；知识内容的自动化质量判定（机器只管结构）。
 
@@ -40,10 +40,29 @@ ai-engineering-standards/
 │   └── bootstrap/                   # 初始知识梳理流水线（标准库内读取，不复制进项目）
 ├── src/init.mjs | adopt.mjs | validate.mjs
 ├── examples/new-project/ | existing-project/
-└── tests/
+├── tests/
+├── .trae/skills/                    # 技能分发目录（见 §2.1）
+│   ├── harness-*/SKILL.md           # 流程型：薄指针，正文 SSOT 在 contract/
+│   └── java-*/SKILL.md + references/ # 规则型：规则正文在自身 references/
 ```
 
 **禁止** Layer 0 根目录出现 `.harness/` 元副本、`archive/`、v1 章节目录作为活动实现。
+
+### 2.1 技能分发（skill）
+
+`.trae/skills/` 是 Layer 0 的技能分发目录，两类并存：
+
+| 类型 | 示例 | 正文 SSOT | 约束 |
+| --- | --- | --- | --- |
+| 流程型 | `harness-adopt` / `harness-change` / `harness-flow` / `harness-vcs` | `contract/`（skill 只做薄指针） | 禁止在 skill 内复制契约正文 |
+| 规则型 | `java-code-structure` / `java-transaction-management` / `java-code-review` | skill 自身 `references/` | 规则用稳定编号（ST/TX/RV-`nn`）+ 版本头；消费项目只允许薄覆盖层 |
+
+规则型 skill 的约定：
+
+- **唯一职责**：`java-code-review` 是审核入口（流程、六维覆盖、证据与报告质量）；`java-code-structure` 只提供 ST 规则；`java-transaction-management` 只提供 TX 规则。加载专项 references 不等于启动第二套审核流程。
+- **覆盖层**：消费项目在 `docs/rules/` 下声明 `覆盖规则: <ID 清单>`，仅替代指定母版条款，未声明继续用母版；禁止整包复制规则正文（红线 1）。
+- **版本冻结**：规则编号在包内稳定；判定口径变更须 bump 该 skill 版本并在 CHANGELOG 记录，不得静默改语义。
+- **扩展纪律**：新增语言专项 skill 包须先在本节登记（名称、职责、规则编号前缀），未经登记不得作为并列 SSOT。
 
 ## 3. 消费项目（Layer 1）布局
 
@@ -197,6 +216,8 @@ docs/
 | `docs/rules/` | 项目特化规则 | 标准库规则副本 |
 | `docs/rules/charter.md` | 项目宪法（不可协商原则，一次定义） | 与 proposal 冲突；过程产物 |
 | `contract/*`（标准库） | 契约 SSOT | 项目内复制整份契约 |
+| `.trae/skills/harness-*`（标准库） | 流程型 skill：薄指针 | 复制契约正文 |
+| `.trae/skills/java-*`（标准库） | 规则型 skill：语言专项规则正文 SSOT（§2.1） | 混入框架用法大全；无版本头与稳定编号 |
 
 **重复内容**：业务事实以代码/测试为准；契约只定义 Harness 形状，不定义业务规则正文。
 

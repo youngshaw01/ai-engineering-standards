@@ -1,5 +1,25 @@
 # Changelog
 
+## [3.2.0] - 2026-10-30
+
+### Added
+
+- 契约新增 §2.1 技能分发（skill）：`.trae/skills/` 定为 Layer 0 分发目录，区分「流程型」（薄指针，正文 SSOT 在 `contract/`）与「规则型」（规则正文在自身 `references/`，须带版本头与稳定编号）
+- 迁入 Java 三包规则型 skill（v1.0 冻结）：`java-code-structure`（ST-01～ST-10）、`java-transaction-management`（TX-01～TX-10）、`java-code-review`（RV-01～RV-08）
+- 规则型 skill 约定：`java-code-review` 为唯一审核入口，专项包只提供规则正文；消费项目以 `覆盖规则: <ID 清单>` 做薄覆盖层，禁止整包复制（红线 1）；新增语言包须先在 §2.1 登记
+
+### Changed
+
+- 契约 §1.3 非目标增加例外：经 §2.1 登记的规则型 skill 包属于范围，仍不收框架用法大全
+- 契约 §2 标准库布局补 `.trae/skills/` 树；§7 文件职责新增流程型/规则型 skill 两行
+- `README.md` 明确领域规范只以规则型 skill 包进入，不构成并列契约体系
+- `schemaVersion` 保持 `3.0.0`，消费项目零改动（无新配置字段）
+
+### Notes
+
+- 变更单元：`.harness/workspace/changes/docs-java-engineering-skills-001/`
+- 来源：三个 skill 先在消费项目（Malaysia AcqSys）以本地全局 skill 形式落地并完成 recheck 验收，规则口径经两轮评审修订后冻结，再迁入标准库作为唯一源头；本地全局目录降为安装副本
+
 ## [3.1.0] - 2026-10-19
 
 ### Added
